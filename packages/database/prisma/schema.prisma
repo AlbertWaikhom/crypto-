@@ -1,0 +1,508 @@
+// =============================================================================
+// NAVRIX PLATFORM — PRISMA MYSQL SCHEMA (MySQL 8.0+ ONLY)
+// Immutable double-entry ledger, BEP-20 USDT deposit state machine,
+// blockchain verification records, investments, interest, withdrawals & audit.
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+  MASTER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING_VERIFICATION
+}
+
+enum DepositStatus {
+  PENDING_PAYMENT
+  PAYMENT_SUBMITTED
+  BLOCKCHAIN_DETECTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  EXPIRED
+  CANCELLED
+}
+
+enum LedgerTransactionType {
+  DEPOSIT
+  INTEREST
+  WITHDRAWAL
+  WITHDRAWAL_REVERSAL
+  ADJUSTMENT
+  FEE
+  REFUND
+}
+
+enum LedgerDirection {
+  CREDIT
+  DEBIT
+}
+
+enum InvestmentStatus {
+  ACTIVE
+  MATURED
+  COMPLETED
+  PAUSED
+  CANCELLED
+}
+
+enum InterestCalculationModel {
+  FIXED_AMOUNT
+  PERCENTAGE
+  DAILY
+  WEEKLY
+  MONTHLY
+  MATURITY
+}
+
+enum WithdrawalStatus {
+  PENDING_REVIEW
+  APPROVED
+  PROCESSING
+  COMPLETED
+  REJECTED
+  FAILED
+}
+
+enum KycStatus {
+  NOT_SUBMITTED
+  PENDING_REVIEW
+  VERIFIED
+  REJECTED
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  SMS
+  PUSH
+}
+
+model User {
+  id                  String     @id @default(uuid()) @db.Char(36)
+  publicUid           String     @unique @map("public_uid") @db.VarChar(32)
+  name                String     @db.VarChar(120)
+  email               String     @unique @db.VarChar(191)
+  phone               String?    @db.VarChar(32)
+  passwordHash        String?    @map("password_hash") @db.VarChar(255)
+  googleId            String?    @unique @map("google_id") @db.VarChar(191)
+  avatarUrl           String?    @map("avatar_url") @db.VarChar(512)
+  role                UserRole   @default(USER)
+  status              UserStatus @default(ACTIVE)
+  emailVerified       Boolean    @default(false) @map("email_verified")
+  emailVerifiedAt     DateTime?  @map("email_verified_at")
+  failedLoginCount    Int        @default(0) @map("failed_login_count")
+  lockedUntil         DateTime?  @map("locked_until")
+  twoFactorEnabled    Boolean    @default(false) @map("two_factor_enabled")
+  twoFactorSecretEnc  String?    @map("two_factor_secret_enc") @db.VarChar(255)
+  lastLoginAt         DateTime?  @map("last_login_at")
+  createdAt           DateTime   @default(now()) @map("created_at")
+  updatedAt           DateTime   @updatedAt @map("updated_at")
+
+  sessions            UserSession[]
+  authTokens          AuthToken[]
+  complianceProfile   ComplianceProfile?
+  wallets             Wallet[]
+  deposits            Deposit[]            @relation("UserDeposits")
+  reviewedDeposits    Deposit[]            @relation("ReviewedDeposits")
+  paymentSubmissions  PaymentSubmission[]
+  investments         Investment[]
+  interestRecords     InterestRecord[]
+  withdrawals         Withdrawal[]         @relation("UserWithdrawals")
+  processedWithdrawals Withdrawal[]        @relation("AdminWithdrawals")
+  ledgerEntries       LedgerEntry[]
+  notifications       Notification[]
+  auditLogs           AuditLog[]
+
+  @@index([role, status])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model UserSession {
+  id               String    @id @default(uuid()) @db.Char(36)
+  userId           String    @map("user_id") @db.Char(36)
+  refreshTokenHash String    @unique @map("refresh_token_hash") @db.VarChar(128)
+  familyId         String    @map("family_id") @db.Char(36)
+  ipAddress        String?   @map("ip_address") @db.VarChar(64)
+  userAgent        String?   @map("user_agent") @db.VarChar(512)
+  expiresAt        DateTime  @map("expires_at")
+  revokedAt        DateTime? @map("revoked_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, revokedAt])
+  @@index([familyId])
+  @@map("user_sessions")
+}
+
+model AuthToken {
+  id        String    @id @default(uuid()) @db.Char(36)
+  userId    String    @map("user_id") @db.Char(36)
+  tokenType String    @map("token_type") @db.VarChar(32)
+  tokenHash String    @unique @map("token_hash") @db.VarChar(128)
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, tokenType])
+  @@map("auth_tokens")
+}
+
+model ComplianceProfile {
+  id                            String    @id @default(uuid()) @db.Char(36)
+  userId                        String    @unique @map("user_id") @db.Char(36)
+  kycStatus                     KycStatus @default(NOT_SUBMITTED) @map("kyc_status")
+  country                       String?   @db.VarChar(80)
+  taxResidency                  String?   @map("tax_residency") @db.VarChar(80)
+  taxIdMasked                   String?   @map("tax_id_masked") @db.VarChar(40)
+  termsAcceptedAt               DateTime? @map("terms_accepted_at")
+  privacyAcceptedAt             DateTime? @map("privacy_accepted_at")
+  riskDisclosureAcceptedAt      DateTime? @map("risk_disclosure_accepted_at")
+  investmentAgreementAcceptedAt DateTime? @map("investment_agreement_accepted_at")
+  createdAt                     DateTime  @default(now()) @map("created_at")
+  updatedAt                     DateTime  @updatedAt @map("updated_at")
+
+  user                          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("compliance_profiles")
+}
+
+model Wallet {
+  id                String        @id @default(uuid()) @db.Char(36)
+  userId            String        @map("user_id") @db.Char(36)
+  asset             String        @default("USDT") @db.VarChar(16)
+  availableBalance  Decimal       @default(0) @map("available_balance") @db.Decimal(24, 8)
+  lockedBalance     Decimal       @default(0) @map("locked_balance") @db.Decimal(24, 8)
+  investedBalance   Decimal       @default(0) @map("invested_balance") @db.Decimal(24, 8)
+  pendingWithdrawal Decimal       @default(0) @map("pending_withdrawal") @db.Decimal(24, 8)
+  version           Int           @default(1)
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+
+  user              User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  ledgerEntries     LedgerEntry[]
+
+  @@unique([userId, asset])
+  @@map("wallets")
+}
+
+model LedgerEntry {
+  id              String                @id @default(uuid()) @db.Char(36)
+  ledgerUid       String                @unique @map("ledger_uid") @db.VarChar(40)
+  userId          String                @map("user_id") @db.Char(36)
+  walletId        String                @map("wallet_id") @db.Char(36)
+  transactionType LedgerTransactionType @map("transaction_type")
+  direction       LedgerDirection
+  asset           String                @default("USDT") @db.VarChar(16)
+  amount          Decimal               @db.Decimal(24, 8)
+  balanceBefore   Decimal               @map("balance_before") @db.Decimal(24, 8)
+  balanceAfter    Decimal               @map("balance_after") @db.Decimal(24, 8)
+  referenceType   String                @map("reference_type") @db.VarChar(40)
+  referenceId     String                @map("reference_id") @db.VarChar(64)
+  idempotencyKey  String                @unique @map("idempotency_key") @db.VarChar(128)
+  description     String                @db.VarChar(500)
+  createdById     String?               @map("created_by_id") @db.Char(36)
+  createdAt       DateTime              @default(now()) @map("created_at")
+
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Restrict)
+  wallet          Wallet                @relation(fields: [walletId], references: [id], onDelete: Restrict)
+  interestRecord  InterestRecord?
+
+  @@index([userId, createdAt])
+  @@index([referenceType, referenceId])
+  @@index([transactionType, createdAt])
+  @@map("ledger_entries")
+}
+
+model Deposit {
+  id               String                 @id @default(uuid()) @db.Char(36)
+  depositUid       String                 @unique @map("deposit_uid") @db.VarChar(40)
+  userId           String                 @map("user_id") @db.Char(36)
+  requestedAmount  Decimal                @map("requested_amount") @db.Decimal(24, 8)
+  verifiedAmount   Decimal?               @map("verified_amount") @db.Decimal(24, 8)
+  token            String                 @default("USDT") @db.VarChar(16)
+  network          String                 @default("BNB_SMART_CHAIN") @db.VarChar(32)
+  receivingAddress String                 @map("receiving_address") @db.VarChar(64)
+  planCode         String?                @map("plan_code") @db.VarChar(64)
+  status           DepositStatus          @default(PENDING_PAYMENT)
+
+  // Separated Fiat / Tax / Exchange Rate Columns (Section 34)
+  fiatAmount       Decimal?               @map("fiat_amount") @db.Decimal(24, 8)
+  fiatCurrency     String?                @map("fiat_currency") @db.VarChar(8)
+  taxAmount        Decimal?               @map("tax_amount") @db.Decimal(24, 8)
+  taxCurrency      String?                @map("tax_currency") @db.VarChar(8)
+  cryptoAmount     Decimal?               @map("crypto_amount") @db.Decimal(24, 8)
+  cryptoCurrency   String?                @map("crypto_currency") @db.VarChar(16)
+  exchangeRate     Decimal?               @map("exchange_rate") @db.Decimal(24, 8)
+  rateTimestamp    DateTime?              @map("rate_timestamp")
+
+  submittedAt      DateTime?              @map("submitted_at")
+  reviewDeadline   DateTime?              @map("review_deadline")
+  reviewedAt       DateTime?              @map("reviewed_at")
+  reviewedById     String?                @map("reviewed_by_id") @db.Char(36)
+  rejectionReason  String?                @map("rejection_reason") @db.VarChar(500)
+  expiresAt        DateTime               @map("expires_at")
+  createdAt        DateTime               @default(now()) @map("created_at")
+  updatedAt        DateTime               @updatedAt @map("updated_at")
+
+  user             User                   @relation("UserDeposits", fields: [userId], references: [id], onDelete: Restrict)
+  reviewedBy       User?                  @relation("ReviewedDeposits", fields: [reviewedById], references: [id], onDelete: SetNull)
+  submission       PaymentSubmission?
+  blockchainTx     BlockchainTransaction?
+  investment       Investment?
+
+  @@index([userId, status])
+  @@index([status, createdAt])
+  @@index([reviewDeadline])
+  @@map("deposits")
+}
+
+model PaymentSubmission {
+  id                   String   @id @default(uuid()) @db.Char(36)
+  depositId            String   @unique @map("deposit_id") @db.Char(36)
+  userId               String   @map("user_id") @db.Char(36)
+  transactionHash      String   @unique @map("transaction_hash") @db.VarChar(80)
+  screenshotStorageKey String?  @map("screenshot_storage_key") @db.VarChar(255)
+  screenshotMimeType   String?  @map("screenshot_mime_type") @db.VarChar(64)
+  screenshotSizeBytes  Int?     @map("screenshot_size_bytes")
+  notes                String?  @db.VarChar(500)
+  submittedIp          String?  @map("submitted_ip") @db.VarChar(64)
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  deposit              Deposit  @relation(fields: [depositId], references: [id], onDelete: Restrict)
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId])
+  @@map("payment_submissions")
+}
+
+model BlockchainTransaction {
+  id                String      @id @default(uuid()) @db.Char(36)
+  transactionHash   String      @unique @map("transaction_hash") @db.VarChar(80)
+  depositId         String?     @unique @map("deposit_id") @db.Char(36)
+  withdrawalId      String?     @unique @map("withdrawal_id") @db.Char(36)
+  direction         String      @default("INBOUND") @db.VarChar(16)
+  verificationMode  String      @default("MOCK") @map("verification_mode") @db.VarChar(16)
+  network           String      @default("BNB_SMART_CHAIN") @db.VarChar(32)
+  chainId           Int         @default(56) @map("chain_id")
+  blockNumber       BigInt?     @map("block_number")
+  blockTimestamp    DateTime?   @map("block_timestamp")
+  fromAddress       String?     @map("from_address") @db.VarChar(64)
+  toAddress         String?     @map("to_address") @db.VarChar(64)
+  tokenContract     String?     @map("token_contract") @db.VarChar(64)
+  tokenAmount       Decimal?    @map("token_amount") @db.Decimal(24, 8)
+  confirmationCount Int         @default(0) @map("confirmation_count")
+  txSucceeded       Boolean     @default(false) @map("tx_succeeded")
+  isValid           Boolean     @default(false) @map("is_valid")
+  failureCode       String?     @map("failure_code") @db.VarChar(64)
+  failureReason     String?     @map("failure_reason") @db.VarChar(500)
+  verifiedAt        DateTime    @default(now()) @map("verified_at")
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+
+  deposit           Deposit?    @relation(fields: [depositId], references: [id], onDelete: SetNull)
+  withdrawal        Withdrawal? @relation(fields: [withdrawalId], references: [id], onDelete: SetNull)
+
+  @@index([toAddress])
+  @@index([fromAddress])
+  @@index([isValid, createdAt])
+  @@map("blockchain_transactions")
+}
+
+model InvestmentPlan {
+  id                   String                   @id @default(uuid()) @db.Char(36)
+  code                 String                   @unique @db.VarChar(64)
+  name                 String                   @db.VarChar(120)
+  description          String?                  @db.VarChar(500)
+  interestModel        InterestCalculationModel @map("interest_model")
+  interestRate         Decimal                  @map("interest_rate") @db.Decimal(12, 4)
+  calculationFrequency String                   @map("calculation_frequency") @db.VarChar(32)
+  durationDays         Int                      @map("duration_days")
+  minAmount            Decimal                  @map("min_amount") @db.Decimal(24, 8)
+  maxAmount            Decimal                  @map("max_amount") @db.Decimal(24, 8)
+  startDate            DateTime?                @map("start_date")
+  endDate              DateTime?                @map("end_date")
+  isActive             Boolean                  @default(true) @map("is_active")
+  createdAt            DateTime                 @default(now()) @map("created_at")
+  updatedAt            DateTime                 @updatedAt @map("updated_at")
+
+  investments          Investment[]
+
+  @@map("investment_plans")
+}
+
+model Investment {
+  id              String                   @id @default(uuid()) @db.Char(36)
+  investmentUid   String                   @unique @map("investment_uid") @db.VarChar(40)
+  userId          String                   @map("user_id") @db.Char(36)
+  depositId       String                   @unique @map("deposit_id") @db.Char(36)
+  planId          String?                  @map("plan_id") @db.Char(36)
+  principalAmount Decimal                  @map("principal_amount") @db.Decimal(24, 8)
+  asset           String                   @default("USDT") @db.VarChar(16)
+  startDate       DateTime                 @map("start_date")
+  maturityDate    DateTime                 @map("maturity_date")
+  interestModel   InterestCalculationModel @map("interest_model")
+  interestRate    Decimal                  @map("interest_rate") @db.Decimal(12, 4)
+  interestAmount  Decimal                  @default(0) @map("interest_amount") @db.Decimal(24, 8)
+  status          InvestmentStatus         @default(ACTIVE)
+  createdAt       DateTime                 @default(now()) @map("created_at")
+  updatedAt       DateTime                 @updatedAt @map("updated_at")
+
+  user            User                     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  deposit         Deposit                  @relation(fields: [depositId], references: [id], onDelete: Restrict)
+  plan            InvestmentPlan?          @relation(fields: [planId], references: [id], onDelete: SetNull)
+  interestRecords InterestRecord[]
+
+  @@index([userId, status])
+  @@index([maturityDate])
+  @@map("investments")
+}
+
+model InterestRecord {
+  id                String                   @id @default(uuid()) @db.Char(36)
+  interestUid       String                   @unique @map("interest_uid") @db.VarChar(40)
+  investmentId      String                   @map("investment_id") @db.Char(36)
+  userId            String                   @map("user_id") @db.Char(36)
+  periodKey         String                   @map("period_key") @db.VarChar(64)
+  calculationModel  InterestCalculationModel @map("calculation_model")
+  rateApplied       Decimal                  @map("rate_applied") @db.Decimal(12, 4)
+  principalSnapshot Decimal                  @map("principal_snapshot") @db.Decimal(24, 8)
+  amount            Decimal                  @db.Decimal(24, 8)
+  ledgerEntryId     String?                  @unique @map("ledger_entry_id") @db.Char(36)
+  status            String                   @default("CREDITED") @db.VarChar(24)
+  description       String?                  @db.VarChar(300)
+  createdById       String?                  @map("created_by_id") @db.Char(36)
+  creditedAt        DateTime                 @default(now()) @map("credited_at")
+  createdAt         DateTime                 @default(now()) @map("created_at")
+
+  investment        Investment               @relation(fields: [investmentId], references: [id], onDelete: Restrict)
+  user              User                     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  ledgerEntry       LedgerEntry?             @relation(fields: [ledgerEntryId], references: [id], onDelete: Restrict)
+
+  @@unique([investmentId, periodKey])
+  @@index([userId, creditedAt])
+  @@map("interest_records")
+}
+
+model Withdrawal {
+  id                 String                 @id @default(uuid()) @db.Char(36)
+  withdrawalUid      String                 @unique @map("withdrawal_uid") @db.VarChar(40)
+  userId             String                 @map("user_id") @db.Char(36)
+  amount             Decimal                @db.Decimal(24, 8)
+  feeAmount          Decimal                @default(0) @map("fee_amount") @db.Decimal(24, 8)
+  netAmount          Decimal                @map("net_amount") @db.Decimal(24, 8)
+  asset              String                 @default("USDT") @db.VarChar(16)
+  network            String                 @default("BNB_SMART_CHAIN") @db.VarChar(32)
+  destinationAddress String                 @map("destination_address") @db.VarChar(64)
+  transactionHash    String?                @unique @map("transaction_hash") @db.VarChar(80)
+  adminId            String?                @map("admin_id") @db.Char(36)
+  status             WithdrawalStatus       @default(PENDING_REVIEW)
+  rejectionReason    String?                @map("rejection_reason") @db.VarChar(500)
+  reviewedAt         DateTime?              @map("reviewed_at")
+  completedAt        DateTime?              @map("completed_at")
+  createdAt          DateTime               @default(now()) @map("created_at")
+  updatedAt          DateTime               @updatedAt @map("updated_at")
+
+  user               User                   @relation("UserWithdrawals", fields: [userId], references: [id], onDelete: Restrict)
+  admin              User?                  @relation("AdminWithdrawals", fields: [adminId], references: [id], onDelete: SetNull)
+  blockchainTx       BlockchainTransaction?
+
+  @@index([userId, status])
+  @@index([status, createdAt])
+  @@map("withdrawals")
+}
+
+model Notification {
+  id        String              @id @default(uuid()) @db.Char(36)
+  userId    String              @map("user_id") @db.Char(36)
+  eventType String              @map("event_type") @db.VarChar(64)
+  channel   NotificationChannel @default(IN_APP)
+  title     String              @db.VarChar(160)
+  message   String              @db.VarChar(1000)
+  metadata  Json?
+  isRead    Boolean             @default(false) @map("is_read")
+  readAt    DateTime?           @map("read_at")
+  createdAt DateTime            @default(now()) @map("created_at")
+
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead, createdAt])
+  @@map("notifications")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid()) @db.Char(36)
+  adminId    String?  @map("admin_id") @db.Char(36)
+  actorRole  String?  @map("actor_role") @db.VarChar(32)
+  action     String   @db.VarChar(64)
+  targetType String   @map("target_type") @db.VarChar(64)
+  targetId   String   @map("target_id") @db.VarChar(64)
+  oldValue   Json?    @map("old_value")
+  newValue   Json?    @map("new_value")
+  ipAddress  String?  @map("ip_address") @db.VarChar(64)
+  userAgent  String?  @map("user_agent") @db.VarChar(512)
+  requestId  String?  @map("request_id") @db.VarChar(64)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  admin      User?    @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([adminId, createdAt])
+  @@index([action, createdAt])
+  @@index([targetType, targetId])
+  @@map("audit_logs")
+}
+
+model SystemSetting {
+  id          String   @id @default(uuid()) @db.Char(36)
+  key         String   @unique @db.VarChar(100)
+  value       String   @db.Text
+  category    String   @default("GENERAL") @db.VarChar(48)
+  isPublic    Boolean  @default(false) @map("is_public")
+  description String?  @db.VarChar(500)
+  updatedById String?  @map("updated_by_id") @db.Char(36)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@map("system_settings")
+}
+
+model UidSequence {
+  prefix    String   @id @db.VarChar(32)
+  lastValue Int      @default(0) @map("last_value")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("uid_sequences")
+}
+
+model IdempotencyRecord {
+  key          String   @id @db.VarChar(160)
+  userId       String?  @map("user_id") @db.Char(36)
+  route        String   @db.VarChar(191)
+  statusCode   Int      @map("status_code")
+  responseBody Json     @map("response_body")
+  expiresAt    DateTime @map("expires_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([expiresAt])
+  @@map("idempotency_records")
+}
+

@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+[data-theme='dark'] {
+  --nv-bg: #050811;
+  --nv-bg-elevated: #0b1120;
+  --nv-surface: rgba(15, 23, 42, 0.88);
+  --nv-surface-hover: rgba(24, 35, 60, 0.94);
+  --nv-border: rgba(148, 163, 184, 0.16);
+  --nv-border-gold: rgba(245, 184, 46, 0.42);
+  --nv-text: #f8fafc;
+  --nv-text-muted: #94a3b8;
+  --nv-gold: #f5b82e;
+  --nv-gold-soft: rgba(245, 184, 46, 0.14);
+  --nv-input-bg: rgba(8, 12, 22, 0.92);
+}
+
+[data-theme='light'] {
+  --nv-bg: #f1f5f9;
+  --nv-bg-elevated: #ffffff;
+  --nv-surface: #ffffff;
+  --nv-surface-hover: #f8fafc;
+  --nv-border: rgba(15, 23, 42, 0.12);
+  --nv-border-gold: rgba(200, 141, 20, 0.45);
+  --nv-text: #0f172a;
+  --nv-text-muted: #475569;
+  --nv-gold: #c88d14;
+  --nv-gold-soft: rgba(245, 184, 46, 0.16);
+  --nv-input-bg: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--nv-bg);
+  color: var(--nv-text);
+  min-height: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+

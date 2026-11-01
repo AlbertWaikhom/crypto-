@@ -1,0 +1,123 @@
+.page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(245, 184, 46, 0.14), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(56, 189, 248, 0.08), transparent 45%),
+    var(--nv-bg);
+}
+
+.navbar {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 1.35rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hero {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 4.5rem;
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.95rem;
+  border-radius: 9999px;
+  border: 1px solid var(--nv-border-gold);
+  background: var(--nv-gold-soft);
+  color: var(--nv-gold);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.headline {
+  margin-top: 1.25rem;
+  font-size: clamp(2.25rem, 4.4vw, 3.65rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.goldGradient {
+  background: linear-gradient(92deg, #ffd666 0%, #f5b82e 50%, #d49014 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subcopy {
+  margin-top: 1.25rem;
+  font-size: 1.08rem;
+  line-height: 1.7;
+  color: var(--nv-text-muted);
+  max-width: 600px;
+}
+
+.heroCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 2rem;
+  border-radius: 1.75rem;
+  background: var(--nv-surface);
+  border: 1px solid var(--nv-border-gold);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+}
+
+.featuresSection {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 5rem;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.featureCard {
+  border-radius: 1.25rem;
+  padding: 1.75rem;
+  background: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.featureCard:hover {
+  border-color: var(--nv-border-gold);
+  transform: translateY(-2px);
+}
+
+.footer {
+  border-top: 1px solid var(--nv-border);
+  padding: 2.5rem 1.5rem;
+  max-width: 1240px;
+  margin: 0 auto;
+  color: var(--nv-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 960px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 2rem;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

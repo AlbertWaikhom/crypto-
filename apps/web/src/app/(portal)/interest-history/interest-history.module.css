@@ -1,0 +1,8 @@
+.panel {
+  border-radius: 1.35rem;
+  padding: 1.6rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  overflow-x: auto;
+}
+

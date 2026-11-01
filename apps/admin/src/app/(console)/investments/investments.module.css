@@ -1,0 +1,37 @@
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.35rem;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.35rem;
+}
+
+@media (min-width: 768px) {
+  .summaryGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.metricCard {
+  border-radius: 1.2rem;
+  padding: 1.25rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+}
+
+.panel {
+  border-radius: 1.35rem;
+  padding: 1.5rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  overflow-x: auto;
+}
+

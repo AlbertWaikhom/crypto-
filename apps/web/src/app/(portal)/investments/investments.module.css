@@ -1,0 +1,28 @@
+.plansGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.planCard {
+  border-radius: 1.35rem;
+  padding: 1.5rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border-gold);
+}
+
+.listPanel {
+  border-radius: 1.35rem;
+  padding: 1.5rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  overflow-x: auto;
+}
+
+@media (max-width: 820px) {
+  .plansGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -1,0 +1,113 @@
+services:
+  # Database Layer — Strictly MySQL 8.0 Only (InnoDB ACID Transactions & Row Locks)
+  mysql:
+    image: mysql:8.0
+    container_name: navrix-mysql
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-navrix_root_change_me}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-navrix_db}
+      MYSQL_USER: ${MYSQL_USER:-navrix_app}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-navrix_app_change_me}
+    ports:
+      - '3306:3306'
+    volumes:
+      - navrix_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # NestJS REST API, Viem BEP-20 Verifier & Immutable Double-Entry Ledger
+  api:
+    build:
+      context: .
+      dockerfile: infra/docker/api.Dockerfile
+    container_name: navrix-api
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      API_PORT: 4000
+      DATABASE_URL: mysql://${MYSQL_USER:-navrix_app}:${MYSQL_PASSWORD:-navrix_app_change_me}@mysql:3306/${MYSQL_DATABASE:-navrix_db}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-change_this_access_secret_in_production_64_chars}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change_this_refresh_secret_in_production_64_chars}
+      JWT_ACCESS_EXPIRES_IN: ${JWT_ACCESS_EXPIRES_IN:-15m}
+      JWT_REFRESH_EXPIRES_DAYS: ${JWT_REFRESH_EXPIRES_DAYS:-7}
+      WEB_URL: ${WEB_URL:-http://localhost:8080}
+      ADMIN_URL: ${ADMIN_URL:-http://localhost:8081}
+      BLOCKCHAIN_MODE: ${BLOCKCHAIN_MODE:-MOCK}
+      MAINNET_ENABLED: ${MAINNET_ENABLED:-false}
+      BSC_RPC_URL: ${BSC_RPC_URL:-https://bsc-dataseed.binance.org/}
+      BSC_TESTNET_RPC_URL: ${BSC_TESTNET_RPC_URL:-https://data-seed-prebsc-1-s1.binance.org:8545/}
+      USDT_CONTRACT_ADDRESS: ${USDT_CONTRACT_ADDRESS:-0x55d398326f99059fF775485246999027B3197955}
+      USDT_TESTNET_CONTRACT_ADDRESS: ${USDT_TESTNET_CONTRACT_ADDRESS:-0x337610d27c682E347C9cD60BD4b3b107C9d34dDd}
+      RECEIVING_WALLET_ADDRESS: ${RECEIVING_WALLET_ADDRESS:-0x98386622d3937c0A3582E07aEc06041C3fb7b521}
+      REQUIRED_CONFIRMATIONS: ${REQUIRED_CONFIRMATIONS:-12}
+      GOOGLE_OAUTH_MODE: ${GOOGLE_OAUTH_MODE:-MOCK}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      UPLOAD_STORAGE_DIR: /app/private-storage
+    ports:
+      - '4000:4000'
+    volumes:
+      - navrix_private_uploads:/app/private-storage
+
+  # Customer Web Application (Next.js App Router)
+  web:
+    build:
+      context: .
+      dockerfile: infra/docker/web.Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080/api/v1}
+    container_name: navrix-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080/api/v1}
+    ports:
+      - '3000:3000'
+
+  # Admin & Master Admin Operations Console (Next.js App Router)
+  admin:
+    build:
+      context: .
+      dockerfile: infra/docker/admin.Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_ADMIN_API_URL:-http://localhost:8081/api/v1}
+    container_name: navrix-admin
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_ADMIN_API_URL:-http://localhost:8081/api/v1}
+    ports:
+      - '3001:3001'
+
+  # Nginx Reverse Proxy Gateway
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: navrix-nginx
+    restart: unless-stopped
+    depends_on:
+      - web
+      - admin
+      - api
+    ports:
+      - '8080:80'
+      - '8081:8081'
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+
+volumes:
+  navrix_mysql_data:
+  navrix_private_uploads:
+

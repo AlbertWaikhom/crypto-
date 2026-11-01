@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.next/
+.turbo/
+out/
+coverage/
+
+# Environment & Database Connection / Credential Files (NEVER commit to Git)
+.env
+.env.*
+**/.env
+**/.env.*
+backend/.env
+backend/.env.*
+packages/database/.env
+packages/database/.env.*
+ACCESS_AND_CREDENTIALS.md
+backend/src/common/prisma.service.ts
+backend/src/load-env.ts
+packages/database/scripts/setup-db.ts
+
+# Private uploads (stored outside public directory)
+storage/
+backend/storage/
+
+# Logs & OS artifacts
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Playwright / Test reports
+playwright-report/
+test-results/

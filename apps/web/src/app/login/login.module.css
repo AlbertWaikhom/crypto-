@@ -1,0 +1,91 @@
+.authWrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(245, 184, 46, 0.14), transparent 52%),
+    var(--nv-bg);
+}
+
+.authCard {
+  width: 100%;
+  max-width: 448px;
+  border-radius: 1.5rem;
+  padding: 2.25rem 2rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border-gold);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.05rem;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--nv-text-muted);
+}
+
+.input {
+  width: 100%;
+  border-radius: 0.8rem;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-input-bg);
+  color: var(--nv-text);
+  padding: 0.72rem 0.95rem;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.input:focus {
+  border-color: var(--nv-gold);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.35rem 0;
+  color: var(--nv-text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--nv-border);
+}
+
+.googleBtn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  border-radius: 0.85rem;
+  padding: 0.72rem 1rem;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-bg-elevated);
+  color: var(--nv-text);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.googleBtn:hover {
+  border-color: var(--nv-border-gold);
+  background-color: var(--nv-surface-hover);
+}
+

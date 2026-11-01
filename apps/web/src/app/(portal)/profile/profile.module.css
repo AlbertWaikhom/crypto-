@@ -1,0 +1,34 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.card {
+  border-radius: 1.35rem;
+  padding: 1.65rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+}
+
+.input {
+  width: 100%;
+  border-radius: 0.85rem;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-input-bg);
+  color: var(--nv-text);
+  padding: 0.72rem 0.95rem;
+  font-size: 0.88rem;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--nv-gold);
+}
+
+@media (max-width: 920px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+

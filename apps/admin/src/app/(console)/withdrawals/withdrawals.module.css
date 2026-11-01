@@ -1,0 +1,56 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.35rem;
+}
+
+.select {
+  border-radius: 0.75rem;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-input-bg);
+  color: var(--nv-text);
+  padding: 0.55rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.panel {
+  border-radius: 1.35rem;
+  padding: 1.5rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  overflow-x: auto;
+}
+
+.modalCard {
+  border-radius: 1.25rem;
+  padding: 1.35rem;
+  margin-bottom: 1.25rem;
+  background-color: var(--nv-bg-elevated);
+  border: 1px solid var(--nv-border-gold);
+}
+
+.input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-input-bg);
+  color: var(--nv-text);
+  padding: 0.65rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--nv-gold);
+}
+
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+

@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+[data-theme='dark'] {
+  --nv-bg: #070b14;
+  --nv-bg-elevated: #0d1424;
+  --nv-surface: rgba(15, 23, 42, 0.84);
+  --nv-surface-hover: rgba(24, 35, 60, 0.92);
+  --nv-border: rgba(148, 163, 184, 0.16);
+  --nv-border-gold: rgba(245, 184, 46, 0.36);
+  --nv-text: #f8fafc;
+  --nv-text-muted: #94a3b8;
+  --nv-gold: #f5b82e;
+  --nv-gold-soft: rgba(245, 184, 46, 0.14);
+  --nv-success: #10b981;
+  --nv-danger: #f43f5e;
+  --nv-input-bg: rgba(9, 14, 26, 0.9);
+}
+
+[data-theme='light'] {
+  --nv-bg: #f4f6fb;
+  --nv-bg-elevated: #ffffff;
+  --nv-surface: rgba(255, 255, 255, 0.96);
+  --nv-surface-hover: #f8fafc;
+  --nv-border: rgba(15, 23, 42, 0.12);
+  --nv-border-gold: rgba(200, 141, 20, 0.45);
+  --nv-text: #0f172a;
+  --nv-text-muted: #475569;
+  --nv-gold: #c88d14;
+  --nv-gold-soft: rgba(245, 184, 46, 0.16);
+  --nv-success: #059669;
+  --nv-danger: #e11d48;
+  --nv-input-bg: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--nv-bg);
+  color: var(--nv-text);
+  min-height: 100%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+

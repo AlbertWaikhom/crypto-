@@ -1,0 +1,27 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.35rem;
+}
+
+.panel {
+  border-radius: 1.35rem;
+  padding: 1.5rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  overflow-x: auto;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--nv-border);
+}
+

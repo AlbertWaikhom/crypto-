@@ -1,0 +1,94 @@
+.headerRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.15rem;
+  margin-bottom: 1.75rem;
+}
+
+.kpiCard {
+  border-radius: 1.25rem;
+  padding: 1.35rem 1.4rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  transition: border-color 0.15s ease;
+}
+
+.kpiCardHighlight {
+  border-color: var(--nv-border-gold);
+  box-shadow: 0 12px 30px rgba(245, 184, 46, 0.08);
+}
+
+.kpiLabel {
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nv-text-muted);
+}
+
+.kpiValue {
+  margin-top: 0.5rem;
+  font-size: 1.65rem;
+  font-weight: 800;
+  font-family: var(--font-mono), monospace;
+}
+
+.chartPanel {
+  border-radius: 1.35rem;
+  padding: 1.5rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  margin-bottom: 1.75rem;
+}
+
+.historyGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.historyCard {
+  border-radius: 1.35rem;
+  padding: 1.35rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+}
+
+.rowItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--nv-border);
+}
+
+.rowItem:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 1024px) {
+  .kpiGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .historyGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .kpiGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

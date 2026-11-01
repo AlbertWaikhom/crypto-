@@ -1,0 +1,23 @@
+.panel {
+  border-radius: 1.35rem;
+  padding: 1.5rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid var(--nv-border);
+  margin-bottom: 0.75rem;
+}
+
+.itemUnread {
+  border-color: var(--nv-border-gold);
+  background: var(--nv-gold-soft);
+}
+

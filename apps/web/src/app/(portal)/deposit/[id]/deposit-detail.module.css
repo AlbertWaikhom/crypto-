@@ -1,0 +1,66 @@
+.grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.card {
+  border-radius: 1.35rem;
+  padding: 1.65rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+}
+
+.qrFrame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.25rem;
+  border-radius: 1.15rem;
+  background: #ffffff;
+  color: #090d16;
+  width: fit-content;
+  margin: 1rem auto;
+}
+
+.addressPill {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  word-break: break-all;
+  padding: 0.75rem 1rem;
+  border-radius: 0.85rem;
+  background-color: var(--nv-input-bg);
+  border: 1px solid var(--nv-border);
+  text-align: center;
+}
+
+.input {
+  width: 100%;
+  border-radius: 0.85rem;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-input-bg);
+  color: var(--nv-text);
+  padding: 0.78rem 1rem;
+  font-size: 0.88rem;
+  font-family: var(--font-mono), monospace;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--nv-gold);
+}
+
+.slaNotice {
+  border-radius: 1rem;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid rgba(245, 184, 46, 0.45);
+  background: rgba(245, 184, 46, 0.1);
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+

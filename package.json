@@ -1,0 +1,46 @@
+{
+  "name": "navrix-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NAVRIX — Institutional Crypto Deposit, Immutable Ledger & Yield Investment Platform",
+  "packageManager": "pnpm@12.16.1",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "dev:backend": "pnpm --filter @navrix/backend dev",
+    "dev:web": "pnpm --filter @navrix/web dev",
+    "dev:admin": "pnpm --filter @navrix/admin dev",
+    "dev:frontend": "turbo run dev --filter=@navrix/web --filter=@navrix/admin --parallel",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:e2e": "playwright test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "db:generate": "pnpm --filter @navrix/database db:generate",
+    "db:migrate": "pnpm --filter @navrix/database db:migrate",
+    "db:deploy": "pnpm --filter @navrix/database db:deploy",
+    "db:push": "pnpm --filter @navrix/database db:push",
+    "db:seed": "pnpm --filter @navrix/database db:seed",
+    "db:setup": "pnpm --filter @navrix/database db:setup",
+    "prepare": "husky || true"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.2",
+    "eslint": "^9.17.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,css,md}": [
+      "prettier --write"
+    ]
+  }
+}
