@@ -1,0 +1,280 @@
+.pageRoot {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(245, 184, 46, 0.12), transparent 45%),
+    radial-gradient(circle at 90% 15%, rgba(16, 185, 129, 0.08), transparent 45%),
+    var(--nv-bg);
+}
+
+.mainContent {
+  flex: 1;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 2.8rem 1.25rem 4rem;
+}
+
+.heroHeader {
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto 3rem;
+}
+
+.badgePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(245, 184, 46, 0.3);
+  background-color: rgba(245, 184, 46, 0.08);
+  padding: 0.22rem 0.72rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+
+.pageTitle {
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.pageSubtitle {
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--nv-text-muted);
+}
+
+/* S-E-R-P-O Framework */
+.serpoSection {
+  margin: 3rem 0;
+}
+
+.sectionHeading {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.sectionLead {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--nv-text-muted);
+  margin-bottom: 1.75rem;
+  max-width: 740px;
+}
+
+.serpoGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.serpoCard {
+  padding: 1.35rem 1.15rem;
+  border-radius: 1rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.serpoCard:hover {
+  border-color: var(--nv-border-gold);
+  transform: translateY(-2px);
+}
+
+.serpoLetter {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--nv-gold);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.serpoTitle {
+  font-size: 0.88rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+}
+
+.serpoDesc {
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: var(--nv-text-muted);
+}
+
+/* Vision & Mission Split */
+.splitSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.75rem;
+  margin: 3.5rem 0;
+}
+
+.visionCard {
+  border-radius: 1.25rem;
+  padding: 2.25rem 2rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border-gold);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.visionQuote {
+  margin-top: 1.5rem;
+  padding: 1.1rem 1.25rem;
+  border-radius: 0.85rem;
+  background-color: rgba(245, 184, 46, 0.08);
+  border-left: 3px solid var(--nv-gold);
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--nv-gold);
+  line-height: 1.5;
+}
+
+.missionList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 1.2rem;
+}
+
+.missionItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.9rem 1rem;
+  border-radius: 0.8rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+}
+
+.missionNum {
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: var(--nv-gold);
+  font-family: var(--nv-font-sf);
+}
+
+.missionText {
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+/* How We Operate Split */
+.operateSection {
+  margin: 3.5rem 0;
+}
+
+.operateGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.operateCard {
+  padding: 1.75rem 1.5rem;
+  border-radius: 1.15rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+}
+
+.operateCardTitle {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.operateList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.operateItem {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: var(--nv-text);
+}
+
+/* Philosophy Section */
+.philosophySection {
+  margin: 3.5rem 0;
+  padding: 2.5rem 2rem;
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(245, 184, 46, 0.12), transparent 70%),
+    var(--nv-surface);
+  border: 1px solid var(--nv-border-gold);
+}
+
+.philosophyGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.philosophyCard {
+  padding: 1.25rem;
+  border-radius: 0.95rem;
+  background-color: var(--nv-bg-elevated);
+  border: 1px solid var(--nv-border);
+}
+
+.philosophyNum {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--nv-gold);
+  margin-bottom: 0.4rem;
+}
+
+.philosophyText {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .serpoGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .splitSection {
+    grid-template-columns: 1fr;
+  }
+  .operateGrid {
+    grid-template-columns: 1fr;
+  }
+  .philosophyGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .serpoGrid {
+    grid-template-columns: 1fr;
+  }
+  .philosophyGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

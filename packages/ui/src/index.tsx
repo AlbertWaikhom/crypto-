@@ -1,4 +1,8 @@
+'use client';
+
 import * as React from 'react';
+
+export * from './reactbits';
 
 export function cn(...classes: Array<string | false | null | undefined>): string {
   return classes.filter(Boolean).join(' ');
@@ -39,7 +43,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const base =
-      'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 disabled:opacity-50 disabled:cursor-not-allowed';
+      'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 disabled:opacity-50 disabled:cursor-not-allowed';
     const variants: Record<NonNullable<ButtonProps['variant']>, string> = {
       gold: 'bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20 hover:brightness-110',
       secondary:
@@ -51,9 +55,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ghost: 'bg-transparent text-slate-300 hover:bg-slate-800/60 hover:text-white',
     };
     const sizes: Record<NonNullable<ButtonProps['size']>, string> = {
-      sm: 'px-3 py-1.5 text-xs',
-      md: 'px-4 py-2.5 text-sm',
-      lg: 'px-6 py-3 text-base',
+      sm: 'px-3.5 py-2 text-xs min-h-[36px]',
+      md: 'px-4 py-2.5 text-sm min-h-[42px]',
+      lg: 'px-6 py-3 text-base min-h-[48px]',
     };
 
     return (
@@ -137,7 +141,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium tracking-wide',
+        'inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold tracking-tight whitespace-nowrap',
         palette,
         className,
       )}
@@ -151,17 +155,42 @@ export interface EmptyStateProps {
   title: string;
   description: string;
   action?: React.ReactNode;
+  compact?: boolean;
 }
 
-export function EmptyState({ title, description, action }: EmptyStateProps) {
+export function EmptyState({
+  title,
+  description,
+  action,
+  compact = false,
+}: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-700/70 px-6 py-12 text-center">
-      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10 text-amber-400 font-bold">
+    <div
+      className={cn(
+        'flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-700/70 text-center',
+        compact ? 'px-4 py-5' : 'px-5 py-9',
+      )}
+    >
+      <div
+        className={cn(
+          'flex items-center justify-center rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-400 font-bold shadow-inner',
+          compact ? 'mb-2 h-8 w-8 text-xs' : 'mb-3 h-11 w-11',
+        )}
+      >
         N
       </div>
-      <h3 className="text-base font-semibold">{title}</h3>
-      <p className="mt-1 max-w-md text-sm opacity-75">{description}</p>
-      {action ? <div className="mt-5">{action}</div> : null}
+      <h3 className={cn('font-bold', compact ? 'text-xs sm:text-sm' : 'text-sm sm:text-base')}>
+        {title}
+      </h3>
+      <p
+        className={cn(
+          'mt-1 max-w-sm opacity-70 leading-relaxed',
+          compact ? 'text-[11px] sm:text-xs' : 'text-xs sm:text-sm',
+        )}
+      >
+        {description}
+      </p>
+      {action ? <div className={compact ? 'mt-2.5' : 'mt-4'}>{action}</div> : null}
     </div>
   );
 }
@@ -197,4 +226,3 @@ export function CopyButton({ value, label = 'Copy', className }: CopyButtonProps
     </Button>
   );
 }
-

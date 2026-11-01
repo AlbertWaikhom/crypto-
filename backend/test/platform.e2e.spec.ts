@@ -13,7 +13,6 @@ import { BLOCKCHAIN_DEFAULTS } from '@navrix/config';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/common/prisma.service';
 
-// Authentic minimal 1x1 transparent PNG buffer (PNG magic bytes: 89 50 4E 47 0D 0A 1A 0A)
 const VALID_1X1_PNG = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
   'base64',
@@ -78,7 +77,7 @@ describe('NAVRIX Live MySQL End-to-End API & Financial Transaction Suite', () =>
           where: { key: 'DEPOSITS_ENABLED' },
           data: { value: 'true' },
         })
-        .catch(() => {});
+        .catch(() => { });
 
       // Clean up isolated E2E test-run records from live MySQL while preserving real/seeded accounts
       const testUsers = await prisma.user.findMany({

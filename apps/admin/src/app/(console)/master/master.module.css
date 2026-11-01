@@ -1,40 +1,451 @@
-.heroBanner {
-  border-radius: 1.5rem;
-  padding: 1.75rem;
-  border: 1px solid var(--nv-border-gold);
-  background:
-    radial-gradient(circle at 90% 10%, rgba(245, 184, 46, 0.18), transparent 45%),
-    var(--nv-surface);
-  margin-bottom: 1.5rem;
+.masterGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
 }
 
-.twoCol {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.4rem;
-  margin-bottom: 1.5rem;
+.loadingWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  padding: 4rem 1rem;
 }
 
-.panel {
-  border-radius: 1.35rem;
-  padding: 1.5rem;
-  background-color: var(--nv-surface);
+.heroStrip {
+  padding: 0.75rem 1.05rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.heroLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  min-width: 0;
+}
+
+.badgeLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.42rem;
+}
+
+.crownTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(245, 184, 46, 0.38);
+  background-color: rgba(245, 184, 46, 0.1);
+  padding: 0.14rem 0.58rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+}
+
+.solvencyOk,
+.solvencyErr {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  border-radius: 9999px;
+  padding: 0.14rem 0.58rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.solvencyOk {
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  background-color: rgba(16, 185, 129, 0.14);
+  color: #34d399;
+}
+
+[data-theme='light'] .solvencyOk {
+  color: #047857;
+}
+
+.solvencyErr {
+  border: 1px solid rgba(244, 63, 94, 0.45);
+  background-color: rgba(244, 63, 94, 0.16);
+  color: #fb7185;
+}
+
+.equityLine {
+  display: flex;
+  align-items: baseline;
+}
+
+.equityNum {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-size: clamp(1.38rem, 2.4vw, 1.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+
+.equityUnit {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--nv-text-muted);
+}
+
+.govBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.42rem;
+}
+
+.govPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 34px;
+  padding: 0.38rem 0.72rem;
+  border-radius: 0.72rem;
   border: 1px solid var(--nv-border);
+  background-color: var(--nv-surface);
+  color: var(--nv-text);
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.14s ease;
 }
 
-.breakerRow {
+.govPill:hover {
+  border-color: var(--nv-border-gold);
+  transform: translateY(-1px);
+}
+
+/* Row 2: 4-Column Compact Telemetry Ribbon */
+.summaryRibbon {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.summaryTile {
+  padding: 0.6rem 0.8rem !important;
+  border-radius: 0.88rem !important;
+}
+
+.tileHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.9rem 1rem;
-  border-radius: 0.95rem;
-  border: 1px solid var(--nv-border);
-  margin-bottom: 0.75rem;
+  gap: 0.35rem;
 }
 
-@media (max-width: 980px) {
-  .twoCol {
-    grid-template-columns: 1fr;
+.tileLabel {
+  font-size: 0.69rem;
+  font-weight: 600;
+  color: var(--nv-text-muted);
+}
+
+.tileVal {
+  margin-top: 0.24rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.24rem;
+  font-size: clamp(1rem, 1.5vw, 1.22rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.tileUnit {
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: var(--nv-text-muted);
+}
+
+/* Row 3: 3-Column Sovereign Bento Grid */
+.mainBento {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr) minmax(0, 0.96fr);
+  gap: 0.65rem;
+  align-items: stretch;
+}
+
+.bentoCard {
+  padding: 0.85rem 0.95rem !important;
+  border-radius: 1rem !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.45rem;
+  margin-bottom: 0.55rem;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.cardSub {
+  margin: 0.08rem 0 0;
+  font-size: 0.67rem;
+  color: var(--nv-text-muted);
+}
+
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--nv-gold);
+  white-space: nowrap;
+}
+
+.textLink:hover {
+  text-decoration: underline;
+}
+
+.modeTag {
+  border-radius: 9999px;
+  border: 1px solid rgba(245, 184, 46, 0.34);
+  background-color: rgba(245, 184, 46, 0.12);
+  padding: 0.12rem 0.5rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: var(--nv-gold);
+}
+
+/* Col 1: Solvency KV List */
+.kvList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.73rem;
+}
+
+.kvItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.22rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+.kvKey {
+  color: var(--nv-text-muted);
+}
+
+.kvVal {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.kvHighlight {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.38rem 0.58rem;
+  border-radius: 0.58rem;
+  background-color: rgba(245, 184, 46, 0.1);
+  border: 1px solid rgba(245, 184, 46, 0.28);
+  font-weight: 800;
+  color: var(--nv-gold);
+}
+
+.discrepancyBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.15rem;
+  padding: 0.42rem 0.58rem;
+  border-radius: 0.58rem;
+  background-color: rgba(16, 185, 129, 0.09);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  font-weight: 700;
+}
+
+/* Col 2: Vault & Breakers */
+.vaultCompactStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.addrRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.4rem 0.58rem;
+  border-radius: 0.68rem;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-input-bg);
+}
+
+.addrLabel {
+  font-size: 0.62rem;
+  color: var(--nv-text-muted);
+}
+
+.addrHex {
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.breakerList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.38rem;
+  margin-top: 0.15rem;
+}
+
+.breakerItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.42rem 0.58rem;
+  border-radius: 0.68rem;
+  border: 1px solid var(--nv-border);
+  background-color: rgba(148, 163, 184, 0.04);
+}
+
+.breakerTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.38rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.chipLive,
+.chipPaused,
+.chipStandby {
+  border-radius: 9999px;
+  padding: 0.06rem 0.38rem;
+  font-size: 0.58rem;
+  font-weight: 800;
+}
+
+.chipLive {
+  background-color: rgba(16, 185, 129, 0.16);
+  color: #34d399;
+}
+
+[data-theme='light'] .chipLive {
+  color: #047857;
+}
+
+.chipPaused {
+  background-color: rgba(244, 63, 94, 0.16);
+  color: #fb7185;
+}
+
+.chipStandby {
+  background-color: rgba(148, 163, 184, 0.16);
+  color: var(--nv-text-muted);
+}
+
+.compactBreakerBtn {
+  min-height: 29px !important;
+  padding: 0.22rem 0.58rem !important;
+  font-size: 0.69rem !important;
+}
+
+/* Col 3: Executive Audit Stream */
+.roleRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.32rem;
+  margin-bottom: 0.45rem;
+}
+
+.rolePill {
+  border-radius: 0.48rem;
+  border: 1px solid var(--nv-border);
+  background-color: rgba(148, 163, 184, 0.08);
+  padding: 0.14rem 0.45rem;
+  font-size: 0.64rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.auditScroll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 222px;
+  overflow-y: auto;
+  padding-right: 0.1rem;
+}
+
+.auditRow {
+  padding: 0.48rem 0.6rem;
+  border-radius: 0.68rem;
+  border: 1px solid var(--nv-border);
+  background-color: rgba(148, 163, 184, 0.04);
+}
+
+.auditHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.auditAct {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--nv-gold);
+}
+
+.auditTs {
+  font-size: 0.64rem;
+  color: var(--nv-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.auditSub {
+  margin-top: 0.14rem;
+  font-size: 0.66rem;
+  color: var(--nv-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1200px) {
+  .mainBento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mainBento > :last-child {
+    grid-column: 1 / -1;
   }
 }
 
+@media (max-width: 820px) {
+  .summaryRibbon {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mainBento {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

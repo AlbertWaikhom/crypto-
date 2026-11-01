@@ -23,6 +23,7 @@
   color: var(--nv-text);
   padding: 0.45rem 0.7rem;
   font-size: 0.78rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--nv-font-sf);
+  font-variant-numeric: tabular-nums;
 }
 

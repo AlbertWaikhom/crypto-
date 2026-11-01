@@ -1,24 +1,34 @@
-import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
 import { BRAND_CONFIG } from '@navrix/config';
 import { AdminProviders } from '../components/AdminProviders';
 import './globals.css';
 
-const sans = Plus_Jakarta_Sans({
+const sfFallback = Inter({
   subsets: ['latin'],
-  variable: '--font-sans',
+  variable: '--font-sf-fallback',
   display: 'swap',
 });
 
-const mono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-  display: 'swap',
-});
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#050811' },
+    { media: '(prefers-color-scheme: light)', color: '#f1f5f9' },
+  ],
+};
 
 export const metadata: Metadata = {
   title: `${BRAND_CONFIG.name} Admin & Master Command Center`,
   description: 'Restricted Administrative & Master Admin Monitoring Console',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: `${BRAND_CONFIG.name} Admin`,
+  },
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -35,10 +45,9 @@ export default function AdminRootLayout({
 }) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
-      <body className={`${sans.variable} ${mono.variable} font-sans antialiased`}>
+      <body className={`${sfFallback.variable} font-sans antialiased`}>
         <AdminProviders>{children}</AdminProviders>
       </body>
     </html>
   );
 }
-

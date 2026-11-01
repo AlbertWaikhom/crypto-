@@ -28,7 +28,8 @@
   border-radius: 0.65rem;
   padding: 0.45rem 0.65rem;
   font-size: 0.72rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--nv-font-sf);
+  font-variant-numeric: tabular-nums;
   background-color: var(--nv-bg-elevated);
   border: 1px solid var(--nv-border);
   max-width: 340px;

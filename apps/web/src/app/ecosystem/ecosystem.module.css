@@ -1,0 +1,260 @@
+.pageRoot {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(245, 184, 46, 0.12), transparent 45%),
+    radial-gradient(circle at 90% 15%, rgba(16, 185, 129, 0.08), transparent 45%),
+    var(--nv-bg);
+}
+
+.mainContent {
+  flex: 1;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 2.8rem 1.25rem 4rem;
+}
+
+.heroHeader {
+  text-align: center;
+  max-width: 820px;
+  margin: 0 auto 2.8rem;
+}
+
+.badgePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(245, 184, 46, 0.3);
+  background-color: rgba(245, 184, 46, 0.08);
+  padding: 0.22rem 0.72rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+
+.pageTitle {
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.pageSubtitle {
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--nv-text-muted);
+}
+
+/* Category Filter Tabs */
+.filterTabsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.tabBtn {
+  border-radius: 9999px;
+  padding: 0.45rem 1rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-surface);
+  color: var(--nv-text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tabBtn:hover {
+  border-color: var(--nv-border-gold);
+  color: var(--nv-text);
+}
+
+.tabBtnActive {
+  background-color: var(--nv-gold);
+  color: #0d131f;
+  border-color: var(--nv-gold);
+  font-weight: 800;
+}
+
+/* Category Group */
+.categoryGroup {
+  margin-bottom: 3.5rem;
+}
+
+.categoryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--nv-border);
+  margin-bottom: 1.5rem;
+}
+
+.categoryTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.categoryTag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--nv-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Entity Cards Grid */
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 1.35rem;
+}
+
+.entityDetailCard {
+  border-radius: 1.25rem;
+  padding: 1.65rem 1.5rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.entityDetailCard:hover {
+  border-color: var(--nv-border-gold);
+  transform: translateY(-2px);
+}
+
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.entityName {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.entityTagline {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--nv-gold);
+  margin-bottom: 0.85rem;
+}
+
+.entityDescription {
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--nv-text-muted);
+  margin-bottom: 1.25rem;
+}
+
+/* Spec Boxes */
+.specBox {
+  margin-bottom: 0.85rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.75rem;
+  background-color: var(--nv-bg-elevated);
+  border: 1px solid var(--nv-border);
+}
+
+.specLabel {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nv-gold);
+  margin-bottom: 0.3rem;
+}
+
+.specValue {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--nv-text);
+}
+
+.chipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.specChip {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.4rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--nv-border);
+  color: var(--nv-text);
+}
+
+.cardFooter {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--nv-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badgePillSmall {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.2rem 0.55rem;
+  border-radius: 0.4rem;
+  background-color: rgba(245, 184, 46, 0.1);
+  color: var(--nv-gold);
+  border: 1px solid rgba(245, 184, 46, 0.25);
+}
+
+.visitBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--nv-gold);
+  transition: opacity 0.15s ease;
+}
+
+.visitBtn:hover {
+  opacity: 0.85;
+  text-decoration: underline;
+}
+
+/* CTA Card */
+.ctaBox {
+  margin: 3.5rem 0 1rem;
+  border-radius: 1.5rem;
+  padding: 3rem 2rem;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(245, 184, 46, 0.15), transparent 60%),
+    var(--nv-surface);
+  border: 1px solid var(--nv-border-gold);
+}
+
+@media (max-width: 768px) {
+  .cardsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

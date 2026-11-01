@@ -4,10 +4,17 @@
 
 :root,
 [data-theme='dark'] {
+  --nv-font-sf: 'SF Pro Display', 'SF Pro Text', 'SF Pro', -apple-system,
+    BlinkMacSystemFont, var(--font-sf-fallback, system-ui), 'Helvetica Neue',
+    Arial, sans-serif;
+  --font-sans: var(--nv-font-sf);
+  --font-mono: var(--nv-font-sf);
+
   --nv-bg: #070b14;
-  --nv-bg-elevated: #0d1424;
+  --nv-bg-elevated: #0c1322;
   --nv-surface: rgba(15, 23, 42, 0.84);
-  --nv-surface-hover: rgba(24, 35, 60, 0.92);
+  --nv-surface-hover: rgba(24, 36, 62, 0.92);
+  --nv-dock-bg: rgba(9, 14, 26, 0.88);
   --nv-border: rgba(148, 163, 184, 0.16);
   --nv-border-gold: rgba(245, 184, 46, 0.36);
   --nv-text: #f8fafc;
@@ -24,6 +31,7 @@
   --nv-bg-elevated: #ffffff;
   --nv-surface: rgba(255, 255, 255, 0.96);
   --nv-surface-hover: #f8fafc;
+  --nv-dock-bg: rgba(255, 255, 255, 0.9);
   --nv-border: rgba(15, 23, 42, 0.12);
   --nv-border-gold: rgba(200, 141, 20, 0.45);
   --nv-text: #0f172a;
@@ -35,8 +43,11 @@
   --nv-input-bg: #ffffff;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html,
@@ -46,7 +57,35 @@ body {
   background-color: var(--nv-bg);
   color: var(--nv-text);
   min-height: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: var(--nv-font-sf) !important;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+button,
+input,
+select,
+textarea,
+code,
+pre,
+kbd,
+samp,
+.font-sans,
+.font-mono,
+.recharts-text,
+.recharts-tooltip-wrapper {
+  font-family: var(--nv-font-sf) !important;
+}
+
+.font-mono,
+[data-tabular='true'] {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.012em;
 }
 
 a {
@@ -54,3 +93,101 @@ a {
   text-decoration: none;
 }
 
+.nv-no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.nv-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Sleek Thin Scrollbars Across All Scroll Containers */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.24) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.24);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 184, 46, 0.45);
+}
+
+/* ReactBits Keyframes */
+@keyframes nv-shine {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@keyframes nv-star-bottom {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-100%, 0%);
+    opacity: 0.15;
+  }
+}
+
+@keyframes nv-star-top {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(100%, 0%);
+    opacity: 0.15;
+  }
+}
+
+@keyframes nv-aurora-shift {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.06) translate3d(1.5%, -1.5%, 0);
+  }
+  100% {
+    transform: scale(1.02) translate3d(-1.5%, 1.5%, 0);
+  }
+}
+
+@keyframes nv-pulse-dot {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.45);
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

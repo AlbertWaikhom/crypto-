@@ -1,24 +1,34 @@
-import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
 import { BRAND_CONFIG } from '@navrix/config';
 import { Providers } from '../components/Providers';
 import './globals.css';
 
-const sans = Plus_Jakarta_Sans({
+const sfFallback = Inter({
   subsets: ['latin'],
-  variable: '--font-sans',
+  variable: '--font-sf-fallback',
   display: 'swap',
 });
 
-const mono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-  display: 'swap',
-});
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#070b14' },
+    { media: '(prefers-color-scheme: light)', color: '#f4f6fb' },
+  ],
+};
 
 export const metadata: Metadata = {
   title: `${BRAND_CONFIG.name} — ${BRAND_CONFIG.tagline}`,
   description: BRAND_CONFIG.subTagline,
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: BRAND_CONFIG.name,
+  },
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -36,10 +46,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
-      <body className={`${sans.variable} ${mono.variable} font-sans antialiased`}>
+      <body className={`${sfFallback.variable} font-sans antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>
   );
 }
-

@@ -1,60 +1,121 @@
-.authWrap {
-  min-height: 100vh;
+.pageShell {
+  min-height: 100dvh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1.25rem;
+  flex-direction: column;
   background:
-    radial-gradient(circle at 50% 0%, rgba(245, 184, 46, 0.14), transparent 52%),
+    radial-gradient(circle at 50% 0%, rgba(245, 184, 46, 0.13), transparent 50%),
     var(--nv-bg);
 }
 
-.authCard {
-  width: 100%;
-  max-width: 448px;
-  border-radius: 1.5rem;
-  padding: 2.25rem 2rem;
-  background-color: var(--nv-surface);
-  border: 1px solid var(--nv-border-gold);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+.authViewport {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.1rem 1rem;
 }
 
-.fieldGroup {
+.cardShell {
+  width: 100%;
+  max-width: 420px;
+}
+
+.authCard {
+  padding: 1.55rem 1.6rem;
+}
+
+.headerBlock {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  margin-bottom: 1.05rem;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1.1rem;
 }
 
-.label {
-  font-size: 0.8rem;
-  font-weight: 600;
+.logoBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 1rem;
+  border: 1px solid rgba(245, 184, 46, 0.3);
+  background: radial-gradient(
+    circle at 30% 20%,
+    rgba(245, 184, 46, 0.2),
+    transparent 70%
+  );
+}
+
+.unifiedPill {
+  margin-top: 0.65rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(245, 184, 46, 0.32);
+  background-color: rgba(245, 184, 46, 0.08);
+  padding: 0.18rem 0.62rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.title {
+  margin: 0.5rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 0.28rem 0 0;
+  font-size: 0.74rem;
+  line-height: 1.45;
   color: var(--nv-text-muted);
 }
 
-.input {
-  width: 100%;
-  border-radius: 0.8rem;
-  border: 1px solid var(--nv-border);
-  background-color: var(--nv-input-bg);
-  color: var(--nv-text);
-  padding: 0.72rem 0.95rem;
-  font-size: 0.9rem;
-  outline: none;
-  transition: border-color 0.15s ease;
+.errorAlert {
+  margin-bottom: 0.85rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  background-color: rgba(244, 63, 94, 0.1);
+  padding: 0.6rem 0.8rem;
+  font-size: 0.74rem;
+  color: #fda4af;
 }
 
-.input:focus {
-  border-color: var(--nv-gold);
+.googleBtn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border-radius: 0.78rem;
+  min-height: 40px;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-surface);
+  color: var(--nv-text);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.googleBtn:hover {
+  border-color: var(--nv-border-gold);
+  background-color: var(--nv-surface-hover);
 }
 
 .divider {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin: 1.35rem 0;
+  gap: 0.65rem;
+  margin: 0.95rem 0;
   color: var(--nv-text-muted);
-  font-size: 0.75rem;
+  font-size: 0.68rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -67,25 +128,38 @@
   background-color: var(--nv-border);
 }
 
-.googleBtn {
-  width: 100%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.65rem;
-  border-radius: 0.85rem;
-  padding: 0.72rem 1rem;
-  border: 1px solid var(--nv-border);
-  background-color: var(--nv-bg-elevated);
-  color: var(--nv-text);
-  font-size: 0.88rem;
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+  margin-bottom: 0.8rem;
+}
+
+.label {
+  font-size: 0.75rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  color: var(--nv-text-muted);
 }
 
-.googleBtn:hover {
-  border-color: var(--nv-border-gold);
-  background-color: var(--nv-surface-hover);
+.input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-input-bg);
+  color: var(--nv-text);
+  padding: 0.6rem 0.85rem;
+  font-size: 0.86rem;
+  outline: none;
+  transition: border-color 0.15s ease;
 }
 
+.input:focus {
+  border-color: var(--nv-gold);
+}
+
+.footerPrompt {
+  margin: 1rem 0 0;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--nv-text-muted);
+}

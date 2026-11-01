@@ -4,21 +4,21 @@ const WEB_URL = process.env.PLAYWRIGHT_WEB_URL || 'http://localhost:3000';
 const ADMIN_URL = process.env.PLAYWRIGHT_ADMIN_URL || 'http://localhost:3001';
 const RECEIVING_WALLET = '0x98386622d3937c0A3582E07aEc06041C3fb7b521';
 
-test.describe('NAVRIX Full-Stack E2E Browser Workflow (Customer + Admin + Master Admin)', () => {
+test.describe('NAVRIX Full-Stack E2E Browser Workflow (Unified Login + Customer + Admin + Master Admin)', () => {
   const uniqueEmail = `e2e.investor.${Date.now()}@navrix.local`;
   const uniqueTxHash = `0x${Date.now().toString(16).padStart(16, 'a')}${'b'.repeat(48)}`;
   let createdDepositUid = '';
 
-  test('1. Customer registers, views zero-state dashboard, creates BEP-20 USDT deposit with QR, and submits tx hash for 24h review', async ({
+  test('1. Customer registers, views zero-state single-screen dashboard, creates BEP-20 USDT deposit with QR, and submits tx hash for 24h review', async ({
     page,
   }) => {
     await page.goto(`${WEB_URL}/register`);
-    await expect(page.getByText('NAVRIX')).toBeVisible();
+    await expect(page.getByText('NAVRIX').first()).toBeVisible();
 
     await page.getByPlaceholder(/full name/i).fill('Playwright Investor');
     await page.getByPlaceholder(/email/i).fill(uniqueEmail);
     await page
-      .getByPlaceholder(/password/i)
+      .getByPlaceholder(/min 8 chars/i)
       .first()
       .fill('NavrixUser2026!');
     await page.locator('input[type="checkbox"]').first().check();
@@ -53,20 +53,16 @@ test.describe('NAVRIX Full-Stack E2E Browser Workflow (Customer + Admin + Master
     ).toBeVisible();
   });
 
-  test('2. Master Admin signs into Admin Console, verifies solvency reconciliation, and approves deposit on-chain', async ({
+  test('2. Master Admin signs into the ONE unified login page (:3000/login), auto-routes to Master Command Center (:3001/master), verifies solvency, and approves deposit', async ({
     page,
   }) => {
-    await page.goto(`${ADMIN_URL}/login`);
-    await page.getByPlaceholder(/email/i).fill('master@navrix.local');
-    await page.getByPlaceholder(/password/i).fill('NavrixMaster2026!');
-    await page.getByRole('button', { name: /sign in/i }).click();
+    await page.goto(`${WEB_URL}/login`);
+    await page.getByPlaceholder(/email|domain/i).fill('masteradmin@navrix.local');
+    await page.getByPlaceholder(/••••|password/i).fill('MasterAdmin@123');
+    await page.getByRole('button', { name: /^sign in$/i }).click();
 
-    await page.waitForURL('**/dashboard');
-    await expect(page.getByText('MASTER COMMAND')).toBeVisible();
-
-    // Check Master Admin Solvency Monitor
-    await page.goto(`${ADMIN_URL}/master`);
-    await expect(page.getByText(/RECONCILED/i)).toBeVisible();
+    await page.waitForURL('**/master');
+    await expect(page.getByText(/RECONCILED/i).first()).toBeVisible();
 
     // Open Deposit Review page and verify + approve
     if (createdDepositUid) {
@@ -79,19 +75,18 @@ test.describe('NAVRIX Full-Stack E2E Browser Workflow (Customer + Admin + Master
     }
   });
 
-  test('3. Customer logs in, sees updated invested balance, and accesses withdrawal request screen', async ({
+  test('3. Customer signs into unified login (:3000/login), sees updated invested balance, and accesses withdrawal request screen', async ({
     page,
   }) => {
     await page.goto(`${WEB_URL}/login`);
-    await page.getByPlaceholder(/email/i).fill(uniqueEmail);
-    await page.getByPlaceholder(/password/i).fill('NavrixUser2026!');
+    await page.getByPlaceholder(/email|domain/i).fill(uniqueEmail);
+    await page.getByPlaceholder(/••••|password/i).fill('NavrixUser2026!');
     await page.getByRole('button', { name: /^sign in$/i }).click();
 
     await page.waitForURL('**/dashboard');
-    await expect(page.getByText(/150\.00/)).toBeVisible();
+    await expect(page.getByText(/150\.00/).first()).toBeVisible();
 
     await page.goto(`${WEB_URL}/withdraw`);
-    await expect(page.getByText(/BNB Smart Chain/i)).toBeVisible();
+    await expect(page.getByText(/BNB Smart Chain/i).first()).toBeVisible();
   });
 });
-
