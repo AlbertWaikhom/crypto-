@@ -43,6 +43,7 @@ import {
   TiltedCard,
 } from '@navrix/ui';
 import { DashboardTutorialMockup } from '../components/DashboardTutorialMockup';
+import { Hero29 } from '../components/Hero29';
 import { SiteHeader } from '../components/SiteHeader';
 import { SiteFooter } from '../components/SiteFooter';
 import { ECOSYSTEM_ENTITIES } from '../data/ecosystem';
@@ -163,159 +164,8 @@ export default function LandingPage() {
       <SiteHeader mode="sticky" />
 
       <main className={styles.mainContent}>
-        {/* HERO SECTION WITH ENTRANCE OPENING ANIMATION */}
-        <motion.section
-          className={styles.heroSection}
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className={styles.heroGrid}>
-            <div className={styles.heroCopyCol}>
-              <motion.div
-                className={styles.eyebrowRow}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
-                <span className={styles.networkBadge}>
-                  <Sparkles className="h-3 w-3 text-amber-400" />
-                  <ShinyText text="FINANCIAL INNOVATION ECOSYSTEM" />
-                </span>
-                <span className={styles.securityChip}>
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                  25,000+ Global Participants
-                </span>
-              </motion.div>
-
-              <div className={styles.particleHeroBox}>
-                <ParticleText
-                  text="NAVRIX PLATFORM"
-                  particleSize={2.2}
-                  density={4}
-                  color="#f5b82e"
-                  highlightColor="#38bdf8"
-                  highlightMode="motion"
-                  shape="circle"
-                  intro="gather"
-                  scatter={180}
-                  gatherDuration={1500}
-                  stagger={380}
-                  clickBurst
-                  burstStrength={1}
-                  pointerRepel={38}
-                  repelRadius={110}
-                  idleDrift={0.7}
-                  trigger="mount"
-                  fontSize="clamp(2rem, 5vw, 3.4rem)"
-                  fontWeight={800}
-                  fontFamily="inherit"
-                  glow
-                />
-              </div>
-
-              <motion.h1
-                className={styles.heroHeadline}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                One Ecosystem.{' '}
-                <GradientText variant="sovereign">
-                  Multiple Financial Engines.
-                </GradientText>
-              </motion.h1>
-
-              <motion.p
-                className={styles.heroDescription}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                {BRAND_CONFIG.name} Platform is a financial innovation
-                ecosystem connecting traders, investors, and capital participants
-                with specialized financial companies across automation, hedge
-                systems, hybrid funds, funded programs, and professional
-                education.
-              </motion.p>
-
-              <motion.div
-                className={styles.ctaRow}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, delay: 0.4 }}
-              >
-                <Link href="/ecosystem">
-                  <Button variant="gold" size="lg">
-                    <Layers className="h-4 w-4" />
-                    Explore Our Ecosystem
-                  </Button>
-                </Link>
-
-                <Link href={primaryHref}>
-                  <Button variant="secondary" size="lg">
-                    Partner With {BRAND_CONFIG.name}
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-              </motion.div>
-
-              <motion.div
-                className={styles.heroMetaRibbon}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-              >
-                <div className={styles.metaItem}>
-                  <span className={styles.metaDot} />
-                  <span>Multi-model financial architecture</span>
-                </div>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaDot} />
-                  <span>25,000+ ecosystem users globally</span>
-                </div>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaDot} />
-                  <span>8+ independent specialized entities</span>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* HERO RIGHT: Interactive 3D CardSwap Deck */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.75, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className={styles.cardSwapContainer}>
-                <div className={styles.cardSwapHeader}>
-                  <span className={styles.cardSwapTitle}>Ecosystem Engines</span>
-                  <span className={styles.cardSwapBadge}>
-                    <Sparkles className="h-3 w-3" />
-                    Interactive 3D Deck
-                  </span>
-                </div>
-                <div className={styles.cardSwapStageWrapper}>
-                  <CardSwap
-                    width={320}
-                    height={320}
-                    cardDistance={32}
-                    verticalDistance={22}
-                    depth={160}
-                    skewAmount={3}
-                    autoplay
-                    delay={3500}
-                    pauseOnHover
-                    theme="dark"
-                  />
-                </div>
-                <div className={styles.cardSwapHint}>
-                  Drag, swipe or hover to inspect specialized financial entities
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </motion.section>
+        {/* REACTBITS PRO HERO-29: ANALYTICS LIGHT VORTEX FUNNEL (FITS IN ONE SCREEN) */}
+        <Hero29 />
 
         {/* FLAGSHIP FEATURE: INTERACTIVE DASHBOARD MOCKUP & GUIDED TUTORIAL */}
         <motion.section
@@ -421,6 +271,35 @@ export default function LandingPage() {
               financial companies. Each entity operates independently with its own
               performance model and operational framework.
             </p>
+          </div>
+
+          <div className="mb-8 flex justify-center">
+            <div className={styles.cardSwapContainer}>
+              <div className={styles.cardSwapHeader}>
+                <span className={styles.cardSwapTitle}>Specialized Entities</span>
+                <span className={styles.cardSwapBadge}>
+                  <Sparkles className="h-3 w-3" />
+                  Interactive 3D Deck
+                </span>
+              </div>
+              <div className={styles.cardSwapStageWrapper}>
+                <CardSwap
+                  width={320}
+                  height={320}
+                  cardDistance={32}
+                  verticalDistance={22}
+                  depth={160}
+                  skewAmount={3}
+                  autoplay
+                  delay={3500}
+                  pauseOnHover
+                  theme="dark"
+                />
+              </div>
+              <div className={styles.cardSwapHint}>
+                Drag, swipe or hover to inspect specialized financial entities
+              </div>
+            </div>
           </div>
 
           <div className={styles.entitiesGrid}>
