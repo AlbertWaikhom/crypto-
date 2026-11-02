@@ -1,1 +1,1 @@
-﻿export { default } from './investment-detail';
+export { default } from './investment-detail';

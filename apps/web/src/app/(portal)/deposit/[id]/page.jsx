@@ -1,1 +1,1 @@
-﻿export { default } from './deposit-detail';
+export { default } from './deposit-detail';

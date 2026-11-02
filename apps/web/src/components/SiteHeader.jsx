@@ -73,6 +73,7 @@ export function SiteHeader({ mode = 'sticky', compactAuth = false }) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    prefetch={true}
                     className={cn(styles.navPillLink, isActive && styles.navPillActive)}
                   >
                     <span>{item.label}</span>
@@ -97,7 +98,7 @@ export function SiteHeader({ mode = 'sticky', compactAuth = false }) {
             </button>
 
             {mounted && accessToken ? (
-              <Link href={workspaceHref}>
+              <Link href={workspaceHref} prefetch={true}>
                 <Button size="sm" className={styles.ctaPrimaryBtn}>
                   <LayoutDashboard size={14} className="mr-1 text-amber-950" />
                   <span>Dashboard</span>
@@ -106,12 +107,12 @@ export function SiteHeader({ mode = 'sticky', compactAuth = false }) {
               </Link>
             ) : (
               <div className={styles.authGroup}>
-                <Link href="/login" className={styles.loginGhostLink}>
+                <Link href="/login" prefetch={true} className={styles.loginGhostLink}>
                   <Lock size={12} className="opacity-60" />
                   <span>Login / Signup</span>
                 </Link>
 
-                <Link href="/login">
+                <Link href="/login" prefetch={true}>
                   <Button size="sm" className={styles.ctaPrimaryBtn}>
                     <span>Partner With NAVRIX</span>
                     <ArrowRight size={13} className="ml-1 opacity-80" />

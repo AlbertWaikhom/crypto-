@@ -1,8 +1,7 @@
 import { ApiResponse, isAdminRole, PublicUserDto } from '@navrix/types';
 import { useAdminStore } from '../store/admin-store';
 
-export const ADMIN_API_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+export const ADMIN_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
 export class AdminApiError extends Error {
   public readonly code: string;
@@ -29,9 +28,7 @@ async function tryRefreshAdmin(): Promise<string | null> {
       user: PublicUserDto;
     }>;
     if (json.success && isAdminRole(json.data.user.role)) {
-      useAdminStore
-        .getState()
-        .setAdminSession(json.data.accessToken, json.data.user);
+      useAdminStore.getState().setAdminSession(json.data.accessToken, json.data.user);
       return json.data.accessToken;
     }
     return null;
@@ -40,10 +37,13 @@ async function tryRefreshAdmin(): Promise<string | null> {
   }
 }
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export async function adminApi<T>(
   path: string,
   options: RequestInit = {},
   retry = true,
+  retryCount = 0,
 ): Promise<T> {
   const store = useAdminStore.getState();
   const headers = new Headers(options.headers || {});
@@ -54,27 +54,50 @@ export async function adminApi<T>(
     headers.set('Authorization', `Bearer ${store.accessToken}`);
   }
 
-  const res = await fetch(`${ADMIN_API_URL}${path}`, {
-    ...options,
-    headers,
-    credentials: 'include',
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${ADMIN_API_URL}${path}`, {
+      ...options,
+      headers,
+      credentials: 'include',
+    });
+  } catch {
+    if (retryCount < 1) {
+      await sleep(300);
+      return adminApi<T>(path, options, retry, retryCount + 1);
+    }
+    throw new AdminApiError(
+      'NETWORK_DISCONNECTED',
+      'Unable to connect to administrative server. Check connection.',
+      0,
+    );
+  }
 
   if (res.status === 401 && retry && !path.startsWith('/auth/login')) {
     const nextToken = await tryRefreshAdmin();
     if (nextToken) {
       headers.set('Authorization', `Bearer ${nextToken}`);
-      return adminApi<T>(path, { ...options, headers }, false);
+      return adminApi<T>(path, { ...options, headers }, false, retryCount);
     }
+  }
+
+  // Transient 5xx retry on GET requests
+  if (res.status >= 500 && retryCount < 1 && options.method !== 'POST') {
+    await sleep(350);
+    return adminApi<T>(path, options, retry, retryCount + 1);
   }
 
   let body: ApiResponse<T>;
   try {
     body = (await res.json()) as ApiResponse<T>;
   } catch {
+    if (res.status >= 500 && retryCount < 1) {
+      await sleep(350);
+      return adminApi<T>(path, options, retry, retryCount + 1);
+    }
     throw new AdminApiError(
-      'NETWORK_ERROR',
-      'Could not reach NAVRIX API server.',
+      'SERVER_BUSY',
+      'Administrative service is temporarily busy. Please retry.',
       res.status,
     );
   }
@@ -102,4 +125,3 @@ export async function fetchAuthorizedScreenshotObjectUrl(
   const blob = await res.blob();
   return URL.createObjectURL(blob);
 }
-

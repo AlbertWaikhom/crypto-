@@ -218,6 +218,7 @@ export function PortalShell({ children }) {
                     <Link
                       key={item.href}
                       href={item.href}
+                      prefetch={true}
                       onClick={() => setMobileNavOpen(false)}
                       className={cn(styles.navItem, active && styles.navItemActive)}
                     >

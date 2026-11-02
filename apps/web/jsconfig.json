@@ -2,7 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/pages/*": ["./src/pages-ui/*"],
+      "@/pages-ui/*": ["./src/pages-ui/*"],
+      "@/auth/*": ["./src/pages-ui/auth/*"]
     },
     "jsx": "preserve"
   },

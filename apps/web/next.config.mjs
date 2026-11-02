@@ -9,7 +9,14 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    optimizePackageImports: [
+      'lucide-react',
+      'recharts',
+      'framer-motion',
+      '@navrix/ui',
+    ],
+  },
 };
 
 export default nextConfig;
-

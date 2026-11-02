@@ -1,5 +1,7 @@
 import { useUiStore } from '../store/ui-store';
+
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+
 export class ClientApiError extends Error {
   code;
   status;
@@ -9,6 +11,7 @@ export class ClientApiError extends Error {
     this.status = status;
   }
 }
+
 async function tryRefreshSession() {
   try {
     const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
@@ -28,43 +31,78 @@ async function tryRefreshSession() {
     return null;
   }
 }
-export async function apiRequest(path, options = {}, retryOn401 = true) {
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export async function apiRequest(path, options = {}, retryOn401 = true, retryCount = 0) {
   const store = useUiStore.getState();
   const headers = new Headers(options.headers || {});
   const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
+
   if (!isFormData && !headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json');
   }
+
   if (store.accessToken && !headers.has('Authorization')) {
     headers.set('Authorization', `Bearer ${store.accessToken}`);
   }
-  const res = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers,
-    credentials: 'include',
-  });
+
+  let res;
+  try {
+    res = await fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      headers,
+      credentials: 'include',
+    });
+  } catch (netErr) {
+    // Retry once on network disconnect / transient socket drop
+    if (retryCount < 1) {
+      await sleep(300);
+      return apiRequest(path, options, retryOn401, retryCount + 1);
+    }
+    throw new ClientApiError(
+      'NETWORK_DISCONNECTED',
+      'Unable to connect to service. Please check your internet connection.',
+      0,
+    );
+  }
+
+  // Handle 401 Unauthorized via session token refresh
   if (res.status === 401 && retryOn401 && !path.startsWith('/auth/login')) {
     const refreshedToken = await tryRefreshSession();
     if (refreshedToken) {
       headers.set('Authorization', `Bearer ${refreshedToken}`);
-      return apiRequest(path, { ...options, headers }, false);
+      return apiRequest(path, { ...options, headers }, false, retryCount);
     }
   }
+
+  // Transient 5xx error retry (handles brief DB pool queue spikes)
+  if (res.status >= 500 && retryCount < 1 && options.method !== 'POST') {
+    await sleep(350);
+    return apiRequest(path, options, retryOn401, retryCount + 1);
+  }
+
   let body;
   try {
     body = await res.json();
   } catch {
+    if (res.status >= 500 && retryCount < 1) {
+      await sleep(350);
+      return apiRequest(path, options, retryOn401, retryCount + 1);
+    }
     throw new ClientApiError(
-      'NETWORK_ERROR',
-      'Unable to parse server response. Check API connectivity.',
+      'SERVER_BUSY',
+      'Service is momentarily busy. Please refresh the page.',
       res.status,
     );
   }
+
   if (!res.ok || !body.success) {
     const errPayload = !body.success
       ? body.error
       : { code: 'REQUEST_FAILED', message: 'Request failed.' };
     throw new ClientApiError(errPayload.code, errPayload.message, res.status);
   }
+
   return body.data;
 }
