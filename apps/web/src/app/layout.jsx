@@ -37,6 +37,49 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Auto-recover from stale chunks or bundler runtime mismatch (e.g. dev server restarts)
+              if (typeof window !== 'undefined') {
+                window.addEventListener('error', function(e) {
+                  var msg = (e && e.message) ? e.message : '';
+                  if (
+                    msg.includes('Loading chunk') ||
+                    msg.includes('ChunkLoadError') ||
+                    msg.includes('React Client Manifest') ||
+                    msg.includes('Failed to fetch dynamically imported module')
+                  ) {
+                    var lastReload = sessionStorage.getItem('nv_last_chunk_reload');
+                    var now = Date.now();
+                    if (!lastReload || (now - parseInt(lastReload, 10)) > 10000) {
+                      sessionStorage.setItem('nv_last_chunk_reload', String(now));
+                      window.location.reload();
+                    }
+                  }
+                });
+                window.addEventListener('unhandledrejection', function(e) {
+                  var msg = (e && e.reason && e.reason.message) ? e.reason.message : '';
+                  if (
+                    msg.includes('Loading chunk') ||
+                    msg.includes('ChunkLoadError') ||
+                    msg.includes('React Client Manifest') ||
+                    msg.includes('Failed to fetch dynamically imported module')
+                  ) {
+                    var lastReload = sessionStorage.getItem('nv_last_chunk_reload');
+                    var now = Date.now();
+                    if (!lastReload || (now - parseInt(lastReload, 10)) > 10000) {
+                      sessionStorage.setItem('nv_last_chunk_reload', String(now));
+                      window.location.reload();
+                    }
+                  }
+                });
+              }
+            `,
+          }}
+        />
+      </head>
       <body className={`${sfFallback.variable} font-sans antialiased`}>
         <Providers>{children}</Providers>
       </body>

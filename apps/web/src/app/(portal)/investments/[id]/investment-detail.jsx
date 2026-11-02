@@ -62,7 +62,7 @@ export default function InvestmentDetailPage() {
 
       <section className={styles.panel}>
         <h2 className="mb-4 text-base font-bold">Interest / Profit Ledger Distributions</h2>
-        {inv.interestRecords.length === 0 ? (
+        {!inv.interestRecords || inv.interestRecords.length === 0 ? (
           <EmptyState
             title="No Interest Cycles Credited Yet"
             description="Each interest distribution creates an independent INT-YYYYMMDD-XXXXXX record and immutable INTEREST ledger entry."
@@ -80,7 +80,7 @@ export default function InvestmentDetailPage() {
               </tr>
             </thead>
             <tbody>
-              {inv.interestRecords.map((r) => (
+              {(inv.interestRecords || []).map((r) => (
                 <tr key={r.interestUid} className="border-b border-slate-800/50 last:border-none">
                   <td className="py-3 pr-4 font-mono text-xs text-amber-400">{r.interestUid}</td>
                   <td className="py-3 pr-4 font-mono text-xs">{r.periodKey}</td>
