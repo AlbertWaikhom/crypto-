@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import {
   ArrowRight,
   CheckCircle2,
@@ -83,9 +84,19 @@ export default function AboutPage() {
     <div className={styles.pageRoot}>
       <SiteHeader mode="sticky" />
 
-      <main className={styles.mainContent}>
+      <motion.main
+        className={styles.mainContent}
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+      >
         {/* HERO HEADER */}
-        <div className={styles.heroHeader}>
+        <motion.div
+          className={styles.heroHeader}
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
           <span className={styles.badgePill}>
             <Sparkles className="h-3 w-3 text-amber-400" />
             <ShinyText text="INSTITUTIONAL ARCHITECTURE" />
@@ -103,7 +114,7 @@ export default function AboutPage() {
             ecosystem connecting specialized companies across trading systems,
             investment structures, funded programs, and professional education.
           </p>
-        </div>
+        </motion.div>
 
         {/* WHO WE ARE */}
         <section className={styles.serpoSection}>
@@ -319,7 +330,7 @@ export default function AboutPage() {
             </Link>
           </div>
         </div>
-      </main>
+      </motion.main>
 
       {/* FOOTER */}
       <footer className="border-t border-slate-800 bg-slate-950/80 py-10 px-6 text-center text-xs text-slate-400">

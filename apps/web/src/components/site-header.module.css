@@ -5,6 +5,7 @@
   backdrop-filter: blur(18px) saturate(165%);
   -webkit-backdrop-filter: blur(18px) saturate(165%);
   z-index: 40;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 [data-theme='light'] .headerRoot {
@@ -19,6 +20,54 @@
 .modeStatic {
   position: relative;
   flex-shrink: 0;
+}
+
+.staticTop {
+  background-color: rgba(8, 13, 24, 0.72);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='light'] .staticTop {
+  background-color: rgba(255, 255, 255, 0.78);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.stickyScrolled {
+  background-color: rgba(8, 13, 24, 0.94);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(245, 184, 46, 0.3);
+  box-shadow:
+    0 12px 34px -10px rgba(0, 0, 0, 0.7),
+    0 1px 0 rgba(245, 184, 46, 0.22);
+}
+
+[data-theme='light'] .stickyScrolled {
+  background-color: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid rgba(217, 155, 30, 0.3);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.12);
+}
+
+.modeToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(245, 184, 46, 0.32);
+  background-color: rgba(245, 184, 46, 0.08);
+  padding: 0.22rem 0.65rem;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--nv-gold);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.modeToggleBtn:hover {
+  background-color: rgba(245, 184, 46, 0.16);
+  border-color: var(--nv-gold);
+  transform: translateY(-1px);
 }
 
 .innerBar {

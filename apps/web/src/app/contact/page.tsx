@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import {
   ArrowRight,
   Building2,
@@ -34,8 +35,18 @@ export default function ContactPage() {
     <div className={styles.pageRoot}>
       <SiteHeader mode="sticky" />
 
-      <main className={styles.mainContent}>
-        <div className={styles.heroHeader}>
+      <motion.main
+        className={styles.mainContent}
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <motion.div
+          className={styles.heroHeader}
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
           <span className={styles.badgePill}>
             <Sparkles className="h-3 w-3 text-amber-400" />
             <ShinyText text="ECOSYSTEM ENGAGEMENT" />
@@ -53,7 +64,7 @@ export default function ContactPage() {
             {BRAND_CONFIG.name} for partnership, institutional onboarding, and
             collaboration opportunities.
           </p>
-        </div>
+        </motion.div>
 
         <div className={styles.contactGrid}>
           {/* INQUIRY FORM */}
@@ -212,7 +223,7 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
-      </main>
+      </motion.main>
 
       {/* FOOTER */}
       <footer className="border-t border-slate-800 bg-slate-950/80 py-10 px-6 text-center text-xs text-slate-400">

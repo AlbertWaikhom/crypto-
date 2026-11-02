@@ -1,0 +1,631 @@
+.mockupRoot {
+  position: relative;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+/* Tour Controller Bar */
+.tourControlBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.15rem;
+  padding: 0.65rem 1rem;
+  border-radius: 1rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border-gold);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+}
+
+.tourTitleCluster {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.tourBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 9999px;
+  background-color: rgba(245, 184, 46, 0.15);
+  border: 1px solid rgba(245, 184, 46, 0.35);
+  padding: 0.2rem 0.65rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--nv-gold);
+  letter-spacing: 0.08em;
+}
+
+.tourHeading {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: var(--nv-text);
+}
+
+.stepPillsGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.stepPillBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 0.65rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-bg-elevated);
+  color: var(--nv-text-muted);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.stepPillBtn:hover {
+  border-color: var(--nv-border-gold);
+  color: var(--nv-text);
+}
+
+.stepPillActive {
+  background-color: rgba(245, 184, 46, 0.18);
+  border-color: var(--nv-gold);
+  color: var(--nv-gold);
+  font-weight: 800;
+  box-shadow: 0 0 16px rgba(245, 184, 46, 0.25);
+}
+
+.tourActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.actionBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.65rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-bg-elevated);
+  color: var(--nv-text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.actionBtn:hover {
+  border-color: var(--nv-border-gold);
+}
+
+.progressBarTrack {
+  width: 100%;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: 0.55rem;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, #f5b82e, #10b981);
+  transition: width 0.25s linear;
+}
+
+/* Floating Tour Explanation Card */
+.tourCalloutBox {
+  margin-bottom: 1.25rem;
+  border-radius: 1.15rem;
+  padding: 1.15rem 1.35rem;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(245, 184, 46, 0.16), transparent 50%),
+    var(--nv-surface);
+  border: 1px solid var(--nv-gold);
+  box-shadow: 0 16px 40px -12px rgba(245, 184, 46, 0.2);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.calloutLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+
+.calloutIconCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 0.9rem;
+  background: radial-gradient(circle at 30% 20%, rgba(245, 184, 46, 0.28), transparent 70%);
+  border: 1px solid rgba(245, 184, 46, 0.4);
+  color: var(--nv-gold);
+  flex-shrink: 0;
+}
+
+.calloutStepBadge {
+  font-size: 0.66rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nv-gold);
+  margin-bottom: 0.2rem;
+}
+
+.calloutTitle {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--nv-text);
+  letter-spacing: -0.015em;
+}
+
+.calloutSubtitle {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #34d399;
+  margin-bottom: 0.35rem;
+}
+
+.calloutDesc {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--nv-text-muted);
+  max-width: 620px;
+}
+
+.calloutNavButtons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Realistic Window Mockup Frame */
+.windowFrame {
+  position: relative;
+  border-radius: 1.35rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border-gold);
+  box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.65);
+  overflow: hidden;
+}
+
+.windowTitlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1.15rem;
+  background-color: rgba(11, 17, 32, 0.95);
+  border-bottom: 1px solid var(--nv-border);
+}
+
+.windowDots {
+  display: flex;
+  align-items: center;
+  gap: 0.42rem;
+}
+
+.dotRed {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background-color: #ef4444;
+}
+
+.dotYellow {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background-color: #f59e0b;
+}
+
+.dotGreen {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background-color: #10b981;
+}
+
+.windowUrlPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.85rem;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--nv-border);
+  font-size: 0.68rem;
+  font-family: var(--nv-font-sf);
+  color: var(--nv-text-muted);
+}
+
+.windowStatusCluster {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.networkPulseDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.networkText {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #34d399;
+}
+
+/* Inner Realistic Dashboard Body */
+.dashboardBody {
+  padding: 1.25rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+/* User Greeting Strip */
+.greetingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--nv-border);
+}
+
+.greetingUser {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.userAvatarBadge {
+  width: 32px;
+  height: 32px;
+  border-radius: 0.65rem;
+  background: radial-gradient(circle at 30% 20%, rgba(245, 184, 46, 0.25), transparent 70%);
+  border: 1px solid var(--nv-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--nv-gold);
+  font-weight: 800;
+  font-size: 0.8rem;
+}
+
+.userNameText {
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.userUidText {
+  font-size: 0.68rem;
+  color: var(--nv-text-muted);
+}
+
+.verifiedTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.64rem;
+  font-weight: 800;
+  color: #10b981;
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+}
+
+/* Top Hero Vault Bar */
+.vaultBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.35rem;
+  border-radius: 1.1rem;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(245, 184, 46, 0.14), transparent 50%),
+    var(--nv-bg-elevated);
+  border: 1px solid var(--nv-border);
+  position: relative;
+  transition: all 0.25s ease;
+}
+
+.highlightedSection {
+  border-color: var(--nv-gold) !important;
+  box-shadow: 0 0 25px rgba(245, 184, 46, 0.35) !important;
+  background-color: rgba(245, 184, 46, 0.05);
+}
+
+.hotspotBadge {
+  position: absolute;
+  top: -10px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: 9999px;
+  background-color: var(--nv-gold);
+  color: #0b1120;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.64rem;
+  font-weight: 900;
+  box-shadow: 0 0 12px rgba(245, 184, 46, 0.6);
+  z-index: 5;
+  cursor: pointer;
+  animation: pulseBeacon 2s infinite ease-in-out;
+}
+
+@keyframes pulseBeacon {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.vaultBalanceNumber {
+  font-size: 2.1rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--nv-text);
+  line-height: 1;
+}
+
+.vaultCurrency {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--nv-gold);
+  margin-left: 0.35rem;
+}
+
+.yieldPill {
+  margin-top: 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.vaultActionGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.mockDepositBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 0.75rem;
+  padding: 0.55rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #f5b82e 0%, #e5a41b 100%);
+  color: #0d131f;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(245, 184, 46, 0.3);
+}
+
+.mockSecondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 0.75rem;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background-color: var(--nv-surface);
+  color: var(--nv-text);
+  border: 1px solid var(--nv-border);
+  cursor: pointer;
+}
+
+/* 4-Column KPI Metric Strip */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.kpiCard {
+  border-radius: 0.95rem;
+  padding: 0.85rem 0.95rem;
+  background-color: var(--nv-bg-elevated);
+  border: 1px solid var(--nv-border);
+  position: relative;
+  transition: all 0.22s ease;
+}
+
+.kpiLabel {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--nv-text-muted);
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kpiValue {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  font-family: var(--nv-font-sf);
+}
+
+.kpiSub {
+  margin-top: 0.25rem;
+  font-size: 0.65rem;
+  color: var(--nv-text-muted);
+}
+
+/* 2-Column Bento: Chart + Strategy Engines */
+.bentoRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 0.95rem;
+}
+
+.chartCard {
+  border-radius: 1rem;
+  padding: 1.1rem;
+  background-color: var(--nv-bg-elevated);
+  border: 1px solid var(--nv-border);
+  position: relative;
+  transition: all 0.25s ease;
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.chartTitle {
+  font-size: 0.84rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.chartBadge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--nv-gold);
+}
+
+.chartSvgWrap {
+  width: 100%;
+  height: 140px;
+}
+
+.strategyCard {
+  border-radius: 1rem;
+  padding: 1.1rem;
+  background-color: var(--nv-bg-elevated);
+  border: 1px solid var(--nv-border);
+  position: relative;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.strategyList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.65rem;
+}
+
+.strategyItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.7rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+}
+
+.strategyLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.strategyIconBox {
+  width: 26px;
+  height: 26px;
+  border-radius: 0.45rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(245, 184, 46, 0.12);
+  color: var(--nv-gold);
+}
+
+.strategyName {
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.strategyType {
+  font-size: 0.65rem;
+  color: var(--nv-text-muted);
+}
+
+.strategyYield {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #34d399;
+}
+
+/* Solvency Verification Footer Strip */
+.solvencyStrip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.95rem;
+  border-radius: 0.8rem;
+  background-color: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #34d399;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .kpiGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .bentoRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .vaultBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .kpiGrid {
+    grid-template-columns: 1fr;
+  }
+  .tourControlBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .calloutLeft {
+    flex-direction: column;
+  }
+  .tourCalloutBox {
+    flex-direction: column;
+  }
+}
+

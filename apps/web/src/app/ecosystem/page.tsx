@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import {
   ArrowRight,
   Briefcase,
@@ -47,9 +48,19 @@ export default function EcosystemPage() {
     <div className={styles.pageRoot}>
       <SiteHeader mode="sticky" />
 
-      <main className={styles.mainContent}>
+      <motion.main
+        className={styles.mainContent}
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+      >
         {/* HERO HEADER */}
-        <div className={styles.heroHeader}>
+        <motion.div
+          className={styles.heroHeader}
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
           <span className={styles.badgePill}>
             <Sparkles className="h-3 w-3 text-amber-400" />
             <ShinyText text="INTEGRATED FINANCIAL ECOSYSTEM" />
@@ -68,7 +79,7 @@ export default function EcosystemPage() {
             investment models, funded programs, and professional education —
             each functioning independently under its own framework.
           </p>
-        </div>
+        </motion.div>
 
         {/* CATEGORY FILTER TABS */}
         <div className={styles.filterTabsRow}>
@@ -212,7 +223,7 @@ export default function EcosystemPage() {
             </Link>
           </div>
         </section>
-      </main>
+      </motion.main>
 
       {/* FOOTER */}
       <footer className="border-t border-slate-800 bg-slate-950/80 py-10 px-6 text-center text-xs text-slate-400">

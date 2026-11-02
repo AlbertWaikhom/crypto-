@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { FileText } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
 import { SiteHeader } from '../../components/SiteHeader';
@@ -11,7 +12,12 @@ export default function TermsConditionsPage() {
     <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-sans">
       <SiteHeader mode="sticky" />
 
-      <main className="flex-1 max-w-3xl mx-auto px-5 py-12">
+      <motion.main
+        className="flex-1 max-w-3xl mx-auto px-5 py-12"
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="mb-8">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-400/10 text-amber-400 border border-amber-400/30 mb-3">
             <FileText className="h-3.5 w-3.5" />
@@ -75,7 +81,7 @@ export default function TermsConditionsPage() {
             </p>
           </section>
         </div>
-      </main>
+      </motion.main>
 
       <footer className="border-t border-slate-800 bg-slate-950/80 py-8 px-6 text-center text-xs text-slate-400">
         <div className="max-w-4xl mx-auto space-y-3">

@@ -5,11 +5,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   ArrowRight,
+  Layers,
   LayoutDashboard,
+  Lock,
   Menu,
   Moon,
+  Pin,
   ShieldCheck,
   Sun,
+  Unlock,
   X,
 } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
@@ -27,11 +31,32 @@ const ADMIN_BASE_URL =
   process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:3001';
 
 export function SiteHeader({
-  mode = 'sticky',
+  mode: initialMode = 'sticky',
   compactAuth = false,
 }: SiteHeaderProps) {
   const { theme, toggleTheme, accessToken, user } = useUiStore();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [currentMode, setCurrentMode] = React.useState<'sticky' | 'static'>(
+    initialMode,
+  );
+  const [isScrolled, setIsScrolled] = React.useState(false);
+
+  React.useEffect(() => {
+    setCurrentMode(initialMode);
+  }, [initialMode]);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 15);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const toggleHeaderMode = () => {
+    setCurrentMode((prev) => (prev === 'sticky' ? 'static' : 'sticky'));
+  };
 
   const workspaceHref = React.useMemo(() => {
     if (!accessToken || !user) return '/dashboard';
@@ -44,7 +69,10 @@ export function SiteHeader({
     <header
       className={cn(
         styles.headerRoot,
-        mode === 'sticky' ? styles.modeSticky : styles.modeStatic,
+        currentMode === 'sticky' ? styles.modeSticky : styles.modeStatic,
+        isScrolled && currentMode === 'sticky'
+          ? styles.stickyScrolled
+          : styles.staticTop,
       )}
     >
       <div className={styles.innerBar}>
@@ -88,9 +116,27 @@ export function SiteHeader({
         </div>
 
         <div className={styles.rightCluster}>
+          {/* Header Sticky / Static Mode Pill Toggle */}
+          <button
+            type="button"
+            onClick={toggleHeaderMode}
+            className={styles.modeToggleBtn}
+            title={`Currently in ${currentMode.toUpperCase()} mode. Click to toggle to ${
+              currentMode === 'sticky' ? 'static' : 'sticky'
+            } mode.`}
+          >
+            {currentMode === 'sticky' ? (
+              <Pin className="h-3 w-3 text-amber-400" />
+            ) : (
+              <Unlock className="h-3 w-3 text-slate-400" />
+            )}
+            <span>{currentMode.toUpperCase()}</span>
+          </button>
+
           <span className={styles.chainChip}>
             <span className={styles.liveDot} />
-            <span>BSC · BEP-20 USDT</span>
+            <span className="hidden sm:inline">BSC · BEP-20 USDT</span>
+            <span className="sm:hidden">BSC</span>
           </span>
 
           <button
@@ -124,7 +170,7 @@ export function SiteHeader({
                 </Link>
                 <Link href="/register">
                   <Button variant="gold" size="sm">
-                    Get Started
+                    Partner With {BRAND_CONFIG.name}
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Button>
                 </Link>
@@ -183,6 +229,17 @@ export function SiteHeader({
           ) : null}
 
           <div className={styles.mobileCtas}>
+            <div className="flex items-center justify-between pb-3 mb-2 border-b border-slate-800 text-xs">
+              <span className="text-slate-400">Header Position Mode:</span>
+              <button
+                type="button"
+                onClick={toggleHeaderMode}
+                className={styles.modeToggleBtn}
+              >
+                <span>{currentMode.toUpperCase()}</span>
+              </button>
+            </div>
+
             {accessToken && user ? (
               <Link
                 href={workspaceHref}
@@ -210,7 +267,7 @@ export function SiteHeader({
                   className="w-full"
                 >
                   <Button variant="gold" size="sm" className="w-full">
-                    Create Investor Account
+                    Partner With {BRAND_CONFIG.name}
                   </Button>
                 </Link>
               </>
@@ -221,4 +278,3 @@ export function SiteHeader({
     </header>
   );
 }
-

@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import {
   ArrowRight,
   BarChart3,
@@ -40,6 +41,7 @@ import {
   StarBorder,
   TiltedCard,
 } from '@navrix/ui';
+import { DashboardTutorialMockup } from '../components/DashboardTutorialMockup';
 import { SiteHeader } from '../components/SiteHeader';
 import { ECOSYSTEM_ENTITIES } from '../data/ecosystem';
 import { useUiStore } from '../store/ui-store';
@@ -146,15 +148,25 @@ export default function LandingPage() {
 
   return (
     <div className={styles.pageRoot}>
-      {/* Pinned Sticky Header */}
+      {/* Pinned Sticky and Static Header with instant Mode Toggle */}
       <SiteHeader mode="sticky" />
 
       <main className={styles.mainContent}>
-        {/* HERO SECTION */}
-        <section className={styles.heroSection}>
+        {/* HERO SECTION WITH ENTRANCE OPENING ANIMATION */}
+        <motion.section
+          className={styles.heroSection}
+          initial={{ opacity: 0, y: 22 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
           <div className={styles.heroGrid}>
             <div className={styles.heroCopyCol}>
-              <div className={styles.eyebrowRow}>
+              <motion.div
+                className={styles.eyebrowRow}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
                 <span className={styles.networkBadge}>
                   <Sparkles className="h-3 w-3 text-amber-400" />
                   <ShinyText text="FINANCIAL INNOVATION ECOSYSTEM" />
@@ -163,24 +175,39 @@ export default function LandingPage() {
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   25,000+ Global Participants
                 </span>
-              </div>
+              </motion.div>
 
-              <h1 className={styles.heroHeadline}>
+              <motion.h1
+                className={styles.heroHeadline}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
                 One Ecosystem.{' '}
                 <GradientText variant="sovereign">
                   Multiple Financial Engines.
                 </GradientText>
-              </h1>
+              </motion.h1>
 
-              <p className={styles.heroDescription}>
+              <motion.p
+                className={styles.heroDescription}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
                 {BRAND_CONFIG.name} Platform is a financial innovation
                 ecosystem connecting traders, investors, and capital participants
                 with specialized financial companies across automation, hedge
                 systems, hybrid funds, funded programs, and professional
                 education.
-              </p>
+              </motion.p>
 
-              <div className={styles.ctaRow}>
+              <motion.div
+                className={styles.ctaRow}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.4 }}
+              >
                 <Link href="/ecosystem">
                   <Button variant="gold" size="lg">
                     <Layers className="h-4 w-4" />
@@ -194,9 +221,14 @@ export default function LandingPage() {
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </Link>
-              </div>
+              </motion.div>
 
-              <div className={styles.heroMetaRibbon}>
+              <motion.div
+                className={styles.heroMetaRibbon}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+              >
                 <div className={styles.metaItem}>
                   <span className={styles.metaDot} />
                   <span>Multi-model financial architecture</span>
@@ -209,11 +241,15 @@ export default function LandingPage() {
                   <span className={styles.metaDot} />
                   <span>8+ independent specialized entities</span>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
             {/* HERO RIGHT: Interactive Ecosystem Radar */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.75, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            >
               <StarBorder color="#F5B82E" speed="9s">
                 <AuroraBackground
                   variant="gold"
@@ -269,12 +305,44 @@ export default function LandingPage() {
                   </div>
                 </AuroraBackground>
               </StarBorder>
-            </div>
+            </motion.div>
           </div>
-        </section>
+        </motion.section>
+
+        {/* FLAGSHIP FEATURE: INTERACTIVE DASHBOARD MOCKUP & GUIDED TUTORIAL */}
+        <motion.section
+          className={styles.mockupSection}
+          initial={{ opacity: 0, y: 32 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionPill}>
+              <Sparkles className="h-3 w-3 text-amber-400" />
+              INTERACTIVE INVESTOR EXPERIENCE
+            </span>
+            <h2 className={styles.sectionTitle}>
+              Live Dashboard Mockup & Guided Walkthrough
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              Experience how {BRAND_CONFIG.name} operates from an investor&apos;s
+              perspective. Follow the 4 interactive tour steps below to explore
+              our dedicated USDT vault, multi-engine strategy allocations,
+              append-only ledger proofs, and frictionless outbound withdrawals.
+            </p>
+          </div>
+
+          <DashboardTutorialMockup />
+        </motion.section>
 
         {/* SECTION 1: ENGINEERING FINANCIAL ECOSYSTEMS */}
-        <section className={styles.engineeringSection}>
+        <motion.section
+          className={styles.engineeringSection}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.65 }}
+        >
           <div className={styles.sectionHeader}>
             <span className={styles.sectionPill}>
               <DecryptedText text="ECOSYSTEM ARCHITECTURE" speedMs={40} />
@@ -323,10 +391,16 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* SECTION 2: DIVERSIFIED FINANCIAL INFRASTRUCTURE */}
-        <section className={styles.infrastructureSection}>
+        <motion.section
+          className={styles.infrastructureSection}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.65 }}
+        >
           <div className={styles.sectionHeader}>
             <span className={styles.sectionPill}>
               SPECIALIZED ENTITIES
@@ -384,10 +458,16 @@ export default function LandingPage() {
               </Button>
             </Link>
           </div>
-        </section>
+        </motion.section>
 
         {/* SECTION 3: BUILT FOR MODERN MARKET PARTICIPANTS */}
-        <section className={styles.participantsSection}>
+        <motion.section
+          className={styles.participantsSection}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.65 }}
+        >
           <div className={styles.participantsCard}>
             <div className="text-center max-w-2xl mx-auto mb-6">
               <span className={styles.sectionPill}>PARTICIPANT SCOPE</span>
@@ -419,10 +499,16 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* SECTION 4: STRUCTURED. SEPARATED. TRANSPARENT. */}
-        <section className={styles.pillarsSection}>
+        <motion.section
+          className={styles.pillarsSection}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.65 }}
+        >
           <div className={styles.sectionHeader}>
             <span className={styles.sectionPill}>CORE GOVERNANCE</span>
             <h2 className={styles.sectionTitle}>
@@ -472,10 +558,16 @@ export default function LandingPage() {
               </Button>
             </Link>
           </div>
-        </section>
+        </motion.section>
 
         {/* SECTION 5: INTEGRATED FINANCIAL INFRASTRUCTURE */}
-        <section className={styles.integratedSection}>
+        <motion.section
+          className={styles.integratedSection}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.65 }}
+        >
           <div className={styles.sectionHeader}>
             <span className={styles.sectionPill}>SYSTEM RELIABILITY</span>
             <h2 className={styles.sectionTitle}>
@@ -502,10 +594,16 @@ export default function LandingPage() {
               );
             })}
           </div>
-        </section>
+        </motion.section>
 
         {/* SECTION 6: BUILD WITH NAVRIX BANNER */}
-        <section className={styles.buildBanner}>
+        <motion.section
+          className={styles.buildBanner}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.65 }}
+        >
           <span className={styles.sectionPill}>ENTERPRISE & ALLOCATORS</span>
           <h2 className={styles.buildBannerTitle}>
             Access Multiple Financial Engines Through One Unified Ecosystem
@@ -529,7 +627,7 @@ export default function LandingPage() {
               </Button>
             </Link>
           </div>
-        </section>
+        </motion.section>
       </main>
 
       {/* FOOTER */}
