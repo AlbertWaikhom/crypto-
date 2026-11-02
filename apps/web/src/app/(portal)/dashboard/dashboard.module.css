@@ -1,23 +1,23 @@
 .dashboardGrid {
   display: flex;
   flex-direction: column;
-  gap: 0.68rem;
+  gap: 0.5rem;
 }
 
 /* Row 1: Compact Single-Line Hero Vault Bar */
 .heroStrip {
-  padding: 0.78rem 1.05rem;
+  padding: 0.55rem 0.85rem;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
 .heroLeft {
   display: flex;
   flex-direction: column;
-  gap: 0.22rem;
+  gap: 0.15rem;
   min-width: 0;
 }
 
@@ -25,7 +25,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.42rem;
+  gap: 0.35rem;
 }
 
 .vaultTag {
@@ -34,8 +34,8 @@
   border-radius: 9999px;
   border: 1px solid rgba(245, 184, 46, 0.34);
   background-color: rgba(245, 184, 46, 0.08);
-  padding: 0.14rem 0.55rem;
-  font-size: 0.62rem;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.58rem;
   font-weight: 800;
   letter-spacing: 0.07em;
 }
@@ -44,8 +44,8 @@
   border-radius: 9999px;
   border: 1px solid var(--nv-border);
   background-color: rgba(15, 23, 42, 0.5);
-  padding: 0.12rem 0.52rem;
-  font-size: 0.66rem;
+  padding: 0.08rem 0.45rem;
+  font-size: 0.62rem;
   font-weight: 700;
   color: var(--nv-text-muted);
   font-variant-numeric: tabular-nums;
@@ -58,8 +58,8 @@
 .verifiedTag {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  font-size: 0.68rem;
+  gap: 0.22rem;
+  font-size: 0.64rem;
   font-weight: 600;
   color: var(--nv-text-muted);
 }
@@ -68,14 +68,14 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.65rem;
+  gap: 0.55rem;
 }
 
 .totalAmount {
   display: inline-flex;
   align-items: baseline;
-  gap: 0.32rem;
-  font-size: clamp(1.42rem, 2.5vw, 1.85rem);
+  gap: 0.25rem;
+  font-size: clamp(1.25rem, 2vw, 1.55rem);
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.025em;
@@ -83,7 +83,7 @@
 }
 
 .totalUnit {
-  font-size: 0.82rem;
+  font-size: 0.76rem;
   font-weight: 700;
   color: var(--nv-text-muted);
 }
@@ -91,12 +91,12 @@
 .yieldPill {
   display: inline-flex;
   align-items: center;
-  gap: 0.28rem;
+  gap: 0.22rem;
   border-radius: 9999px;
   background-color: rgba(16, 185, 129, 0.13);
   border: 1px solid rgba(16, 185, 129, 0.28);
-  padding: 0.16rem 0.55rem;
-  font-size: 0.69rem;
+  padding: 0.12rem 0.45rem;
+  font-size: 0.65rem;
   font-weight: 700;
   color: #34d399;
   font-variant-numeric: tabular-nums;
@@ -110,7 +110,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.38rem;
 }
 
 .pillPrimary,
@@ -118,11 +118,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.38rem;
-  min-height: 36px;
-  padding: 0.42rem 0.78rem;
-  border-radius: 0.75rem;
-  font-size: 0.76rem;
+  gap: 0.32rem;
+  min-height: 32px;
+  padding: 0.32rem 0.68rem;
+  border-radius: 0.65rem;
+  font-size: 0.72rem;
   font-weight: 700;
   white-space: nowrap;
   transition: transform 0.14s ease, border-color 0.14s ease;
@@ -131,7 +131,7 @@
 .pillPrimary {
   background: linear-gradient(135deg, #f5b82e 0%, #fbbf24 55%, #d99b1e 100%);
   color: #070b14;
-  box-shadow: 0 6px 18px -6px rgba(245, 184, 46, 0.45);
+  box-shadow: 0 4px 14px -5px rgba(245, 184, 46, 0.4);
 }
 
 .pillSecondary {
@@ -153,23 +153,23 @@
 .kpiRibbon {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 0.55rem;
+  gap: 0.45rem;
 }
 
 .kpiTile {
-  padding: 0.62rem 0.75rem !important;
-  border-radius: 0.9rem !important;
+  padding: 0.45rem 0.58rem !important;
+  border-radius: 0.75rem !important;
 }
 
 .kpiHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.35rem;
+  gap: 0.25rem;
 }
 
 .kpiName {
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   font-weight: 600;
   color: var(--nv-text-muted);
   white-space: nowrap;
@@ -178,25 +178,25 @@
 }
 
 .kpiNum {
-  margin-top: 0.28rem;
+  margin-top: 0.18rem;
   display: flex;
   align-items: baseline;
-  gap: 0.22rem;
-  font-size: clamp(0.95rem, 1.35vw, 1.12rem);
+  gap: 0.18rem;
+  font-size: 0.98rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
 
 .kpiAsset {
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   font-weight: 700;
   color: var(--nv-text-muted);
 }
 
 .microTrack {
-  margin-top: 0.38rem;
-  height: 3px;
+  margin-top: 0.25rem;
+  height: 2px;
   width: 100%;
   border-radius: 9999px;
   background-color: rgba(148, 163, 184, 0.14);
@@ -213,13 +213,13 @@
 .mainBento {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.72fr) minmax(0, 1.15fr);
-  gap: 0.68rem;
+  gap: 0.5rem;
   align-items: stretch;
 }
 
 .bentoCard {
-  padding: 0.88rem 0.98rem !important;
-  border-radius: 1rem !important;
+  padding: 0.65rem 0.8rem !important;
+  border-radius: 0.85rem !important;
   display: flex;
   flex-direction: column;
 }
@@ -228,20 +228,20 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.6rem;
+  gap: 0.45rem;
+  margin-bottom: 0.4rem;
 }
 
 .cardTitle {
   margin: 0;
-  font-size: 0.86rem;
+  font-size: 0.82rem;
   font-weight: 800;
   letter-spacing: -0.015em;
 }
 
 .cardSub {
-  margin: 0.1rem 0 0;
-  font-size: 0.68rem;
+  margin: 0.05rem 0 0;
+  font-size: 0.64rem;
   color: var(--nv-text-muted);
 }
 
@@ -249,7 +249,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.15rem;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
   color: var(--nv-gold);
   white-space: nowrap;
@@ -264,11 +264,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 205px;
+  min-height: 145px;
 }
 
 .chartBox {
-  height: 210px;
+  height: 155px;
   width: 100%;
 }
 
@@ -277,13 +277,13 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 0.55rem;
+  gap: 0.42rem;
   height: 100%;
 }
 
 .donutCanvas {
   position: relative;
-  height: 124px;
+  height: 95px;
   width: 100%;
 }
 
@@ -298,14 +298,14 @@
 }
 
 .donutTiny {
-  font-size: 0.55rem;
+  font-size: 0.52rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--nv-text-muted);
 }
 
 .donutTotal {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
@@ -313,21 +313,22 @@
 .tierRows {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.22rem;
 }
 
 .tierRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.3rem 0.48rem;
-  border-radius: 0.52rem;
+  padding: 0.22rem 0.42rem;
+  border-radius: 0.45rem;
   background-color: rgba(148, 163, 184, 0.06);
+  font-size: 0.68rem;
 }
 
 .dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 9999px;
 }
 
@@ -336,23 +337,23 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.45rem;
-  margin-bottom: 0.55rem;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
 }
 
 .feedScroll {
   display: flex;
   flex-direction: column;
-  gap: 0.38rem;
-  max-height: 215px;
+  gap: 0.28rem;
+  max-height: 155px;
   overflow-y: auto;
   padding-right: 0.1rem;
 }
 
 .feedEmpty {
-  padding: 2.75rem 0.5rem;
+  padding: 2rem 0.5rem;
   text-align: center;
-  font-size: 0.74rem;
+  font-size: 0.7rem;
   color: var(--nv-text-muted);
 }
 
@@ -361,10 +362,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.55rem;
-  padding: 0.5rem 0.65rem;
-  min-height: 46px;
-  border-radius: 0.72rem;
+  gap: 0.45rem;
+  padding: 0.38rem 0.55rem;
+  min-height: 38px;
+  border-radius: 0.62rem;
   border: 1px solid var(--nv-border);
   background-color: rgba(148, 163, 184, 0.04);
   transition: border-color 0.15s ease, background-color 0.15s ease;
@@ -376,7 +377,7 @@
 }
 
 .feedUid {
-  font-size: 0.73rem;
+  font-size: 0.69rem;
   font-weight: 700;
   color: var(--nv-gold);
   font-variant-numeric: tabular-nums;
@@ -386,7 +387,7 @@
 }
 
 .feedDate {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   color: var(--nv-text-muted);
 }
 
@@ -394,45 +395,37 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.16rem;
+  gap: 0.12rem;
   flex-shrink: 0;
 }
 
 .feedAmt {
-  font-size: 0.77rem;
+  font-size: 0.74rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
 .feedYieldAmt {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 800;
   color: #10b981;
   font-variant-numeric: tabular-nums;
 }
 
-/* Responsive Breakpoints (Tablet, iOS & Android) */
-@media (max-width: 1200px) {
+/* Responsive Breakpoints (Laptop, Tablet, iOS & Android) */
+@media (max-width: 960px) {
   .kpiRibbon {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .mainBento {
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr);
-  }
-
-  .mainBento > :last-child {
-    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
-@media (max-width: 780px) {
+@media (max-width: 600px) {
   .kpiRibbon {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .mainBento {
-    grid-template-columns: minmax(0, 1fr);
   }
 
   .actionPills {

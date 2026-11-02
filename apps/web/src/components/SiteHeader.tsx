@@ -3,17 +3,18 @@
 import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   ArrowRight,
+  ChevronDown,
   Layers,
   LayoutDashboard,
   Lock,
   Menu,
   Moon,
-  Pin,
   ShieldCheck,
+  Sparkles,
   Sun,
-  Unlock,
   X,
 } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
@@ -30,33 +31,30 @@ export interface SiteHeaderProps {
 const ADMIN_BASE_URL =
   process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:3001';
 
+const NAV_LINKS = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/ecosystem', label: 'NAVRIX Ecosystem' },
+  { href: '/contact', label: 'Contact' },
+];
+
 export function SiteHeader({
-  mode: initialMode = 'sticky',
+  mode = 'sticky',
   compactAuth = false,
 }: SiteHeaderProps) {
+  const pathname = usePathname();
   const { theme, toggleTheme, accessToken, user } = useUiStore();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-  const [currentMode, setCurrentMode] = React.useState<'sticky' | 'static'>(
-    initialMode,
-  );
   const [isScrolled, setIsScrolled] = React.useState(false);
 
   React.useEffect(() => {
-    setCurrentMode(initialMode);
-  }, [initialMode]);
-
-  React.useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 15);
+      setIsScrolled(window.scrollY > 20);
     };
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const toggleHeaderMode = () => {
-    setCurrentMode((prev) => (prev === 'sticky' ? 'static' : 'sticky'));
-  };
 
   const workspaceHref = React.useMemo(() => {
     if (!accessToken || !user) return '/dashboard';
@@ -66,215 +64,185 @@ export function SiteHeader({
   }, [accessToken, user]);
 
   return (
-    <header
-      className={cn(
-        styles.headerRoot,
-        currentMode === 'sticky' ? styles.modeSticky : styles.modeStatic,
-        isScrolled && currentMode === 'sticky'
-          ? styles.stickyScrolled
-          : styles.staticTop,
-      )}
-    >
-      <div className={styles.innerBar}>
-        <div className={styles.leftCluster}>
+    <>
+      <header
+        className={cn(
+          styles.headerWrapper,
+          mode === 'static' ? styles.wrapperStatic : styles.wrapperFixed,
+          isScrolled && mode === 'sticky' ? styles.wrapperScrolled : styles.wrapperTop,
+        )}
+      >
+        <div className={styles.pillContainer}>
+          {/* Brand Monogram & Title */}
           <Link
             href="/"
             className={styles.brandLink}
             onClick={() => setMobileMenuOpen(false)}
           >
-            <div className={styles.logoTile}>
+            <div className={styles.brandIconTile}>
               <Image
                 src="/brand/logo-mark.png"
                 alt={BRAND_CONFIG.name}
-                width={30}
-                height={30}
+                width={28}
+                height={28}
                 priority
               />
             </div>
-            <div>
-              <div className={styles.brandTitle}>{BRAND_CONFIG.name}</div>
-              <div className={styles.brandMotto}>{BRAND_CONFIG.motto}</div>
+            <div className={styles.brandMeta}>
+              <span className={styles.brandTitle}>{BRAND_CONFIG.name}</span>
+              <span className={styles.brandSubtitle}>FINANCIAL ECOSYSTEM</span>
             </div>
           </Link>
 
-          {!compactAuth ? (
-            <nav className={styles.desktopNav} aria-label="Primary Site Navigation">
-              <Link href="/" className={styles.navAnchor}>
-                Home
-              </Link>
-              <Link href="/about" className={styles.navAnchor}>
-                About
-              </Link>
-              <Link href="/ecosystem" className={styles.navAnchor}>
-                NAVRIX Ecosystem
-              </Link>
-              <Link href="/contact" className={styles.navAnchor}>
-                Contact
-              </Link>
+          {/* Desktop Center Pill Navigation */}
+          {!compactAuth && (
+            <nav className={styles.centerNav}>
+              {NAV_LINKS.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      styles.navPillLink,
+                      isActive && styles.navPillActive,
+                    )}
+                  >
+                    <span>{item.label}</span>
+                    {isActive && <span className={styles.activeDot} />}
+                  </Link>
+                );
+              })}
             </nav>
-          ) : null}
-        </div>
+          )}
 
-        <div className={styles.rightCluster}>
-          {/* Header Sticky / Static Mode Pill Toggle */}
-          <button
-            type="button"
-            onClick={toggleHeaderMode}
-            className={styles.modeToggleBtn}
-            title={`Currently in ${currentMode.toUpperCase()} mode. Click to toggle to ${
-              currentMode === 'sticky' ? 'static' : 'sticky'
-            } mode.`}
-          >
-            {currentMode === 'sticky' ? (
-              <Pin className="h-3 w-3 text-amber-400" />
-            ) : (
-              <Unlock className="h-3 w-3 text-slate-400" />
-            )}
-            <span>{currentMode.toUpperCase()}</span>
-          </button>
+          {/* Right Action Cluster */}
+          <div className={styles.rightCluster}>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className={styles.iconThemeBtn}
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+              aria-label="Toggle Theme"
+            >
+              {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+            </button>
 
-          <span className={styles.chainChip}>
-            <span className={styles.liveDot} />
-            <span className="hidden sm:inline">BSC · BEP-20 USDT</span>
-            <span className="sm:hidden">BSC</span>
-          </span>
-
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className={styles.themeBtn}
-            aria-label="Toggle dark/light theme"
-          >
-            {theme === 'dark' ? (
-              <Sun className="h-4 w-4 text-amber-400" />
-            ) : (
-              <Moon className="h-4 w-4 text-slate-700" />
-            )}
-          </button>
-
-          <div className={styles.desktopActions}>
-            {accessToken && user ? (
+            {accessToken ? (
               <Link href={workspaceHref}>
-                <Button variant="gold" size="sm">
-                  <LayoutDashboard className="h-3.5 w-3.5" />
-                  Open Workspace
+                <Button
+                  size="sm"
+                  className={styles.ctaPrimaryBtn}
+                >
+                  <LayoutDashboard size={14} className="mr-1 text-amber-950" />
+                  <span>Dashboard</span>
+                  <ArrowRight size={13} className="ml-1 opacity-70" />
                 </Button>
               </Link>
             ) : (
-              <>
-                <Link href="/login">
-                  <Button variant="ghost" size="sm">
-                    <ShieldCheck className="h-3.5 w-3.5 text-amber-400" />
-                    Unified Sign In
-                  </Button>
-                </Link>
-                <Link href="/register">
-                  <Button variant="gold" size="sm">
-                    Partner With {BRAND_CONFIG.name}
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Button>
-                </Link>
-              </>
-            )}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen((v) => !v)}
-            className={styles.mobileBurger}
-            aria-label="Toggle site menu"
-          >
-            {mobileMenuOpen ? (
-              <X className="h-4 w-4" />
-            ) : (
-              <Menu className="h-4 w-4" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {mobileMenuOpen ? (
-        <div className={styles.mobileSheet}>
-          {!compactAuth ? (
-            <div className={styles.mobileLinks}>
-              <Link
-                href="/"
-                onClick={() => setMobileMenuOpen(false)}
-                className={styles.mobileAnchor}
-              >
-                Home
-              </Link>
-              <Link
-                href="/about"
-                onClick={() => setMobileMenuOpen(false)}
-                className={styles.mobileAnchor}
-              >
-                About
-              </Link>
-              <Link
-                href="/ecosystem"
-                onClick={() => setMobileMenuOpen(false)}
-                className={styles.mobileAnchor}
-              >
-                NAVRIX Ecosystem
-              </Link>
-              <Link
-                href="/contact"
-                onClick={() => setMobileMenuOpen(false)}
-                className={styles.mobileAnchor}
-              >
-                Contact
-              </Link>
-            </div>
-          ) : null}
-
-          <div className={styles.mobileCtas}>
-            <div className="flex items-center justify-between pb-3 mb-2 border-b border-slate-800 text-xs">
-              <span className="text-slate-400">Header Position Mode:</span>
-              <button
-                type="button"
-                onClick={toggleHeaderMode}
-                className={styles.modeToggleBtn}
-              >
-                <span>{currentMode.toUpperCase()}</span>
-              </button>
-            </div>
-
-            {accessToken && user ? (
-              <Link
-                href={workspaceHref}
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full"
-              >
-                <Button variant="gold" size="sm" className="w-full">
-                  Open Workspace
-                </Button>
-              </Link>
-            ) : (
-              <>
+              <div className={styles.authGroup}>
                 <Link
                   href="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full"
+                  className={styles.loginGhostLink}
                 >
-                  <Button variant="secondary" size="sm" className="w-full">
-                    Unified Sign In (User & Admin)
+                  <Lock size={12} className="opacity-60" />
+                  <span>Login / Signup</span>
+                </Link>
+
+                <Link href="/login">
+                  <Button
+                    size="sm"
+                    className={styles.ctaPrimaryBtn}
+                  >
+                    <span>Partner With NAVRIX</span>
+                    <ArrowRight size={13} className="ml-1 opacity-80" />
                   </Button>
                 </Link>
-                <Link
-                  href="/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full"
-                >
-                  <Button variant="gold" size="sm" className="w-full">
-                    Partner With {BRAND_CONFIG.name}
-                  </Button>
-                </Link>
-              </>
+              </div>
+            )}
+
+            {/* Mobile Hamburger Toggle */}
+            {!compactAuth && (
+              <button
+                type="button"
+                className={styles.mobileMenuToggle}
+                onClick={() => setMobileMenuOpen((prev) => !prev)}
+                aria-label="Toggle Navigation Menu"
+              >
+                {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
             )}
           </div>
         </div>
-      ) : null}
-    </header>
+
+        {/* Mobile Dropdown Sheet */}
+        {mobileMenuOpen && !compactAuth && (
+          <div className={styles.mobileSheet}>
+            <nav className={styles.mobileNavLinks}>
+              {NAV_LINKS.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={cn(
+                      styles.mobileNavLinkItem,
+                      isActive && styles.mobileNavActive,
+                    )}
+                  >
+                    <span>{item.label}</span>
+                    <ArrowRight size={14} className="opacity-40" />
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <div className={styles.mobileAuthActions}>
+              {accessToken ? (
+                <Link
+                  href={workspaceHref}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Button className={styles.mobileActionBtn}>
+                    <LayoutDashboard size={16} className="mr-2" />
+                    Open Command Workspace
+                  </Button>
+                </Link>
+              ) : (
+                <div className="flex flex-col gap-2 w-full">
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Button
+                      variant="outline"
+                      className="w-full text-xs font-semibold"
+                    >
+                      <Lock size={13} className="mr-1.5 opacity-60" />
+                      Client Login / Signup
+                    </Button>
+                  </Link>
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Button className={styles.mobileActionBtn}>
+                      Partner With NAVRIX
+                      <ArrowRight size={14} className="ml-1.5" />
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Spacer to prevent fixed header from overlapping top page content */}
+      {mode === 'sticky' && <div className={styles.fixedSpacer} />}
+    </>
   );
 }
+
+export default SiteHeader;

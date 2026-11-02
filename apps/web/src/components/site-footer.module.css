@@ -1,0 +1,242 @@
+.footerRoot {
+  width: 100%;
+  border-top: 1px solid var(--nv-border);
+  background-color: #070b14;
+  color: var(--nv-text);
+  padding: 3.5rem 1.5rem 2rem;
+  font-family: var(--nv-font-sf);
+}
+
+[data-theme='light'] .footerRoot {
+  background-color: #f8fafc;
+}
+
+.footerInner {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.topGrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+/* Col 1 */
+.brandCol {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.logoTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 25%,
+    rgba(245, 184, 46, 0.25),
+    rgba(12, 19, 34, 0.9) 75%
+  );
+  border: 1px solid rgba(245, 184, 46, 0.35);
+}
+
+.brandName {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--nv-text);
+}
+
+.brandMotto {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--nv-gold);
+}
+
+.brandSummary {
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--nv-text-muted);
+  max-width: 420px;
+  margin: 0;
+}
+
+.socialBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.35rem;
+}
+
+.socialBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 9999px;
+  padding: 0.28rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: rgba(148, 163, 184, 0.08);
+  border: 1px solid var(--nv-border);
+  color: var(--nv-text-muted);
+}
+
+/* Nav Cols */
+.navCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.colHeader {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--nv-gold);
+}
+
+.entityList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.entityItem {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease;
+}
+
+.entityItem:hover {
+  background: rgba(245, 184, 46, 0.08);
+  transform: translateX(3px);
+}
+
+.entityName {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--nv-text);
+}
+
+.entityRole {
+  font-size: 0.68rem;
+  color: var(--nv-text-muted);
+}
+
+.linkList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.navLink {
+  font-size: 0.82rem;
+  color: var(--nv-text-muted);
+  text-decoration: none;
+  transition: color 0.15s ease, transform 0.15s ease;
+  display: inline-block;
+}
+
+.navLink:hover {
+  color: var(--nv-text);
+  transform: translateX(2px);
+}
+
+.navLinkHighlight {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--nv-gold);
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.navLinkHighlight:hover {
+  opacity: 0.85;
+  text-decoration: underline;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: var(--nv-border);
+  margin: 2.5rem 0 1.5rem;
+}
+
+/* Regulatory Disclaimer (Zero Contact Information) */
+.disclaimerBlock {
+  background: rgba(148, 163, 184, 0.04);
+  border-radius: 0.75rem;
+  padding: 0.95rem 1.15rem;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.disclaimerText {
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--nv-text-muted);
+  margin: 0;
+}
+
+.disclaimerText strong {
+  color: var(--nv-text);
+}
+
+/* Bottom Bar */
+.bottomBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.74rem;
+  color: var(--nv-text-muted);
+}
+
+.copyText {
+  font-variant-numeric: tabular-nums;
+}
+
+.protocolStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .topGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}

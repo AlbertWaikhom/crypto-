@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -43,9 +44,19 @@ import {
 } from '@navrix/ui';
 import { DashboardTutorialMockup } from '../components/DashboardTutorialMockup';
 import { SiteHeader } from '../components/SiteHeader';
+import { SiteFooter } from '../components/SiteFooter';
 import { ECOSYSTEM_ENTITIES } from '../data/ecosystem';
 import { useUiStore } from '../store/ui-store';
 import styles from './landing.module.css';
+
+const ParticleText: React.ComponentType<any> = dynamic(
+  () => import('../components/ParticleText'),
+  { ssr: false }
+);
+const CardSwap: React.ComponentType<any> = dynamic(
+  () => import('../components/CardSwap'),
+  { ssr: false }
+);
 
 const ADMIN_BASE_URL =
   process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:3001';
@@ -177,6 +188,32 @@ export default function LandingPage() {
                 </span>
               </motion.div>
 
+              <div className={styles.particleHeroBox}>
+                <ParticleText
+                  text="NAVRIX PLATFORM"
+                  particleSize={2.2}
+                  density={4}
+                  color="#f5b82e"
+                  highlightColor="#38bdf8"
+                  highlightMode="motion"
+                  shape="circle"
+                  intro="gather"
+                  scatter={180}
+                  gatherDuration={1500}
+                  stagger={380}
+                  clickBurst
+                  burstStrength={1}
+                  pointerRepel={38}
+                  repelRadius={110}
+                  idleDrift={0.7}
+                  trigger="mount"
+                  fontSize="clamp(2rem, 5vw, 3.4rem)"
+                  fontWeight={800}
+                  fontFamily="inherit"
+                  glow
+                />
+              </div>
+
               <motion.h1
                 className={styles.heroHeadline}
                 initial={{ opacity: 0, y: 15 }}
@@ -244,67 +281,38 @@ export default function LandingPage() {
               </motion.div>
             </div>
 
-            {/* HERO RIGHT: Interactive Ecosystem Radar */}
+            {/* HERO RIGHT: Interactive 3D CardSwap Deck */}
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.75, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             >
-              <StarBorder color="#F5B82E" speed="9s">
-                <AuroraBackground
-                  variant="gold"
-                  intensity="subtle"
-                  className={styles.visualCard}
-                >
-                  <div className={styles.visualCardHeader}>
-                    <div>
-                      <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                        Active Ecosystem Hub
-                      </div>
-                      <div className="text-sm font-extrabold text-white">
-                        {BRAND_CONFIG.name} Gateway Architecture
-                      </div>
-                    </div>
-                    <span className={styles.liveBadge}>
-                      <span className={styles.livePulseDot} />
-                      Live Network
-                    </span>
-                  </div>
-
-                  <div className={styles.visualList}>
-                    {ECOSYSTEM_ENTITIES.slice(0, 4).map((item) => (
-                      <div key={item.id} className={styles.visualEntityRow}>
-                        <div className={styles.visualEntityLeft}>
-                          <div className={styles.entityIconBox}>
-                            <Cpu className="h-3.5 w-3.5" />
-                          </div>
-                          <div>
-                            <div className={styles.entityNameSmall}>
-                              {item.name}
-                            </div>
-                            <div className={styles.entityTagSmall}>
-                              {item.tagline}
-                            </div>
-                          </div>
-                        </div>
-                        <span className={styles.entityTypeBadge}>
-                          {item.badge}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-                    <span>Independent Strategy Frameworks</span>
-                    <Link
-                      href="/ecosystem"
-                      className="font-bold text-amber-400 hover:underline flex items-center gap-1"
-                    >
-                      View All 8 Entities →
-                    </Link>
-                  </div>
-                </AuroraBackground>
-              </StarBorder>
+              <div className={styles.cardSwapContainer}>
+                <div className={styles.cardSwapHeader}>
+                  <span className={styles.cardSwapTitle}>Ecosystem Engines</span>
+                  <span className={styles.cardSwapBadge}>
+                    <Sparkles className="h-3 w-3" />
+                    Interactive 3D Deck
+                  </span>
+                </div>
+                <div className={styles.cardSwapStageWrapper}>
+                  <CardSwap
+                    width={320}
+                    height={320}
+                    cardDistance={32}
+                    verticalDistance={22}
+                    depth={160}
+                    skewAmount={3}
+                    autoplay
+                    delay={3500}
+                    pauseOnHover
+                    theme="dark"
+                  />
+                </div>
+                <div className={styles.cardSwapHint}>
+                  Drag, swipe or hover to inspect specialized financial entities
+                </div>
+              </div>
             </motion.div>
           </div>
         </motion.section>
@@ -630,115 +638,8 @@ export default function LandingPage() {
         </motion.section>
       </main>
 
-      {/* FOOTER */}
-      <footer className={styles.siteFooter}>
-        <div className={styles.footerInner}>
-          <div className={styles.footerGrid}>
-            <div className={styles.footerBrandCol}>
-              <div className="flex items-center gap-2.5">
-                <Image
-                  src="/brand/logo-mark.png"
-                  alt={BRAND_CONFIG.name}
-                  width={34}
-                  height={34}
-                />
-                <span className="text-lg font-extrabold tracking-tight">
-                  {BRAND_CONFIG.name} Platform
-                </span>
-              </div>
-              <div className={styles.footerBrandTagline}>
-                Engineering Financial Ecosystems.
-              </div>
-              <p className={styles.footerBrandSub}>
-                A structured financial innovation ecosystem unifying specialized
-                algorithmic trading, hedge exposure, hybrid funds, and financial
-                education.
-              </p>
-            </div>
-
-            <div>
-              <div className={styles.footerColTitle}>Quick Links</div>
-              <nav className={styles.footerNavList} aria-label="Footer Quick Links">
-                <Link href="/" className={styles.footerLink}>
-                  Home
-                </Link>
-                <Link href="/about" className={styles.footerLink}>
-                  About
-                </Link>
-                <Link href="/ecosystem" className={styles.footerLink}>
-                  {BRAND_CONFIG.name} Ecosystem
-                </Link>
-                <Link href="/contact" className={styles.footerLink}>
-                  Contact
-                </Link>
-                <Link href="/risk-disclosure" className={styles.footerLink}>
-                  Risk Disclosure
-                </Link>
-                <Link href="/terms-conditions" className={styles.footerLink}>
-                  Terms & Conditions
-                </Link>
-              </nav>
-            </div>
-
-            <div>
-              <div className={styles.footerColTitle}>Connect With Us</div>
-              <div className={styles.socialRow}>
-                <a
-                  href="https://youtube.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.socialPill}
-                >
-                  YouTube
-                </a>
-                <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.socialPill}
-                >
-                  Facebook
-                </a>
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.socialPill}
-                >
-                  Instagram
-                </a>
-                <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.socialPill}
-                >
-                  X (Twitter)
-                </a>
-              </div>
-              <div className="mt-4 text-xs text-slate-400">
-                Institutional partnerships & inquiries:{' '}
-                <Link href="/contact" className="text-amber-400 hover:underline">
-                  contact@{BRAND_CONFIG.name.toLowerCase()}platform.com
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.disclaimerBox}>
-            {BRAND_CONFIG.name} Platform is a financial ecosystem service
-            provider. It does not directly manage client funds, execute trades,
-            or provide regulated investment advisory services. Each ecosystem
-            company operates independently under its own structure and risk
-            framework. Trading and investment activities involve risk, and
-            capital loss is possible.
-          </div>
-
-          <div className={styles.copyrightLine}>
-            Copyright © 2026 {BRAND_CONFIG.name} Platform. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      {/* DEDICATED MODULAR FOOTER (ZERO CONTACT INFORMATION) */}
+      <SiteFooter />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { FileText } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
 import { SiteHeader } from '../../components/SiteHeader';
+import { SiteFooter } from '../../components/SiteFooter';
 
 export default function TermsConditionsPage() {
   return (
@@ -83,21 +84,7 @@ export default function TermsConditionsPage() {
         </div>
       </motion.main>
 
-      <footer className="border-t border-slate-800 bg-slate-950/80 py-8 px-6 text-center text-xs text-slate-400">
-        <div className="max-w-4xl mx-auto space-y-3">
-          <div className="flex flex-wrap justify-center gap-5 text-slate-300 font-semibold">
-            <Link href="/" className="hover:text-amber-400">Home</Link>
-            <Link href="/about" className="hover:text-amber-400">About</Link>
-            <Link href="/ecosystem" className="hover:text-amber-400">{BRAND_CONFIG.name} Ecosystem</Link>
-            <Link href="/contact" className="hover:text-amber-400">Contact</Link>
-            <Link href="/risk-disclosure" className="hover:text-amber-400">Risk Disclosure</Link>
-            <Link href="/terms-conditions" className="hover:text-amber-400">Terms & Conditions</Link>
-          </div>
-          <p className="opacity-60">
-            Copyright © 2026 {BRAND_CONFIG.name} Platform. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
