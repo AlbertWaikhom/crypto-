@@ -48,382 +48,316 @@ interface AdminDepositDetail {
 
 export default function AdminDepositReviewPage() {
   const params = useParams<{ id: string }>();
-  const depositId = params.id;
-  const qc = useQueryClient();
+  const id = params.id;
+  const queryClient = useQueryClient();
 
-  const [verifiedAmount, setVerifiedAmount] = React.useState('');
-  const [adminNotes, setAdminNotes] = React.useState('');
-  const [rejectionReason, setRejectionReason] = React.useState('');
-  const [actionError, setActionError] = React.useState<string | null>(null);
-  const [actionSuccess, setActionSuccess] = React.useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [rejectReason, setRejectReason] = React.useState('');
+  const [busyAction, setBusyAction] = React.useState<string | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
+  const [notice, setNotice] = React.useState<string | null>(null);
   const [screenshotUrl, setScreenshotUrl] = React.useState<string | null>(null);
 
-  const {
-    data: deposit,
-    isLoading,
-    error,
-  } = useQuery<AdminDepositDetail>({
-    queryKey: ['admin-deposit', depositId],
-    queryFn: () => adminApi.getDeposit(depositId),
-    enabled: Boolean(depositId),
+  const { data: dep, isLoading } = useQuery({
+    queryKey: ['admin-deposit-detail', id],
+    queryFn: () => adminApi<AdminDepositDetail>(`/admin/deposits/${id}`),
+    enabled: Boolean(id),
   });
 
   React.useEffect(() => {
-    if (deposit?.requestedAmount && !verifiedAmount) {
-      setVerifiedAmount(deposit.requestedAmount);
-    }
-  }, [deposit?.requestedAmount, verifiedAmount]);
-
-  React.useEffect(() => {
     let active = true;
-    if (deposit?.submission?.screenshotStorageKey) {
-      fetchAuthorizedScreenshotObjectUrl(deposit.submission.screenshotStorageKey)
-        .then((url) => {
-          if (active) setScreenshotUrl(url);
-        })
-        .catch(() => {});
+    if (dep?.submission?.screenshotStorageKey) {
+      fetchAuthorizedScreenshotObjectUrl(dep.depositUid).then((url) => {
+        if (active && url) setScreenshotUrl(url);
+      });
     }
     return () => {
       active = false;
-      if (screenshotUrl) {
-        URL.revokeObjectURL(screenshotUrl);
-      }
     };
-  }, [deposit?.submission?.screenshotStorageKey]);
+  }, [dep?.depositUid, dep?.submission?.screenshotStorageKey]);
 
-  async function handleApprove(e: React.FormEvent) {
-    e.preventDefault();
-    setActionError(null);
-    setActionSuccess(null);
-    setIsSubmitting(true);
+  const refreshAll = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['admin-deposit-detail', id] }),
+      queryClient.invalidateQueries({ queryKey: ['admin-deposits'] }),
+      queryClient.invalidateQueries({ queryKey: ['admin-dashboard'] }),
+    ]);
+  };
+
+  const handleVerify = async () => {
+    setError(null);
+    setNotice(null);
+    setBusyAction('VERIFY');
     try {
-      const result = await adminApi.approveDeposit(depositId, {
-        verifiedAmount: verifiedAmount ? parseFloat(verifiedAmount) : undefined,
-        adminNotes: adminNotes || undefined,
-      });
-      setActionSuccess(
-        `Deposit approved successfully. Ledger transaction ID: ${result.ledgerTransactionId}`,
+      const res = await adminApi<{
+        verification: { isValid: boolean; failureReason?: string };
+      }>(`/admin/deposits/${id}/verify`, { method: 'POST' });
+      setNotice(
+        res.verification.isValid
+          ? 'On-chain BEP-20 transfer verified successfully!'
+          : `Verification failed: ${res.verification.failureReason}`,
       );
-      qc.invalidateQueries({ queryKey: ['admin-deposit', depositId] });
-      qc.invalidateQueries({ queryKey: ['admin-deposits'] });
+      await refreshAll();
     } catch (err) {
-      setActionError(err instanceof AdminApiError ? err.message : 'Failed to approve deposit.');
+      setError(err instanceof AdminApiError ? err.message : 'Blockchain verification call failed.');
     } finally {
-      setIsSubmitting(false);
+      setBusyAction(null);
     }
-  }
+  };
 
-  async function handleReject(e: React.FormEvent) {
-    e.preventDefault();
-    if (!rejectionReason.trim()) {
-      setActionError('A rejection reason is required.');
+  const handleApprove = async () => {
+    setError(null);
+    setNotice(null);
+    setBusyAction('APPROVE');
+    try {
+      await adminApi(`/admin/deposits/${id}/approve`, { method: 'POST' });
+      setNotice(
+        'Deposit re-verified on-chain, approved, credited to immutable ledger, and investment activated!',
+      );
+      await refreshAll();
+    } catch (err) {
+      setError(err instanceof AdminApiError ? err.message : 'Deposit approval failed.');
+    } finally {
+      setBusyAction(null);
+    }
+  };
+
+  const handleReject = async () => {
+    if (rejectReason.trim().length < 5) {
+      setError('Enter a clear rejection reason (minimum 5 characters).');
       return;
     }
-    setActionError(null);
-    setActionSuccess(null);
-    setIsSubmitting(true);
+    setError(null);
+    setNotice(null);
+    setBusyAction('REJECT');
     try {
-      await adminApi.rejectDeposit(depositId, {
-        rejectionReason: rejectionReason.trim(),
-        adminNotes: adminNotes || undefined,
+      await adminApi(`/admin/deposits/${id}/reject`, {
+        method: 'POST',
+        body: JSON.stringify({ reason: rejectReason }),
       });
-      setActionSuccess('Deposit rejected.');
-      qc.invalidateQueries({ queryKey: ['admin-deposit', depositId] });
-      qc.invalidateQueries({ queryKey: ['admin-deposits'] });
+      setNotice('Deposit rejected and audit trail recorded.');
+      await refreshAll();
     } catch (err) {
-      setActionError(err instanceof AdminApiError ? err.message : 'Failed to reject deposit.');
+      setError(err instanceof AdminApiError ? err.message : 'Deposit rejection failed.');
     } finally {
-      setIsSubmitting(false);
+      setBusyAction(null);
     }
-  }
+  };
 
-  if (isLoading) {
+  if (isLoading || !dep) {
     return (
-      <div className={styles.loadingWrap}>
-        <RefreshCw className={styles.spinner} />
-        <p>Loading deposit review packet...</p>
-      </div>
+      <div className="py-16 text-center text-sm opacity-70">Loading deposit review dossier...</div>
     );
   }
 
-  if (error || !deposit) {
-    return (
-      <div className={styles.errorWrap}>
-        <p className={styles.errorText}>
-          {error instanceof AdminApiError ? error.message : 'Deposit not found or unauthorized.'}
-        </p>
-        <Link href="/deposits">
-          <Button variant="secondary" size="sm">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Deposits
-          </Button>
-        </Link>
-      </div>
-    );
-  }
-
-  const isPending = deposit.status === 'PAYMENT_SUBMITTED' || deposit.status === 'AWAITING_PAYMENT';
-  const blockchainTx = deposit.blockchainTx;
+  const canProcess = !['APPROVED', 'REJECTED', 'EXPIRED', 'CANCELLED'].includes(dep.status);
 
   return (
-    <div className={styles.page}>
-      <div className={styles.header}>
-        <div className={styles.headerLeft}>
-          <Link href="/deposits" className={styles.backLink}>
-            <ArrowLeft className="h-4 w-4" /> Deposits
+    <div>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <Link
+            href="/deposits"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:underline"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to Deposits Queue
           </Link>
-          <h1 className={styles.pageTitle}>Review Deposit</h1>
-          <code className={styles.depositUid}>{deposit.depositUid}</code>
+          <h1 className="mt-1 font-mono text-2xl font-extrabold">{dep.depositUid}</h1>
         </div>
-        <StatusBadge status={deposit.status} />
+        <StatusBadge status={dep.status} />
       </div>
 
-      {actionSuccess && (
-        <div className={styles.bannerSuccess}>
-          <CheckCircle2 className="h-5 w-5 shrink-0" />
-          <span>{actionSuccess}</span>
+      {error ? (
+        <div className="mb-5 rounded-xl border border-rose-500/40 bg-rose-500/10 p-3.5 text-xs text-rose-300">
+          {error}
         </div>
-      )}
+      ) : null}
 
-      {actionError && (
-        <div className={styles.bannerError}>
-          <XCircle className="h-5 w-5 shrink-0" />
-          <span>{actionError}</span>
+      {notice ? (
+        <div className="mb-5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-3.5 text-xs text-emerald-300">
+          {notice}
         </div>
-      )}
+      ) : null}
 
-      <div className={styles.twoCol}>
-        <div className={styles.col}>
-          <div className={styles.card}>
-            <h2 className={styles.cardTitle}>Investor Details</h2>
-            <div className={styles.detailGrid}>
-              <div className={styles.detailItem}>
-                <span className={styles.label}>Name</span>
-                <span className={styles.value}>{deposit.user.name}</span>
-              </div>
-              <div className={styles.detailItem}>
-                <span className={styles.label}>Email</span>
-                <span className={styles.value}>{deposit.user.email}</span>
-              </div>
-              <div className={styles.detailItem}>
-                <span className={styles.label}>Investor UID</span>
-                <span className={styles.valueCode}>{deposit.user.publicUid}</span>
-              </div>
-              {deposit.user.phone && (
-                <div className={styles.detailItem}>
-                  <span className={styles.label}>Phone</span>
-                  <span className={styles.value}>{deposit.user.phone}</span>
-                </div>
-              )}
+      <div className={styles.grid}>
+        <section className={styles.card}>
+          <h2 className="mb-3 text-base font-bold">Customer Request & Payment Submission</h2>
+
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Deposit ID</span>
+            <span className="font-mono font-bold text-amber-400">{dep.depositUid}</span>
+          </div>
+          <div className={styles.kvRow}>
+            <span className="opacity-65">User</span>
+            <span className="font-semibold">
+              {dep.user.name} ({dep.user.publicUid}) · {dep.user.email}
+            </span>
+          </div>
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Requested Amount</span>
+            <span className="font-mono font-bold">
+              {formatUsdt(dep.requestedAmount)} {dep.token}
+            </span>
+          </div>
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Network</span>
+            <span>{dep.network} (BEP-20)</span>
+          </div>
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Receiving Address</span>
+            <span className="font-mono text-right break-all">{dep.receivingAddress}</span>
+          </div>
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Submitted Tx Hash</span>
+            <div className="flex items-center gap-2">
+              <span className="font-mono break-all text-right">
+                {dep.submission?.transactionHash || 'Not submitted'}
+              </span>
+              {dep.submission?.transactionHash ? (
+                <CopyButton value={dep.submission.transactionHash} label="Copy" />
+              ) : null}
             </div>
           </div>
-
-          <div className={styles.card}>
-            <h2 className={styles.cardTitle}>Order Specification</h2>
-            <div className={styles.detailGrid}>
-              <div className={styles.detailItem}>
-                <span className={styles.label}>Requested Amount</span>
-                <span className={styles.valueStrong}>{formatUsdt(deposit.requestedAmount)}</span>
-              </div>
-              <div className={styles.detailItem}>
-                <span className={styles.label}>Asset & Network</span>
-                <span className={styles.value}>
-                  {deposit.token} ({deposit.network})
-                </span>
-              </div>
-              <div className={styles.detailItem}>
-                <span className={styles.label}>Created At</span>
-                <span className={styles.value}>{new Date(deposit.createdAt).toLocaleString()}</span>
-              </div>
-              {deposit.submittedAt && (
-                <div className={styles.detailItem}>
-                  <span className={styles.label}>Submitted At</span>
-                  <span className={styles.value}>
-                    {new Date(deposit.submittedAt).toLocaleString()}
-                  </span>
-                </div>
-              )}
-              {deposit.reviewDeadline && (
-                <div className={styles.detailItem}>
-                  <span className={styles.label}>SLA Deadline</span>
-                  <span className={styles.value}>
-                    {new Date(deposit.reviewDeadline).toLocaleString()}
-                  </span>
-                </div>
-              )}
-              {deposit.rejectionReason && (
-                <div className={styles.detailItemFull}>
-                  <span className={styles.label}>Rejection Reason</span>
-                  <span className={styles.valueError}>{deposit.rejectionReason}</span>
-                </div>
-              )}
-            </div>
-            <div className={styles.addressRow}>
-              <span className={styles.label}>Receiving Vault Address</span>
-              <div className={styles.copyRow}>
-                <code className={styles.codeSmall}>{deposit.receivingAddress}</code>
-                <CopyButton text={deposit.receivingAddress} />
-              </div>
-            </div>
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Created Time</span>
+            <span>{new Date(dep.createdAt).toLocaleString()}</span>
+          </div>
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Submitted Time</span>
+            <span>{dep.submittedAt ? new Date(dep.submittedAt).toLocaleString() : '—'}</span>
           </div>
 
-          {deposit.submission && (
-            <div className={styles.card}>
-              <h2 className={styles.cardTitle}>Investor Submission Proof</h2>
-              <div className={styles.addressRow}>
-                <span className={styles.label}>Reported Tx Hash</span>
-                <div className={styles.copyRow}>
-                  <code className={styles.codeSmall}>{deposit.submission.transactionHash}</code>
-                  <CopyButton text={deposit.submission.transactionHash} />
-                </div>
+          {screenshotUrl ? (
+            <div className="mt-4">
+              <div className="mb-2 text-xs font-semibold opacity-75">
+                Supporting Screenshot (Never authoritative proof of payment):
               </div>
-              {deposit.submission.notes && (
-                <div className={styles.detailItemFull}>
-                  <span className={styles.label}>Investor Notes</span>
-                  <p className={styles.value}>{deposit.submission.notes}</p>
-                </div>
-              )}
-              {screenshotUrl && (
-                <div className={styles.screenshotWrap}>
-                  <span className={styles.label}>Payment Screenshot</span>
-                  <img
-                    src={screenshotUrl}
-                    alt="Payment Screenshot"
-                    className={styles.screenshotImg}
-                    onClick={() => window.open(screenshotUrl, '_blank')}
-                  />
-                  <p className={styles.hint}>Click image to view in new tab</p>
-                </div>
-              )}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={screenshotUrl}
+                alt="Submitted payment evidence"
+                className="max-h-64 rounded-xl border border-slate-700 object-contain"
+              />
             </div>
-          )}
+          ) : null}
+        </section>
 
-          {blockchainTx && (
-            <div className={styles.card}>
-              <div className={styles.cardHeaderRow}>
-                <h2 className={styles.cardTitle}>Automated On-Chain Telemetry</h2>
-                <span className={blockchainTx.isValid ? styles.badgeValid : styles.badgeInvalid}>
-                  {blockchainTx.isValid ? 'VALID' : 'FLAGGED / INVALID'}
-                </span>
-              </div>
-              <div className={styles.detailGrid}>
-                <div className={styles.detailItem}>
-                  <span className={styles.label}>Verification Mode</span>
-                  <span className={styles.value}>{blockchainTx.verificationMode}</span>
-                </div>
-                <div className={styles.detailItem}>
-                  <span className={styles.label}>Block Confirmations</span>
-                  <span className={styles.value}>{blockchainTx.confirmationCount}</span>
-                </div>
-                {blockchainTx.tokenAmount && (
-                  <div className={styles.detailItem}>
-                    <span className={styles.label}>On-Chain Amount</span>
-                    <span className={styles.valueStrong}>
-                      {formatUsdt(blockchainTx.tokenAmount)}
-                    </span>
-                  </div>
-                )}
-                {blockchainTx.fromAddress && (
-                  <div className={styles.detailItemFull}>
-                    <span className={styles.label}>From Address</span>
-                    <code className={styles.codeSmall}>{blockchainTx.fromAddress}</code>
-                  </div>
-                )}
-                {blockchainTx.failureReason && (
-                  <div className={styles.detailItemFull}>
-                    <span className={styles.label}>Failure Analysis</span>
-                    <span className={styles.valueError}>
-                      {blockchainTx.failureCode}: {blockchainTx.failureReason}
-                    </span>
-                  </div>
-                )}
-              </div>
+        <section className={styles.card}>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-base font-bold">Authoritative Blockchain Verification</h2>
+            {dep.blockchainTx ? (
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                  dep.blockchainTx.isValid
+                    ? 'bg-emerald-500/20 text-emerald-300'
+                    : 'bg-rose-500/20 text-rose-300'
+                }`}
+              >
+                {dep.blockchainTx.isValid ? 'ON-CHAIN VALID' : 'ON-CHAIN INVALID'}
+              </span>
+            ) : null}
+          </div>
+
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Blockchain Tx Status</span>
+            <span>
+              {dep.blockchainTx
+                ? dep.blockchainTx.txSucceeded
+                  ? 'SUCCESS (0x1)'
+                  : 'FAILED / NOT FOUND'
+                : 'Not verified yet'}
+            </span>
+          </div>
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Actual Blockchain Amount</span>
+            <span className="font-mono font-bold text-emerald-400">
+              {dep.blockchainTx?.tokenAmount
+                ? `${formatUsdt(dep.blockchainTx.tokenAmount)} USDT`
+                : '—'}
+            </span>
+          </div>
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Sender Address</span>
+            <span className="font-mono break-all text-right">
+              {dep.blockchainTx?.fromAddress || '—'}
+            </span>
+          </div>
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Receiver Address</span>
+            <span className="font-mono break-all text-right">
+              {dep.blockchainTx?.toAddress || '—'}
+            </span>
+          </div>
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Token Contract</span>
+            <span className="font-mono break-all text-right">
+              {dep.blockchainTx?.tokenContract || '—'}
+            </span>
+          </div>
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Block Number</span>
+            <span className="font-mono">{dep.blockchainTx?.blockNumber || '—'}</span>
+          </div>
+          <div className={styles.kvRow}>
+            <span className="opacity-65">Confirmation Count</span>
+            <span className="font-mono font-bold">{dep.blockchainTx?.confirmationCount ?? 0}</span>
+          </div>
+          {dep.blockchainTx?.failureReason ? (
+            <div className="mt-3 rounded-xl border border-rose-500/40 bg-rose-500/10 p-3 text-xs text-rose-200">
+              <strong>Verification Failure:</strong> {dep.blockchainTx.failureReason}
             </div>
-          )}
-        </div>
+          ) : null}
 
-        {isPending && (
-          <div className={styles.col}>
-            <div className={styles.actionCard}>
-              <h2 className={styles.cardTitle}>Operational Action</h2>
-              <form onSubmit={handleApprove} className={styles.formSection}>
-                <h3 className={styles.sectionSubtitle}>Option A: Confirm & Credit Deposit</h3>
-                <p className={styles.sectionHint}>
-                  Crediting will update the user's available ledger balance and create an immutable
-                  credit entry.
-                </p>
-                <div className={styles.field}>
-                  <label htmlFor="verifiedAmount" className={styles.fieldLabel}>
-                    Verified Amount (USDT)
-                  </label>
+          {canProcess ? (
+            <div className="mt-6 space-y-4 border-t border-slate-700/60 pt-5">
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  isLoading={busyAction === 'VERIFY'}
+                  onClick={handleVerify}
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  VERIFY ON-CHAIN
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="gold"
+                  isLoading={busyAction === 'APPROVE'}
+                  onClick={handleApprove}
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                  APPROVE & CREDIT LEDGER
+                </Button>
+              </div>
+
+              <div className="space-y-2 pt-2">
+                <label className="block text-xs font-semibold opacity-75">
+                  Rejection Reason (Required to Reject)
+                </label>
+                <div className="flex gap-2">
                   <input
-                    id="verifiedAmount"
-                    type="number"
-                    step="0.01"
-                    min="1"
-                    required
-                    value={verifiedAmount}
-                    onChange={(e) => setVerifiedAmount(e.target.value)}
+                    type="text"
+                    value={rejectReason}
+                    onChange={(e) => setRejectReason(e.target.value)}
+                    placeholder="Reason for rejecting deposit..."
                     className={styles.input}
                   />
+                  <Button
+                    type="button"
+                    variant="danger"
+                    isLoading={busyAction === 'REJECT'}
+                    onClick={handleReject}
+                  >
+                    <XCircle className="h-4 w-4" />
+                    REJECT
+                  </Button>
                 </div>
-                <div className={styles.field}>
-                  <label htmlFor="approveNotes" className={styles.fieldLabel}>
-                    Admin Notes (Optional)
-                  </label>
-                  <textarea
-                    id="approveNotes"
-                    rows={2}
-                    value={adminNotes}
-                    onChange={(e) => setAdminNotes(e.target.value)}
-                    placeholder="e.g. Verified via BSCScan tx hash confirmation"
-                    className={styles.textarea}
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
-                >
-                  {isSubmitting
-                    ? 'Processing...'
-                    : `Approve & Credit ${formatUsdt(verifiedAmount || deposit.requestedAmount)}`}
-                </Button>
-              </form>
-
-              <hr className={styles.divider} />
-
-              <form onSubmit={handleReject} className={styles.formSection}>
-                <h3 className={styles.sectionSubtitleError}>Option B: Reject Deposit</h3>
-                <p className={styles.sectionHint}>
-                  Investor will receive an immediate notification with this rejection explanation.
-                </p>
-                <div className={styles.field}>
-                  <label htmlFor="rejectionReason" className={styles.fieldLabel}>
-                    Rejection Reason (Required)
-                  </label>
-                  <textarea
-                    id="rejectionReason"
-                    rows={3}
-                    required
-                    value={rejectionReason}
-                    onChange={(e) => setRejectionReason(e.target.value)}
-                    placeholder="e.g. Invalid transaction hash; payment not received on-chain; amount mismatch."
-                    className={styles.textarea}
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  variant="destructive"
-                  className="w-full"
-                >
-                  {isSubmitting ? 'Processing...' : 'Reject Deposit Order'}
-                </Button>
-              </form>
+              </div>
             </div>
-          </div>
-        )}
+          ) : null}
+        </section>
       </div>
     </div>
   );
