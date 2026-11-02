@@ -1,0 +1,677 @@
+/* NAVRIX Institutional Multi-Model Ecosystem Landing Page
+   Section colors, compact vertical heights, and disciplined container width */
+
+.pageRoot {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background-color: #070b14;
+  color: #f8fafc;
+  font-family: var(--nv-font-sf);
+  overflow-x: clip;
+}
+
+.mainContent {
+  flex: 1;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Centralized disciplined container width (compact, user-friendly) */
+.sectionInner {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ==========================================================================
+   SHARED SECTION HEADERS & LABELS (Compact Typography & Rhythm)
+   ========================================================================== */
+.sectionHeader {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.sectionPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.22rem 0.7rem;
+  border-radius: 9999px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--nv-gold);
+  background-color: rgba(245, 184, 46, 0.08);
+  border: 1px solid rgba(245, 184, 46, 0.32);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: clamp(1.75rem, 2.8vw, 2.35rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+}
+
+[data-theme='light'] .sectionTitle {
+  color: #0f172a;
+}
+
+.sectionSubtitle {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.62;
+  color: #94a3b8;
+  max-width: 660px;
+}
+
+[data-theme='light'] .sectionSubtitle {
+  color: #475569;
+}
+
+/* ==========================================================================
+   SECTION 1: DASHBOARD MOCKUP & GUIDED TUTORIAL (Container #080d19)
+   ========================================================================== */
+.mockupSection {
+  width: 100%;
+  background-color: #080d19;
+  background-image: radial-gradient(circle at 50% 0%, rgba(245, 184, 46, 0.04) 0%, transparent 65%);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 2.75rem 0 3.25rem;
+}
+
+/* ==========================================================================
+   SECTION 2: ENGINEERING FINANCIAL ECOSYSTEMS (Container #060a14)
+   ========================================================================== */
+.engineeringSection {
+  width: 100%;
+  background-color: #060a14;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 50% 10%, rgba(245, 184, 46, 0.05) 0%, transparent 70%),
+    linear-gradient(180deg, #060a14 0%, #070c18 100%);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 3rem 0 3.25rem;
+}
+
+.statCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .statCardsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.statCard {
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 1.45rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.statCard:hover {
+  border-color: rgba(245, 184, 46, 0.4);
+  background: rgba(15, 23, 42, 0.85);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.5);
+}
+
+.statValue {
+  font-size: clamp(2rem, 3.2vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #ffffff 0%, #fef3c7 40%, #f5b82e 85%, #d99b1e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.statLabel {
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: #f8fafc;
+  letter-spacing: 0.02em;
+}
+
+.statDescription {
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: #94a3b8;
+  margin-top: 0.2rem;
+}
+
+/* ==========================================================================
+   SECTION 3: DIVERSIFIED FINANCIAL INFRASTRUCTURE (Container #090f1e)
+   ========================================================================== */
+.infrastructureSection {
+  width: 100%;
+  background-color: #090f1e;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 3.25rem 0 3.5rem;
+}
+
+/* 3D CardSwap Container */
+.cardSwapContainer {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(245, 184, 46, 0.22);
+  border-radius: 1.15rem;
+  padding: 1.15rem 1.25rem 0.95rem;
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cardSwapHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.cardSwapTitle {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f8fafc;
+}
+
+.cardSwapBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: var(--nv-gold);
+  background-color: rgba(245, 184, 46, 0.1);
+  border: 1px solid rgba(245, 184, 46, 0.28);
+  border-radius: 9999px;
+  padding: 0.15rem 0.55rem;
+}
+
+.cardSwapStageWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 310px;
+}
+
+.cardSwapHint {
+  font-size: 0.68rem;
+  color: #94a3b8;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* 8 Entities Grid (Compact & User-friendly) */
+.entitiesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 1100px) {
+  .entitiesGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .entitiesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.entityCard {
+  border-radius: 0.95rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.13);
+  padding: 1.15rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 180px;
+  transition: all 0.18s ease;
+}
+
+.entityCard:hover {
+  border-color: rgba(245, 184, 46, 0.4);
+  background: rgba(15, 23, 42, 0.85);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.45);
+}
+
+.entityCardTop {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+.entityHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.entityTitle {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.entityTagline {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--nv-gold);
+}
+
+.entityDesc {
+  margin: 0.35rem 0 0;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: #94a3b8;
+}
+
+.entityCardBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+  padding-top: 0.65rem;
+}
+
+.entityLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #f8fafc;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.entityLink:hover {
+  color: var(--nv-gold);
+}
+
+.centerCtaWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.75rem;
+}
+
+.participantsSection {
+  width: 100%;
+  background-color: #070b14;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 3rem 0 3.25rem;
+}
+
+.participantsCard {
+  border-radius: 1.15rem;
+  background: rgba(13, 21, 38, 0.75);
+  border: 1px solid rgba(245, 184, 46, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 2rem 2.25rem;
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+  .participantsCard {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+.participantsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .participantsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .participantsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.participantFeatureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  transition: all 0.18s ease;
+}
+
+.participantFeatureItem:hover {
+  border-color: rgba(245, 184, 46, 0.35);
+  background: rgba(15, 23, 42, 0.8);
+  transform: translateY(-1px);
+}
+
+.checkIconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.participantFeatureTitle {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.participantFeatureDesc {
+  margin-top: 0.2rem;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   SECTION 5: STRUCTURED. SEPARATED. TRANSPARENT. (Container #0a1122)
+   ========================================================================== */
+.pillarsSection {
+  width: 100%;
+  background-color: #0a1122;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 3rem 0 3.25rem;
+}
+
+.pillarsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .pillarsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pillarCard {
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 1.5rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  transition: all 0.18s ease;
+}
+
+.pillarCard:hover {
+  border-color: rgba(245, 184, 46, 0.35);
+  background: rgba(15, 23, 42, 0.85);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.5);
+}
+
+.pillarIconBox {
+  width: 36px;
+  height: 36px;
+  border-radius: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pillarTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.pillarBody {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   SECTION 6: INTEGRATED FINANCIAL INFRASTRUCTURE (Container #060a14)
+   ========================================================================== */
+.integratedSection {
+  width: 100%;
+  background-color: #060a14;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 2.75rem 0 3rem;
+}
+
+.integratedGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .integratedGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.integratedCard {
+  border-radius: 0.95rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  padding: 1.35rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.18s ease;
+}
+
+.integratedCard:hover {
+  border-color: rgba(245, 184, 46, 0.35);
+  background: rgba(15, 23, 42, 0.85);
+  transform: translateY(-2px);
+}
+
+.integratedTitle {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.integratedDesc {
+  margin: 0;
+  font-size: 0.76rem;
+  line-height: 1.55;
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   SECTION 7: BUILD WITH NAVRIX BANNER (Container #080d1a)
+   ========================================================================== */
+.buildBannerSection {
+  width: 100%;
+  background-color: #080d1a;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 3.25rem 0;
+}
+
+.buildBannerCard {
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, rgba(20, 31, 56, 0.95) 0%, rgba(10, 16, 30, 0.95) 100%);
+  border: 1px solid rgba(245, 184, 46, 0.35);
+  box-shadow:
+    0 24px 60px -20px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  padding: 2.25rem 2rem;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.buildBannerTitle {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.buildBannerSubtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #94a3b8;
+  max-width: 620px;
+}
+
+/* ==========================================================================
+   SECTION 8: REAL-TIME GLOBAL TELEMETRY BAR (Container #05080f)
+   ========================================================================== */
+.telemetryBarSection {
+  width: 100%;
+  background-color: #05080f;
+  border-top: 1px solid rgba(245, 184, 46, 0.22);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 0.85rem 1.5rem;
+}
+
+.telemetryInner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.telemetryHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.telemetryPulseTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #f8fafc;
+}
+
+.greenPulseDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulseGreen 1.8s infinite;
+}
+
+@keyframes pulseGreen {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+}
+
+.telemetryClocksRow {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (max-width: 900px) {
+  .telemetryClocksRow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 500px) {
+  .telemetryClocksRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.clockItem {
+  display: flex;
+  flex-direction: column;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.5rem;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.clockCity {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.clockTime {
+  font-size: 0.76rem;
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--nv-gold);
+  letter-spacing: 0.04em;
+  margin-top: 0.15rem;
+}

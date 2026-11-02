@@ -3,8 +3,7 @@
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(circle at 50% 0%, rgba(245, 184, 46, 0.13), transparent 50%),
-    var(--nv-bg);
+    radial-gradient(circle at 50% 0%, rgba(245, 184, 46, 0.13), transparent 50%), var(--nv-bg);
 }
 
 .authViewport {
@@ -40,11 +39,7 @@
   height: 50px;
   border-radius: 1rem;
   border: 1px solid rgba(245, 184, 46, 0.3);
-  background: radial-gradient(
-    circle at 30% 20%,
-    rgba(245, 184, 46, 0.2),
-    transparent 70%
-  );
+  background: radial-gradient(circle at 30% 20%, rgba(245, 184, 46, 0.2), transparent 70%);
 }
 
 .unifiedPill {
@@ -100,7 +95,9 @@
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .googleBtn:hover {
