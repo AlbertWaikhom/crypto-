@@ -1,739 +1,203 @@
+/* NAVRIX Institutional Multi-Model Ecosystem Landing Page
+   Section colors, compact vertical heights, and disciplined container width */
+
 .pageRoot {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background:
-    radial-gradient(circle at 14% 0%, rgba(245, 184, 46, 0.12), transparent 42%),
-    radial-gradient(circle at 86% 10%, rgba(16, 185, 129, 0.08), transparent 42%),
-    var(--nv-bg);
+  background-color: #070b14;
+  color: #f8fafc;
+  font-family: var(--nv-font-sf);
+  overflow-x: clip;
 }
 
 .mainContent {
   flex: 1;
   width: 100%;
-  max-width: 1280px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Centralized disciplined container width (compact, user-friendly) */
+.sectionInner {
+  width: 100%;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 0 1.25rem 3.5rem;
+  padding: 0 1.5rem;
 }
 
-/* Hero Section */
-.heroSection {
-  padding: 3rem 0 2rem;
-}
-
-.mockupSection {
-  padding: 1.5rem 0 3.5rem;
-  border-top: 1px solid var(--nv-border);
-}
-
-.heroGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-  gap: 2.25rem;
-  align-items: center;
-}
-
-.heroCopyCol {
-  min-width: 0;
-}
-
-.eyebrowRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.networkBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.42rem;
-  border-radius: 9999px;
-  border: 1px solid rgba(245, 184, 46, 0.35);
-  background-color: rgba(245, 184, 46, 0.09);
-  padding: 0.28rem 0.78rem;
-  font-size: 0.69rem;
-  font-weight: 800;
-  letter-spacing: 0.07em;
-}
-
-.securityChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  border-radius: 9999px;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  background-color: rgba(16, 185, 129, 0.1);
-  padding: 0.28rem 0.72rem;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #34d399;
-}
-
-[data-theme='light'] .securityChip {
-  color: #047857;
-}
-
-.heroHeadline {
-  margin: 1.1rem 0 0;
-  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.03em;
-}
-
-.heroDescription {
-  margin: 1rem 0 0;
-  font-size: 1rem;
-  line-height: 1.65;
-  color: var(--nv-text-muted);
-  max-width: 620px;
-}
-
-.ctaRow {
-  margin-top: 1.65rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.85rem;
-}
-
-.heroMetaRibbon {
-  margin-top: 1.85rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.25rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--nv-border);
-}
-
-.metaItem {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--nv-text-muted);
-}
-
-.metaDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 9999px;
-  background-color: var(--nv-gold);
-}
-
-/* Hero Right Visual Card */
-.visualCard {
-  padding: 1.5rem;
-  border-radius: 1.25rem;
-}
-
-.visualCardHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.85rem;
-  border-bottom: 1px solid var(--nv-border);
-}
-
-.liveBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #34d399;
-}
-
-.livePulseDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 9999px;
-  background-color: #34d399;
-  animation: pulseDot 2s infinite ease-in-out;
-}
-
-@keyframes pulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.85); }
-}
-
-.visualList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.visualEntityRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.65rem 0.85rem;
-  border-radius: 0.75rem;
-  background-color: var(--nv-surface-hover);
-  border: 1px solid var(--nv-border);
-  transition: border-color 0.15s ease;
-}
-
-.visualEntityRow:hover {
-  border-color: var(--nv-border-gold);
-}
-
-.visualEntityLeft {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.entityIconBox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 0.55rem;
-  background-color: rgba(245, 184, 46, 0.14);
-  color: var(--nv-gold);
-}
-
-.entityNameSmall {
-  font-size: 0.82rem;
-  font-weight: 700;
-}
-
-.entityTagSmall {
-  font-size: 0.68rem;
-  color: var(--nv-text-muted);
-}
-
-.entityTypeBadge {
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 0.2rem 0.5rem;
-  border-radius: 0.4rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  color: var(--nv-text-muted);
-  border: 1px solid var(--nv-border);
-}
-
-/* Section Header Shared */
+/* ==========================================================================
+   SHARED SECTION HEADERS & LABELS (Compact Typography & Rhythm)
+   ========================================================================== */
 .sectionHeader {
   text-align: center;
   max-width: 720px;
-  margin: 0 auto 2.5rem;
+  margin: 0 auto 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
 }
 
 .sectionPill {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  padding: 0.22rem 0.7rem;
   border-radius: 9999px;
-  border: 1px solid rgba(245, 184, 46, 0.3);
-  background-color: rgba(245, 184, 46, 0.08);
-  padding: 0.22rem 0.72rem;
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
-  margin-bottom: 0.65rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--nv-gold);
+  background-color: rgba(245, 184, 46, 0.08);
+  border: 1px solid rgba(245, 184, 46, 0.32);
 }
 
 .sectionTitle {
-  font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+  margin: 0;
+  font-size: clamp(1.75rem, 2.8vw, 2.35rem);
   font-weight: 800;
-  letter-spacing: -0.025em;
   line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+}
+
+[data-theme='light'] .sectionTitle {
+  color: #0f172a;
 }
 
 .sectionSubtitle {
-  margin-top: 0.65rem;
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--nv-text-muted);
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.62;
+  color: #94a3b8;
+  max-width: 660px;
 }
 
-/* Engineering Section */
+[data-theme='light'] .sectionSubtitle {
+  color: #475569;
+}
+
+/* ==========================================================================
+   SECTION 1: DASHBOARD MOCKUP & GUIDED TUTORIAL (Container #080d19)
+   ========================================================================== */
+.mockupSection {
+  width: 100%;
+  background-color: #080d19;
+  background-image: radial-gradient(circle at 50% 0%, rgba(245, 184, 46, 0.04) 0%, transparent 65%);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 2.75rem 0 3.25rem;
+}
+
+/* ==========================================================================
+   SECTION 2: ENGINEERING FINANCIAL ECOSYSTEMS (Container #060a14)
+   ========================================================================== */
 .engineeringSection {
-  padding: 3.5rem 0 2rem;
-  border-top: 1px solid var(--nv-border);
+  width: 100%;
+  background-color: #060a14;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 50% 10%, rgba(245, 184, 46, 0.05) 0%, transparent 70%),
+    linear-gradient(180deg, #060a14 0%, #070c18 100%);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 3rem 0 3.25rem;
 }
 
 .statCardsGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
-  margin-top: 2rem;
-}
-
-.statCard {
-  padding: 1.65rem 1.4rem;
-  border-radius: 1.15rem;
-  background-color: var(--nv-surface);
-  border: 1px solid var(--nv-border);
-  text-align: center;
-  transition: border-color 0.2s ease, transform 0.2s ease;
-}
-
-.statCard:hover {
-  border-color: var(--nv-border-gold);
-  transform: translateY(-2px);
-}
-
-.statValue {
-  font-size: 2.5rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--nv-gold);
-}
-
-.statLabel {
-  margin-top: 0.35rem;
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--nv-text);
-}
-
-.statDescription {
-  margin-top: 0.35rem;
-  font-size: 0.74rem;
-  color: var(--nv-text-muted);
-  line-height: 1.45;
-}
-
-/* Diversified Infrastructure Grid */
-.infrastructureSection {
-  padding: 3.5rem 0 2rem;
-}
-
-.entitiesGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.entityCard {
-  padding: 1.35rem 1.2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-radius: 1.1rem;
-  min-height: 200px;
-}
-
-.entityCardTop {
-  display: flex;
-  flex-direction: column;
-}
-
-.entityHeaderRow {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.6rem;
-}
-
-.entityTitle {
-  font-size: 1.08rem;
-  font-weight: 800;
-  letter-spacing: -0.015em;
-}
-
-.entityTagline {
-  font-size: 0.73rem;
-  font-weight: 700;
-  color: var(--nv-gold);
-  margin-bottom: 0.45rem;
-}
-
-.entityDesc {
-  font-size: 0.78rem;
-  line-height: 1.5;
-  color: var(--nv-text-muted);
-}
-
-.entityCardBottom {
-  margin-top: 1.1rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--nv-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.entityLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: var(--nv-gold);
-  transition: opacity 0.15s ease;
-}
-
-.entityLink:hover {
-  opacity: 0.85;
-  text-decoration: underline;
-}
-
-.centerCtaWrap {
-  margin-top: 2rem;
-  text-align: center;
-}
-
-/* Modern Participants Section */
-.participantsSection {
-  padding: 3.5rem 0 2rem;
-  border-top: 1px solid var(--nv-border);
-}
-
-.participantsCard {
-  border-radius: 1.25rem;
-  padding: 2.25rem 2rem;
-  background-color: var(--nv-surface);
-  border: 1px solid var(--nv-border-gold);
-}
-
-.participantsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-  margin-top: 1.5rem;
-}
-
-.participantFeatureItem {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.checkIconBox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 9999px;
-  background-color: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  flex-shrink: 0;
-  margin-top: 0.1rem;
-}
-
-.participantFeatureTitle {
-  font-size: 0.88rem;
-  font-weight: 700;
-}
-
-.participantFeatureDesc {
-  margin-top: 0.2rem;
-  font-size: 0.74rem;
-  color: var(--nv-text-muted);
-  line-height: 1.45;
-}
-
-/* Structured. Separated. Transparent. */
-.pillarsSection {
-  padding: 3.5rem 0 2rem;
-}
-
-.pillarsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-}
-
-.pillarCard {
-  padding: 1.65rem 1.4rem;
-  border-radius: 1.15rem;
-  background-color: var(--nv-surface);
-  border: 1px solid var(--nv-border);
-  transition: border-color 0.2s ease;
-}
-
-.pillarCard:hover {
-  border-color: var(--nv-border-gold);
-}
-
-.pillarIconBox {
-  width: 40px;
-  height: 40px;
-  border-radius: 0.8rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.pillarTitle {
-  font-size: 1.12rem;
-  font-weight: 800;
-  letter-spacing: -0.015em;
-  margin-bottom: 0.45rem;
-}
-
-.pillarBody {
-  font-size: 0.8rem;
-  line-height: 1.55;
-  color: var(--nv-text-muted);
-}
-
-/* Integrated Infrastructure Section */
-.integratedSection {
-  padding: 3.5rem 0 2rem;
-  border-top: 1px solid var(--nv-border);
-}
-
-.integratedGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-  margin-top: 1.75rem;
-}
-
-.integratedCard {
-  padding: 1.5rem;
-  border-radius: 1rem;
-  background-color: var(--nv-surface);
-  border: 1px solid var(--nv-border);
-}
-
-.integratedTitle {
-  font-size: 0.96rem;
-  font-weight: 800;
-  margin-bottom: 0.35rem;
-  color: var(--nv-gold);
-}
-
-.integratedDesc {
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: var(--nv-text-muted);
-}
-
-/* Build With NAVRIX Banner */
-.buildBanner {
-  margin: 3.5rem 0 1rem;
-  border-radius: 1.5rem;
-  padding: 3rem 2rem;
-  text-align: center;
-  border: 1px solid var(--nv-border-gold);
-  background:
-    radial-gradient(circle at 50% 0%, rgba(245, 184, 46, 0.16), transparent 60%),
-    var(--nv-surface);
-}
-
-.buildBannerTitle {
-  font-size: clamp(1.8rem, 3.2vw, 2.5rem);
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  max-width: 680px;
-  margin: 0 auto;
-}
-
-.buildBannerSubtitle {
-  margin: 0.85rem auto 1.75rem;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--nv-text-muted);
-  max-width: 580px;
-}
-
-/* Footer */
-.siteFooter {
-  border-top: 1px solid var(--nv-border);
-  background-color: var(--nv-surface);
-  padding: 3rem 1.25rem 2rem;
-}
-
-.footerInner {
-  max-width: 1280px;
-  margin: 0 auto;
-}
-
-.footerGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
-  gap: 2.5rem;
-  margin-bottom: 2.5rem;
-}
-
-.footerBrandCol {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.footerBrandTagline {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--nv-gold);
-}
-
-.footerBrandSub {
-  font-size: 0.78rem;
-  line-height: 1.5;
-  color: var(--nv-text-muted);
-  max-width: 360px;
-}
-
-.footerColTitle {
-  font-size: 0.75rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--nv-text-muted);
-  margin-bottom: 0.85rem;
-}
-
-.footerNavList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.footerLink {
-  font-size: 0.82rem;
-  color: var(--nv-text);
-  opacity: 0.8;
-  transition: opacity 0.15s ease, color 0.15s ease;
-}
-
-.footerLink:hover {
-  opacity: 1;
-  color: var(--nv-gold);
-}
-
-.socialRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-}
-
-.socialPill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  border-radius: 0.65rem;
-  padding: 0.45rem 0.8rem;
-  background-color: var(--nv-bg-elevated);
-  border: 1px solid var(--nv-border);
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: var(--nv-text);
-  transition: border-color 0.15s ease;
-}
-
-.socialPill:hover {
-  border-color: var(--nv-border-gold);
-}
-
-.disclaimerBox {
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--nv-border);
-  font-size: 0.72rem;
-  line-height: 1.6;
-  color: var(--nv-text-muted);
-  text-align: center;
-}
-
-.copyrightLine {
-  margin-top: 0.75rem;
-  font-size: 0.72rem;
-  color: var(--nv-text-muted);
-  text-align: center;
-}
-
-/* Responsive Media Queries */
-@media (max-width: 1024px) {
-  .heroGrid {
-    grid-template-columns: 1fr;
-  }
-  .entitiesGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .statCardsGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .participantsGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .footerGrid {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
 @media (max-width: 768px) {
-  .heroSection {
-    padding: 2rem 0 1.5rem;
-  }
   .statCardsGrid {
     grid-template-columns: 1fr;
   }
-  .entitiesGrid {
-    grid-template-columns: 1fr;
-  }
-  .pillarsGrid {
-    grid-template-columns: 1fr;
-  }
-  .integratedGrid {
-    grid-template-columns: 1fr;
-  }
-  .participantsGrid {
-    grid-template-columns: 1fr;
-  }
-  .footerGrid {
-    grid-template-columns: 1fr;
-    gap: 1.85rem;
-  }
 }
 
-
-/* ReactBits ParticleText & CardSwap Styling */
-.particleHeroBox {
-  width: 100%;
-  height: 95px;
-  margin-bottom: 0.35rem;
-  overflow: hidden;
-}
-
-.cardSwapContainer {
-  position: relative;
-  width: 100%;
-  max-width: 440px;
-  height: 480px;
-  margin: 0 auto;
-  border-radius: 1.5rem;
-  background: radial-gradient(
-    circle at 50% 0%,
-    rgba(245, 184, 46, 0.14),
-    rgba(12, 19, 34, 0.85) 75%
-  );
-  border: 1px solid rgba(245, 184, 46, 0.32);
-  box-shadow:
-    0 24px 60px -20px rgba(0, 0, 0, 0.8),
-    0 0 30px rgba(245, 184, 46, 0.12);
-  padding: 1.1rem;
+.statCard {
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 1.45rem 1.35rem;
   display: flex;
   flex-direction: column;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.statCard:hover {
+  border-color: rgba(245, 184, 46, 0.4);
+  background: rgba(15, 23, 42, 0.85);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.5);
+}
+
+.statValue {
+  font-size: clamp(2rem, 3.2vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #ffffff 0%, #fef3c7 40%, #f5b82e 85%, #d99b1e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.statLabel {
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: #f8fafc;
+  letter-spacing: 0.02em;
+}
+
+.statDescription {
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: #94a3b8;
+  margin-top: 0.2rem;
+}
+
+/* ==========================================================================
+   SECTION 3: DIVERSIFIED FINANCIAL INFRASTRUCTURE (Container #090f1e)
+   ========================================================================== */
+.infrastructureSection {
+  width: 100%;
+  background-color: #090f1e;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 3.25rem 0 3.5rem;
+}
+
+/* 3D CardSwap Container */
+.cardSwapContainer {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(245, 184, 46, 0.22);
+  border-radius: 1.15rem;
+  padding: 1.15rem 1.25rem 0.95rem;
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .cardSwapHeader {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.85rem;
-  padding-bottom: 0.65rem;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
 }
 
 .cardSwapTitle {
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   font-weight: 800;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--nv-gold);
+  color: #f8fafc;
 }
 
 .cardSwapBadge {
@@ -742,24 +206,473 @@
   gap: 0.3rem;
   font-size: 0.64rem;
   font-weight: 700;
-  color: #34d399;
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.28);
-  padding: 0.12rem 0.5rem;
+  color: var(--nv-gold);
+  background-color: rgba(245, 184, 46, 0.1);
+  border: 1px solid rgba(245, 184, 46, 0.28);
   border-radius: 9999px;
+  padding: 0.15rem 0.55rem;
 }
 
 .cardSwapStageWrapper {
-  flex: 1;
-  position: relative;
   width: 100%;
-  min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 310px;
 }
 
 .cardSwapHint {
-  margin-top: 0.65rem;
+  font-size: 0.68rem;
+  color: #94a3b8;
+  margin-top: 0.5rem;
   text-align: center;
-  font-size: 0.66rem;
-  font-weight: 600;
-  color: var(--nv-text-muted);
+}
+
+/* 8 Entities Grid (Compact & User-friendly) */
+.entitiesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 1100px) {
+  .entitiesGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .entitiesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.entityCard {
+  border-radius: 0.95rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.13);
+  padding: 1.15rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 180px;
+  transition: all 0.18s ease;
+}
+
+.entityCard:hover {
+  border-color: rgba(245, 184, 46, 0.4);
+  background: rgba(15, 23, 42, 0.85);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.45);
+}
+
+.entityCardTop {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+.entityHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.entityTitle {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.entityTagline {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--nv-gold);
+}
+
+.entityDesc {
+  margin: 0.35rem 0 0;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: #94a3b8;
+}
+
+.entityCardBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+  padding-top: 0.65rem;
+}
+
+.entityLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #f8fafc;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.entityLink:hover {
+  color: var(--nv-gold);
+}
+
+.centerCtaWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.75rem;
+}
+
+/* ==========================================================================
+   SECTION 4: BUILT FOR MODERN MARKET PARTICIPANTS (Container #070b14)
+   ========================================================================== */
+.participantsSection {
+  width: 100%;
+  background-color: #070b14;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 3rem 0 3.25rem;
+}
+
+.participantsCard {
+  border-radius: 1.15rem;
+  background: rgba(13, 21, 38, 0.75);
+  border: 1px solid rgba(245, 184, 46, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 2rem 2.25rem;
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+  .participantsCard {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+.participantsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .participantsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .participantsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.participantFeatureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  transition: all 0.18s ease;
+}
+
+.participantFeatureItem:hover {
+  border-color: rgba(245, 184, 46, 0.35);
+  background: rgba(15, 23, 42, 0.8);
+  transform: translateY(-1px);
+}
+
+.checkIconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.participantFeatureTitle {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.participantFeatureDesc {
+  margin-top: 0.2rem;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   SECTION 5: STRUCTURED. SEPARATED. TRANSPARENT. (Container #0a1122)
+   ========================================================================== */
+.pillarsSection {
+  width: 100%;
+  background-color: #0a1122;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 3rem 0 3.25rem;
+}
+
+.pillarsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .pillarsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pillarCard {
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 1.5rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  transition: all 0.18s ease;
+}
+
+.pillarCard:hover {
+  border-color: rgba(245, 184, 46, 0.35);
+  background: rgba(15, 23, 42, 0.85);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.5);
+}
+
+.pillarIconBox {
+  width: 36px;
+  height: 36px;
+  border-radius: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pillarTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.pillarBody {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   SECTION 6: INTEGRATED FINANCIAL INFRASTRUCTURE (Container #060a14)
+   ========================================================================== */
+.integratedSection {
+  width: 100%;
+  background-color: #060a14;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 2.75rem 0 3rem;
+}
+
+.integratedGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .integratedGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.integratedCard {
+  border-radius: 0.95rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  padding: 1.35rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.18s ease;
+}
+
+.integratedCard:hover {
+  border-color: rgba(245, 184, 46, 0.35);
+  background: rgba(15, 23, 42, 0.85);
+  transform: translateY(-2px);
+}
+
+.integratedTitle {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.integratedDesc {
+  margin: 0;
+  font-size: 0.76rem;
+  line-height: 1.55;
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   SECTION 7: BUILD WITH NAVRIX BANNER (Container #080d1a)
+   ========================================================================== */
+.buildBannerSection {
+  width: 100%;
+  background-color: #080d1a;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 3.25rem 0;
+}
+
+.buildBannerCard {
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, rgba(20, 31, 56, 0.95) 0%, rgba(10, 16, 30, 0.95) 100%);
+  border: 1px solid rgba(245, 184, 46, 0.35);
+  box-shadow:
+    0 24px 60px -20px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  padding: 2.25rem 2rem;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.buildBannerTitle {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.buildBannerSubtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #94a3b8;
+  max-width: 620px;
+}
+
+/* ==========================================================================
+   SECTION 8: REAL-TIME GLOBAL TELEMETRY BAR (Container #05080f)
+   ========================================================================== */
+.telemetryBarSection {
+  width: 100%;
+  background-color: #05080f;
+  border-top: 1px solid rgba(245, 184, 46, 0.22);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 0.85rem 1.5rem;
+}
+
+.telemetryInner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.telemetryHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.telemetryPulseTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #f8fafc;
+}
+
+.greenPulseDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulseGreen 1.8s infinite;
+}
+
+@keyframes pulseGreen {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+}
+
+.telemetryClocksRow {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (max-width: 900px) {
+  .telemetryClocksRow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 500px) {
+  .telemetryClocksRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.clockItem {
+  display: flex;
+  flex-direction: column;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.5rem;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.clockCity {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.clockTime {
+  font-size: 0.76rem;
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--nv-gold);
+  letter-spacing: 0.04em;
+  margin-top: 0.15rem;
 }
