@@ -1,0 +1,148 @@
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+
+// Public Pages
+import HomePage from './app/home';
+import AboutPage from './app/about/about';
+import EcosystemPage from './app/ecosystem/ecosystem';
+import ContactPage from './app/contact/contact';
+import TermsConditionsPage from './app/terms-conditions/terms-conditions';
+import RiskDisclosurePage from './app/risk-disclosure/risk-disclosure';
+
+// Auth Pages
+import LoginPage from './app/auth/login/login';
+import RegisterPage from './app/auth/register/register';
+import ForgotPasswordPage from './app/auth/forgot-password/forgot-password';
+
+// Portal Shell & Pages
+import { PortalShell } from './components/PortalShell';
+import DashboardPage from './app/(portal)/dashboard/dashboard';
+import DepositPage from './app/(portal)/deposit/deposit';
+import DepositDetailPage from './app/(portal)/deposit/[id]/deposit-detail';
+import WithdrawPage from './app/(portal)/withdraw/withdraw';
+import InvestmentsPage from './app/(portal)/investments/investments';
+import InvestmentDetailPage from './app/(portal)/investments/[id]/investment-detail';
+import InterestHistoryPage from './app/(portal)/interest-history/interest-history';
+import TransactionsPage from './app/(portal)/transactions/transactions';
+import NotificationsPage from './app/(portal)/notifications/notifications';
+import ProfilePage from './app/(portal)/profile/profile';
+import SecurityPage from './app/(portal)/security/security';
+
+function PortalLayout({ children }) {
+  return <PortalShell>{children}</PortalShell>;
+}
+
+export default function App() {
+  return (
+    <Routes>
+      {/* Public Pages */}
+      <Route path="/" element={<HomePage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/ecosystem" element={<EcosystemPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/terms-conditions" element={<TermsConditionsPage />} />
+      <Route path="/risk-disclosure" element={<RiskDisclosurePage />} />
+
+      {/* Auth Pages */}
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/auth/login" element={<LoginPage />} />
+      <Route path="/auth/register" element={<RegisterPage />} />
+      <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+
+      {/* Customer Portal Pages */}
+      <Route
+        path="/dashboard"
+        element={
+          <PortalLayout>
+            <DashboardPage />
+          </PortalLayout>
+        }
+      />
+      <Route
+        path="/deposit"
+        element={
+          <PortalLayout>
+            <DepositPage />
+          </PortalLayout>
+        }
+      />
+      <Route
+        path="/deposit/:id"
+        element={
+          <PortalLayout>
+            <DepositDetailPage />
+          </PortalLayout>
+        }
+      />
+      <Route
+        path="/withdraw"
+        element={
+          <PortalLayout>
+            <WithdrawPage />
+          </PortalLayout>
+        }
+      />
+      <Route
+        path="/investments"
+        element={
+          <PortalLayout>
+            <InvestmentsPage />
+          </PortalLayout>
+        }
+      />
+      <Route
+        path="/investments/:id"
+        element={
+          <PortalLayout>
+            <InvestmentDetailPage />
+          </PortalLayout>
+        }
+      />
+      <Route
+        path="/interest-history"
+        element={
+          <PortalLayout>
+            <InterestHistoryPage />
+          </PortalLayout>
+        }
+      />
+      <Route
+        path="/transactions"
+        element={
+          <PortalLayout>
+            <TransactionsPage />
+          </PortalLayout>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <PortalLayout>
+            <NotificationsPage />
+          </PortalLayout>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <PortalLayout>
+            <ProfilePage />
+          </PortalLayout>
+        }
+      />
+      <Route
+        path="/security"
+        element={
+          <PortalLayout>
+            <SecurityPage />
+          </PortalLayout>
+        }
+      />
+
+      {/* Catch-all redirect */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+}
