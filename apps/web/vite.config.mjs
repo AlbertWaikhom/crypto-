@@ -11,6 +11,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@navrix/config': path.resolve(__dirname, '../../packages/config/src/index.ts'),
+      '@navrix/types': path.resolve(__dirname, '../../packages/types/src/index.ts'),
+      '@navrix/ui': path.resolve(__dirname, '../../packages/ui/src/index.tsx'),
+      '@navrix/validation': path.resolve(__dirname, '../../packages/validation/src/index.ts'),
       'next/link': path.resolve(__dirname, './src/compat/Link.jsx'),
       'next/navigation': path.resolve(__dirname, './src/compat/navigation.js'),
       'next/image': path.resolve(__dirname, './src/compat/Image.jsx'),
