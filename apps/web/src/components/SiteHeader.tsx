@@ -46,8 +46,10 @@ export function SiteHeader({
   const { theme, toggleTheme, accessToken, user } = useUiStore();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -122,13 +124,14 @@ export function SiteHeader({
               type="button"
               onClick={toggleTheme}
               className={styles.iconThemeBtn}
-              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+              title={`Switch to ${mounted && theme === 'light' ? 'Dark' : 'Light'} Mode`}
               aria-label="Toggle Theme"
+              suppressHydrationWarning
             >
-              {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+              {mounted && theme === 'light' ? <Moon size={15} /> : <Sun size={15} />}
             </button>
 
-            {accessToken ? (
+            {mounted && accessToken ? (
               <Link href={workspaceHref}>
                 <Button
                   size="sm"

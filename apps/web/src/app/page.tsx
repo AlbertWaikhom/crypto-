@@ -136,29 +136,46 @@ function Building2Icon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+// Client-only isolated clock to prevent any SSR hydration mismatch
+function TelemetryClock({
+  timeZone,
+  className,
+}: {
+  timeZone: string;
+  className?: string;
+}) {
+  const [time, setTime] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const updateTime = () => {
+      try {
+        const formatted = new Intl.DateTimeFormat('en-GB', {
+          timeZone,
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        }).format(new Date());
+        setTime(formatted);
+      } catch {
+        setTime('--:--:--');
+      }
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, [timeZone]);
+
+  return (
+    <span className={className} suppressHydrationWarning>
+      {time ?? '--:--:--'}
+    </span>
+  );
+}
+
 export default function LandingPage() {
   const { accessToken, user } = useUiStore();
-  const [currentTime, setCurrentTime] = React.useState(new Date());
-
-  // Live clocks for global telemetry
-  React.useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const formatClock = (tz: string) => {
-    try {
-      return currentTime.toLocaleTimeString('en-GB', {
-        timeZone: tz,
-        hour12: false,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      });
-    } catch {
-      return '00:00:00';
-    }
-  };
 
   const primaryHref = !accessToken || !user
     ? '/register'
@@ -560,27 +577,27 @@ export default function LandingPage() {
             <div className={styles.telemetryClocksRow}>
               <div className={styles.clockItem}>
                 <span className={styles.clockCity}>London</span>
-                <span className={styles.clockTime}>{formatClock('Europe/London')}</span>
+                <TelemetryClock timeZone="Europe/London" className={styles.clockTime} />
               </div>
               <div className={styles.clockItem}>
                 <span className={styles.clockCity}>New York</span>
-                <span className={styles.clockTime}>{formatClock('America/New_York')}</span>
+                <TelemetryClock timeZone="America/New_York" className={styles.clockTime} />
               </div>
               <div className={styles.clockItem}>
                 <span className={styles.clockCity}>Singapore</span>
-                <span className={styles.clockTime}>{formatClock('Asia/Singapore')}</span>
+                <TelemetryClock timeZone="Asia/Singapore" className={styles.clockTime} />
               </div>
               <div className={styles.clockItem}>
                 <span className={styles.clockCity}>Dubai</span>
-                <span className={styles.clockTime}>{formatClock('Asia/Dubai')}</span>
+                <TelemetryClock timeZone="Asia/Dubai" className={styles.clockTime} />
               </div>
               <div className={styles.clockItem}>
                 <span className={styles.clockCity}>Frankfurt</span>
-                <span className={styles.clockTime}>{formatClock('Europe/Berlin')}</span>
+                <TelemetryClock timeZone="Europe/Berlin" className={styles.clockTime} />
               </div>
               <div className={styles.clockItem}>
                 <span className={styles.clockCity}>Tokyo</span>
-                <span className={styles.clockTime}>{formatClock('Asia/Tokyo')}</span>
+                <TelemetryClock timeZone="Asia/Tokyo" className={styles.clockTime} />
               </div>
             </div>
           </div>

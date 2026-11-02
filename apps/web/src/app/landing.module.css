@@ -329,9 +329,6 @@
   margin-top: 1.75rem;
 }
 
-/* ==========================================================================
-   SECTION 4: BUILT FOR MODERN MARKET PARTICIPANTS (Container #070b14)
-   ========================================================================== */
 .participantsSection {
   width: 100%;
   background-color: #070b14;
@@ -625,10 +622,13 @@
 }
 
 @keyframes pulseGreen {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.4;
     transform: scale(0.85);
