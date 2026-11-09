@@ -1,0 +1,277 @@
+/* ============================================================================
+   NAVRIX React Bits Primitives — Sovereign Gold, Navy & Emerald Motion Engine
+   Location: d:\crypto\apps\web\src\app\landingpage\reactbits-primitives.css
+   ============================================================================ */
+
+.rb-aurora-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.rb-aurora-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(245, 184, 46, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(245, 184, 46, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 70% at 55% 38%, #000 35%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 55% 38%, #000 35%, transparent 85%);
+}
+
+.rb-aurora-beam {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(88px);
+  will-change: transform, opacity;
+}
+
+.rb-aurora-beam-gold {
+  top: -8%;
+  right: 6%;
+  width: 540px;
+  height: 520px;
+  background: radial-gradient(
+    circle,
+    rgba(245, 184, 46, 0.34) 0%,
+    rgba(217, 155, 30, 0.16) 45%,
+    transparent 74%
+  );
+  animation: rbAuroraFloatPrimary 11s ease-in-out infinite alternate;
+}
+
+.rb-aurora-beam-emerald {
+  top: 16%;
+  right: 14%;
+  width: 460px;
+  height: 440px;
+  background: radial-gradient(
+    circle,
+    rgba(16, 185, 129, 0.24) 0%,
+    rgba(245, 184, 46, 0.12) 48%,
+    transparent 74%
+  );
+  animation: rbAuroraFloatSecondary 14s ease-in-out infinite alternate;
+}
+
+.rb-aurora-beam-streak {
+  top: -12%;
+  right: 18%;
+  width: 240px;
+  height: 680px;
+  transform: rotate(28deg);
+  background: linear-gradient(
+    180deg,
+    rgba(251, 191, 36, 0.28) 0%,
+    rgba(16, 185, 129, 0.18) 52%,
+    transparent 95%
+  );
+  filter: blur(52px);
+  animation: rbAuroraStreakPulse 8s ease-in-out infinite alternate;
+}
+
+.rb-aurora-beam-ambient {
+  bottom: 4%;
+  left: -6%;
+  width: 440px;
+  height: 360px;
+  background: radial-gradient(
+    circle,
+    rgba(245, 184, 46, 0.12) 0%,
+    rgba(14, 165, 233, 0.06) 55%,
+    transparent 76%
+  );
+  filter: blur(95px);
+}
+
+@keyframes rbAuroraFloatPrimary {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate3d(-28px, 22px, 0) scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(18px, -18px, 0) scale(0.96);
+    opacity: 0.88;
+  }
+}
+
+@keyframes rbAuroraFloatSecondary {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.96);
+    opacity: 0.72;
+  }
+  50% {
+    transform: translate3d(24px, -20px, 0) scale(1.07);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(-16px, 24px, 0) scale(1.02);
+    opacity: 0.78;
+  }
+}
+
+@keyframes rbAuroraStreakPulse {
+  0% {
+    transform: rotate(26deg) translateY(-10px) scaleX(0.94);
+    opacity: 0.65;
+  }
+  100% {
+    transform: rotate(31deg) translateY(14px) scaleX(1.12);
+    opacity: 0.96;
+  }
+}
+
+/* Particles Layer */
+.rb-particles-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.rb-particle-dot {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(circle, #fbbf24 0%, rgba(245, 184, 46, 0.15) 75%, transparent 100%);
+  box-shadow: 0 0 10px rgba(245, 184, 46, 0.65);
+  animation: rbParticleTwinkle var(--rb-dur, 5s) ease-in-out infinite alternate;
+  animation-delay: var(--rb-delay, 0s);
+}
+
+.rb-particle-dot.is-emerald {
+  background: radial-gradient(circle, #34d399 0%, rgba(16, 185, 129, 0.15) 75%, transparent 100%);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.65);
+}
+
+@keyframes rbParticleTwinkle {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.75);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate3d(6px, -12px, 0) scale(1.15);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(-5px, -22px, 0) scale(0.85);
+    opacity: 0.35;
+  }
+}
+
+/* SplitText Word & Character Wrapper */
+.rb-split-text {
+  display: inline;
+}
+
+.rb-split-word {
+  display: inline-block;
+  white-space: nowrap;
+  margin-right: 0.27em;
+}
+
+.rb-split-word:last-child {
+  margin-right: 0;
+}
+
+.rb-split-word-accent {
+  background: linear-gradient(135deg, #fde68a 0%, #f5b82e 48%, #10b981 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 34px rgba(245, 184, 46, 0.24);
+}
+
+/* SpotlightCard */
+.rb-spotlight-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background: linear-gradient(165deg, rgba(16, 24, 42, 0.88) 0%, rgba(9, 14, 26, 0.94) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  box-shadow:
+    0 18px 42px -18px rgba(0, 0, 0, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.rb-spotlight-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 184, 46, 0.38);
+  box-shadow:
+    0 24px 48px -18px rgba(0, 0, 0, 0.84),
+    0 0 28px -8px rgba(245, 184, 46, 0.22),
+    inset 0 1px 0 rgba(245, 184, 46, 0.18);
+}
+
+.rb-spotlight-overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transition: opacity 260ms ease;
+}
+
+.rb-spotlight-content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+}
+
+/* LogoLoop Continuous Horizontal Marquee */
+.rb-logoloop-viewport {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0%, #000 5%, #000 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 5%,
+    #000 95%,
+    transparent 100%
+  );
+}
+
+.rb-logoloop-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  gap: 12px;
+  animation: rbLogoLoopScroll var(--rb-loop-duration, 26s) linear infinite;
+  will-change: transform;
+}
+
+.rb-logoloop-viewport.pause-on-hover:hover .rb-logoloop-track {
+  animation-play-state: paused;
+}
+
+@keyframes rbLogoLoopScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Reduced Motion Accessibility Override */
+@media (prefers-reduced-motion: reduce) {
+  .rb-aurora-beam-gold,
+  .rb-aurora-beam-emerald,
+  .rb-aurora-beam-streak,
+  .rb-particle-dot,
+  .rb-logoloop-track {
+    animation: none !important;
+  }
+}

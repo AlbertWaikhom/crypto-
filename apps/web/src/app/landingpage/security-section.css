@@ -1,0 +1,160 @@
+/* ============================================================================
+   NAVRIX Landing Page — Section 08: SecuritySection (Framer Motion)
+   Location: d:\crypto\apps\web\src\app\landingpage\security-section.css
+   ============================================================================ */
+
+.lp-security-section {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px 36px;
+  scroll-margin-top: 88px;
+}
+
+.lp-security-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  padding: 36px 40px;
+  background: linear-gradient(155deg, rgba(14, 22, 39, 0.96) 0%, rgba(7, 11, 20, 0.99) 100%);
+  border: 1px solid rgba(245, 184, 46, 0.24);
+  box-shadow:
+    0 26px 56px -22px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 34px;
+}
+
+.lp-security-card::before {
+  content: '';
+  position: absolute;
+  left: -40px;
+  top: -40px;
+  width: 300px;
+  height: 300px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgba(245, 184, 46, 0.24) 0%,
+    rgba(16, 185, 129, 0.14) 48%,
+    transparent 74%
+  );
+  filter: blur(36px);
+  pointer-events: none;
+}
+
+.lp-security-shield-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lp-security-shield-svg {
+  width: 152px;
+  height: 164px;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.65))
+    drop-shadow(0 0 24px rgba(245, 184, 46, 0.28));
+}
+
+.lp-security-center {
+  position: relative;
+  z-index: 1;
+}
+
+.lp-security-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 13px;
+  border-radius: 9999px;
+  background: rgba(245, 184, 46, 0.12);
+  border: 1px solid rgba(245, 184, 46, 0.32);
+  color: #fde68a;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.lp-security-title {
+  font-size: clamp(1.55rem, 2.5vw, 2.15rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0 0 10px;
+  line-height: 1.15;
+}
+
+.lp-security-desc {
+  font-size: 14px;
+  line-height: 1.62;
+  color: #94a3b8;
+  margin: 0;
+  max-width: 420px;
+}
+
+.lp-security-checklist {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lp-security-check-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.lp-security-check-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: rgba(245, 184, 46, 0.16);
+  border: 1px solid rgba(245, 184, 46, 0.42);
+  color: #f5b82e;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+@media (max-width: 980px) {
+  .lp-security-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 28px 24px;
+    gap: 24px;
+  }
+
+  .lp-security-desc {
+    margin: 0 auto;
+  }
+
+  .lp-security-checklist {
+    max-width: 360px;
+    margin: 0 auto;
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .lp-security-section {
+    padding: 0 16px 28px;
+  }
+
+  .lp-security-card {
+    padding: 24px 18px;
+    border-radius: 20px;
+  }
+}

@@ -1,321 +1,474 @@
 'use client';
+
 import * as React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle2, ExternalLink, Layers, Sparkles, XCircle } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  ArrowRight,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Layers,
+  ShieldCheck,
+  Sparkles,
+  XCircle,
+} from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
 import { Button, CountUp, GradientText, ShinyText, SpotlightCard } from '@navrix/ui';
-import { SiteHeader } from '../../components/SiteHeader';
 import { SiteFooter } from '../../components/SiteFooter';
-import { ECOSYSTEM_ENTITIES } from '../../data/ecosystem';
+import { SiteHeader } from '../../components/SiteHeader';
+import {
+  DoubleEntrySolvencyGraphic,
+  EcosystemTopologyGraphic,
+} from '../../components/marketing/ArchitectureGraphics';
 import styles from './about.module.css';
-const SERPO_ITEMS = [
+
+const SERPO_PILLARS = [
   {
     letter: 'S',
     title: 'Strategy Framework',
-    desc: 'Independent system logic, algorithmic parameters, and quantitative model architecture specific to each entity.',
+    short: 'Decoupled quantitative logic per entity',
+    headline: 'Zero Single-Model Dependency Across Market Regimes',
+    desc: 'Every company in the NAVRIX ecosystem maintains a self-contained quantitative thesis—ranging from semi-automated MT5 momentum (Botxp, Tradex0.3) to 24/5 correlation hedging (ARB24x5) and duration-matched pools (Novex Portfolio).',
+    checks: [
+      'Independent signal generation & parameter governance',
+      'No shared strategy black-box across separate entities',
+      'Designed to withstand macroeconomic regime rotations',
+    ],
   },
   {
     letter: 'E',
     title: 'Execution Model',
-    desc: 'Autonomous execution pathways, brokerage conduits, and platform-level operating decisions.',
+    short: 'Autonomous brokerage bridges & routing',
+    headline: 'Dedicated Execution Conduits & Session Stability',
+    desc: 'Execution venues, liquidity bridges, and latency thresholds are configured natively by each operating entity to match its order-flow profile—eliminating cross-desk queue congestion.',
+    checks: [
+      'Institutional MT5 bridges & direct market routing',
+      'Zero discretionary trade execution by NAVRIX Gateway',
+      '24/5 continuous session telemetry across global hubs',
+    ],
   },
   {
     letter: 'R',
     title: 'Risk Structure',
-    desc: 'Entity-specific controls, maximum drawdown limits, and sovereign exposure management design.',
+    short: 'Ring-fenced drawdown & escrow caps',
+    headline: 'Strict Liability Isolation & Circuit Breakers',
+    desc: 'Risk exposure is strictly ring-fenced within each participating model. Drawdowns or volatility events in an aggressive tactical sleeve never spill over into hedge or pooled capital mandates.',
+    checks: [
+      'Zero cross-entity commingling of liabilities or margin',
+      'Entity-level equity circuit breakers & stop governance',
+      'Atomic escrow locking on all outbound USDT withdrawals',
+    ],
   },
   {
     letter: 'P',
     title: 'Performance Reporting',
-    desc: 'Dedicated reporting frameworks directly aligned with each operating company model.',
+    short: 'Append-only double-entry ledger proofs',
+    headline: 'Immutable Row-Locked Accounting (0.00000000 Variance)',
+    desc: 'Within the NAVRIX Investor Portal, balances are never overwritten in place. Every verified BEP-20 deposit, vault lock, yield accrual, and payout creates an auditable double-entry credit or debit.',
+    checks: [
+      'Continuous Master Admin wallet-to-ledger reconciliation',
+      '66-character BSC transaction hash verification trail',
+      'Transparent cycle reporting aligned with each entity model',
+    ],
   },
   {
     letter: 'O',
     title: 'Operational Policies',
-    desc: 'Independent governance, legal terms, and operational policy architecture for each company.',
+    short: 'Transparent legal & eligibility boundaries',
+    headline: 'Clear Contractual Scope & Participant Due Diligence',
+    desc: 'Each ecosystem company publishes independent participation terms, lock-up schedules, and risk disclosures—empowering allocators to evaluate every engine on its own merits.',
+    checks: [
+      'Explicit separation between infrastructure & capital management',
+      'Mandatory risk disclosure visibility prior to onboarding',
+      'Dedicated compliance & institutional relations desk',
+    ],
   },
 ];
-const MISSIONS = [
-  'To make structured financial systems accessible globally',
-  'To bridge automation, hedge exposure, hybrid investments, and education',
-  'To provide a unified access point to specialized financial entities',
-  'To promote responsible participation through transparency and risk awareness',
+
+const EVOLUTION_PHASES = [
+  {
+    phase: 'PHASE 01',
+    title: 'Systematic Execution Foundations',
+    period: 'Algorithmic Core',
+    summary:
+      'Established structured semi-automated and high-performance trading architectures (Botxp & Tradex0.3) built around disciplined MT5 execution and monitored drawdown caps.',
+  },
+  {
+    phase: 'PHASE 02',
+    title: 'Autonomous Hedge & Pooled Vaults',
+    period: 'Capital Resilience',
+    summary:
+      'Expanded into 24/5 delta-balanced hedge automation (ARB24x5) and duration-tiered hybrid capital pools (Novex Portfolio) for passive USDT allocators.',
+  },
+  {
+    phase: 'PHASE 03',
+    title: 'Funded Talent & Practitioner Academies',
+    period: 'Global Reach (25,000+)',
+    summary:
+      'Integrated meritocratic prop evaluations (Funded Master), real-time macro intelligence (Volatility Blaze), and live cohorts (Stockarth Academy & Finup Global).',
+  },
+  {
+    phase: 'PHASE 04',
+    title: 'Unified Sovereign BEP-20 Gateway',
+    period: 'Current Architecture',
+    summary:
+      'Consolidated onboarding, deterministic USR-xxxx BEP-20 USDT deposit routing, and row-locked double-entry MySQL solvency verification under one sovereign portal.',
+  },
 ];
+
 const WHAT_WE_ENABLE = [
-  'Provide structured visibility across disparate financial models',
-  'Maintain brand-level consistency and unified user experience',
-  'Facilitate access to independent specialized financial companies',
-  'Support infrastructure alignment and execution stability',
-  'Promote responsible risk understanding and clear disclosure',
+  'Unified sovereign identity (USR-xxxx) and BEP-20 USDT deposit verification',
+  'Append-only double-entry ledger visibility with 0.00000000 reconciliation variance',
+  'Structured discovery across 8 independent trading, hedge, prop, and academy entities',
+  'Atomic escrow-locked withdrawal workflows with verified BSC transaction hashes',
+  'Standardized S.E.R.P.O. transparency and mandatory risk disclosure frameworks',
 ];
-const WHAT_WE_DO_NOT = [
-  'Manage investor funds directly',
-  'Execute trades on behalf of clients',
-  'Guarantee performance or fixed returns',
-  'Offer regulated financial or investment advisory services',
+
+const WHAT_WE_NEVER_DO = [
+  'Directly execute discretionary client trades or commingle cross-entity liabilities',
+  'Overwrite wallet balances without an immutable double-entry audit record',
+  'Promise fixed, risk-free, or guaranteed investment returns across market regimes',
+  'Act as a commercial fiat bank or provide unlicensed personal investment advice',
+  'Obscure independent entity terms, lock-up horizons, or drawdown parameters',
 ];
-const PHILOSOPHY_POINTS = [
-  { num: '01', text: 'Financial markets are dynamic and require multifaceted approaches.' },
+
+const PHILOSOPHY_CARDS = [
+  {
+    num: '01',
+    title: 'Regimes Shift Constantly',
+    body: 'Global liquidity cycles alternate between directional momentum, range compression, and macro shocks—demanding multi-model adaptability.',
+  },
   {
     num: '02',
-    text: 'Single-strategy dependence creates vulnerability during macroeconomic regime shifts.',
+    title: 'Single Strategies Break',
+    body: 'Relying on a single trading algorithm exposes capital to tail-risk vulnerability when market microstructure changes.',
   },
   {
     num: '03',
-    text: 'Ecosystem-based financial architecture creates structural resilience and longevity.',
+    title: 'Isolation Builds Longevity',
+    body: 'Ring-fencing independent strategy companies prevents operational or risk contagion across uncorrelated sleeves.',
   },
   {
     num: '04',
-    text: `${BRAND_CONFIG.name} Platform exists to structure that architecture with integrity.`,
+    title: 'Proof Replaces Trust',
+    body: 'Cryptographic BEP-20 transaction hashes and double-entry ledger reconciliation turn solvency into verifiable math.',
   },
 ];
+
 export default function AboutPage() {
+  const [activeSerpoIdx, setActiveSerpoIdx] = React.useState(0);
+  const [phaseIdx, setPhaseIdx] = React.useState(3);
+
+  const activeSerpo = SERPO_PILLARS[activeSerpoIdx] || SERPO_PILLARS[0];
+  const activePhase = EVOLUTION_PHASES[phaseIdx] || EVOLUTION_PHASES[0];
+
   return (
     <div className={styles.pageRoot}>
       <SiteHeader mode="sticky" />
 
-      <motion.main
-        className={styles.mainContent}
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-      >
-        {/* HERO HEADER */}
-        <motion.div
-          className={styles.heroHeader}
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          <span className={styles.badgePill}>
-            <Sparkles className="h-3 w-3 text-amber-400" />
-            <ShinyText text="INSTITUTIONAL ARCHITECTURE" />
-          </span>
+      <main className={styles.mainContent}>
+        {/* 1. EXECUTIVE HERO WITH TOPOLOGY & SOLVENCY GRAPHICS */}
+        <section className={styles.heroSection}>
+          <div className={styles.container}>
+            <div className={styles.heroGrid}>
+              <motion.div
+                className={styles.heroCopy}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55 }}
+              >
+                <span className={styles.eyebrowPill}>
+                  <Sparkles size={13} />
+                  <ShinyText text="INSTITUTIONAL ARCHITECTURE & GOVERNANCE" />
+                </span>
 
-          <h1 className={styles.pageTitle}>
-            About {BRAND_CONFIG.name} Platform —{' '}
-            <GradientText variant="sovereign">
-              Building Financial Infrastructure for the Modern Era
-            </GradientText>
-          </h1>
+                <h1 className={styles.pageTitle}>
+                  The Sovereign Gateway Behind{' '}
+                  <GradientText variant="sovereign">
+                    Eight Specialized Financial Ecosystems.
+                  </GradientText>
+                </h1>
 
-          <p className={styles.pageSubtitle}>
-            {BRAND_CONFIG.name} Platform operates as a financial innovation ecosystem connecting
-            specialized companies across trading systems, investment structures, funded programs,
-            and professional education.
-          </p>
-        </motion.div>
+                <p className={styles.pageSubtitle}>
+                  We believe the future of digital wealth is not a single strategy—it is an
+                  ecosystem of decoupled systems. {BRAND_CONFIG.name} engineers the non-custodial
+                  routing, double-entry ledger accounting, and governance standards that connect
+                  25,000+ global participants with specialized financial entities.
+                </p>
 
-        {/* WHO WE ARE */}
-        <section className={styles.serpoSection}>
-          <h2 className={styles.sectionHeading}>Who We Are</h2>
-          <p className={styles.sectionLead}>
-            We are a centralized ecosystem platform designed to connect traders, investors, and
-            capital participants with independent financial companies operating under structured
-            models. {BRAND_CONFIG.name} provides ecosystem connectivity, infrastructure visibility,
-            and unified access.
-          </p>
+                <div className={styles.kpiStrip}>
+                  <div className={styles.kpiTile}>
+                    <div className={styles.kpiVal}>
+                      <CountUp value={25000} decimals={0} />+
+                    </div>
+                    <div className={styles.kpiLbl}>Global Users</div>
+                  </div>
+                  <div className={styles.kpiTile}>
+                    <div className={styles.kpiVal}>8 Entities</div>
+                    <div className={styles.kpiLbl}>Autonomous Models</div>
+                  </div>
+                  <div className={styles.kpiTile}>
+                    <div className={styles.kpiVal}>60+</div>
+                    <div className={styles.kpiLbl}>Jurisdictions</div>
+                  </div>
+                  <div className={styles.kpiTile}>
+                    <div className={styles.kpiVal} style={{ color: '#10b981' }}>
+                      100%
+                    </div>
+                    <div className={styles.kpiLbl}>Ledger Solvency</div>
+                  </div>
+                </div>
+              </motion.div>
 
-          <div className={styles.serpoGrid}>
-            {SERPO_ITEMS.map((item, idx) => (
-              <div key={idx} className={styles.serpoCard}>
-                <div className={styles.serpoLetter}>{item.letter}</div>
-                <div className={styles.serpoTitle}>{item.title}</div>
-                <p className={styles.serpoDesc}>{item.desc}</p>
-              </div>
-            ))}
+              <motion.div
+                className={styles.heroGraphicsStack}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.08 }}
+              >
+                <EcosystemTopologyGraphic />
+                <DoubleEntrySolvencyGraphic />
+              </motion.div>
+            </div>
           </div>
         </section>
 
-        {/* VISION & MISSION SPLIT */}
-        <section className={styles.splitSection}>
-          <div className={styles.visionCard}>
-            <div>
-              <span className={styles.badgePill}>OUR VISION</span>
-              <h2 className={styles.sectionHeading}>
-                System Architecture for the Next Era of Finance
-              </h2>
-              <p className="text-sm leading-relaxed text-slate-300 mt-2">
-                To create a diversified financial ecosystem where multiple earning models can
-                operate under one structured architecture — while maintaining operational
-                independence and transparency.
+        {/* 2. INTERACTIVE S.E.R.P.O. GOVERNANCE ARCHITECTURE EXPLORER */}
+        <section id="serpo" className={styles.sectionBlockAlt}>
+          <div className={styles.container}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.eyebrowPill}>S.E.R.P.O. GOVERNANCE STANDARD</span>
+              <h2 className={styles.sectionTitle}>Five Pillars of Operational Separation</h2>
+              <p className={styles.sectionSubtitle}>
+                Select any pillar of our S.E.R.P.O. framework to inspect how {BRAND_CONFIG.name}{' '}
+                enforces strict structural boundaries across every ecosystem company.
               </p>
             </div>
 
-            <div className={styles.visionQuote}>
-              “We believe the future of finance is not a single strategy. It is an ecosystem of
-              systems.”
+            <div className={styles.serpoExplorer}>
+              <div className={styles.serpoTabs} role="tablist">
+                {SERPO_PILLARS.map((item, idx) => {
+                  const active = idx === activeSerpoIdx;
+                  return (
+                    <button
+                      key={item.letter}
+                      type="button"
+                      role="tab"
+                      aria-selected={active}
+                      onClick={() => setActiveSerpoIdx(idx)}
+                      className={`${styles.serpoTabBtn} ${active ? styles.serpoTabActive : ''}`}
+                    >
+                      <span className={styles.serpoLetterBadge}>{item.letter}</span>
+                      <div>
+                        <div className={styles.serpoTabTitle}>{item.title}</div>
+                        <div className={styles.serpoTabShort}>{item.short}</div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeSerpo.letter}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.22 }}
+                  className={styles.serpoDetailPanel}
+                >
+                  <div>
+                    <div className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-amber-400 mb-2">
+                      <ShieldCheck size={14} />
+                      Pillar {activeSerpo.letter} · {activeSerpo.title}
+                    </div>
+                    <h3 className="text-xl md:text-2xl font-extrabold m-0">
+                      {activeSerpo.headline}
+                    </h3>
+                    <p
+                      className="text-sm leading-relaxed mt-3 mb-0"
+                      style={{ color: 'var(--nv-text-muted)' }}
+                    >
+                      {activeSerpo.desc}
+                    </p>
+                  </div>
+
+                  <div className={styles.serpoChecklist}>
+                    {activeSerpo.checks.map((chk) => (
+                      <div key={chk} className={styles.serpoCheckRow}>
+                        <CheckCircle2 size={15} className="text-emerald-400 flex-shrink-0" />
+                        <span>{chk}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-800/40">
+                    <span
+                      className="text-xs font-semibold"
+                      style={{ color: 'var(--nv-text-muted)' }}
+                    >
+                      Enforced across all 8 autonomous ecosystem entities
+                    </span>
+                    <Link href="/ecosystem">
+                      <Button variant="gold" size="sm">
+                        <span>Inspect Entities</span>
+                        <ArrowRight size={13} />
+                      </Button>
+                    </Link>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
+        </section>
 
-          <div>
-            <span className={styles.badgePill}>OUR MISSION</span>
-            <h2 className={styles.sectionHeading}>How We Build It</h2>
-            <div className={styles.missionList}>
-              {MISSIONS.map((m, idx) => (
-                <div key={idx} className={styles.missionItem}>
-                  <div className={styles.missionNum}>{String(idx + 1).padStart(2, '0')}</div>
-                  <div className={styles.missionText}>{m}</div>
+        {/* 3. INSTITUTIONAL EVOLUTION CAROUSEL */}
+        <section className={styles.sectionBlock}>
+          <div className={styles.container}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.eyebrowPill}>ECOSYSTEM ROADMAP & EVOLUTION</span>
+              <h2 className={styles.sectionTitle}>How We Built a Multi-Engine Standard</h2>
+              <p className={styles.sectionSubtitle}>
+                From specialized algorithmic trading desks to a unified BEP-20 sovereign wealth
+                gateway serving 25,000+ global participants.
+              </p>
+            </div>
+
+            <div className={styles.milestoneCard}>
+              <div className={styles.milestoneStepsRow}>
+                {EVOLUTION_PHASES.map((item, idx) => (
+                  <button
+                    key={item.phase}
+                    type="button"
+                    onClick={() => setPhaseIdx(idx)}
+                    className={`${styles.milestonePill} ${idx === phaseIdx ? styles.milestonePillActive : ''}`}
+                  >
+                    <div className="text-[11px] font-extrabold text-amber-400">{item.phase}</div>
+                    <div className="text-xs font-extrabold mt-0.5">{item.title}</div>
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
+                <div className="max-w-3xl">
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-400">
+                    {activePhase.phase} · {activePhase.period}
+                  </span>
+                  <h3 className="text-xl font-extrabold mt-1 mb-2">{activePhase.title}</h3>
+                  <p
+                    className="text-sm leading-relaxed m-0"
+                    style={{ color: 'var(--nv-text-muted)' }}
+                  >
+                    {activePhase.summary}
+                  </p>
                 </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setPhaseIdx(
+                        (i) => (i - 1 + EVOLUTION_PHASES.length) % EVOLUTION_PHASES.length,
+                      )
+                    }
+                    className="p-2.5 rounded-lg border border-slate-700/60 hover:border-amber-400"
+                    aria-label="Previous Phase"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPhaseIdx((i) => (i + 1) % EVOLUTION_PHASES.length)}
+                    className="p-2.5 rounded-lg border border-slate-700/60 hover:border-amber-400"
+                    aria-label="Next Phase"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 4. GATEWAY BOUNDARY & COMPLIANCE MATRIX */}
+        <section className={styles.sectionBlockAlt}>
+          <div className={styles.container}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.eyebrowPill}>GATEWAY SPECIFICATION</span>
+              <h2 className={styles.sectionTitle}>Clear Institutional Boundaries</h2>
+              <p className={styles.sectionSubtitle}>
+                Absolute clarity on what {BRAND_CONFIG.name} Platform orchestrates versus what
+                remains strictly decoupled at the entity level.
+              </p>
+            </div>
+
+            <div className={styles.matrixGrid}>
+              <div className={styles.matrixCard}>
+                <div className="flex items-center gap-2 text-base font-extrabold text-emerald-400">
+                  <CheckCircle2 size={19} />
+                  <span>What {BRAND_CONFIG.name} Gateway Orchestrates</span>
+                </div>
+                {WHAT_WE_ENABLE.map((row) => (
+                  <div key={row} className={styles.matrixRow}>
+                    <CheckCircle2 size={16} className="text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <span>{row}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className={styles.matrixCard}>
+                <div className="flex items-center gap-2 text-base font-extrabold text-rose-400">
+                  <XCircle size={19} />
+                  <span>Strict Non-Custodial Guardrails</span>
+                </div>
+                {WHAT_WE_NEVER_DO.map((row) => (
+                  <div key={row} className={styles.matrixRow}>
+                    <XCircle size={16} className="text-rose-400 flex-shrink-0 mt-0.5" />
+                    <span>{row}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 5. QUANTITATIVE PHILOSOPHY BENTO */}
+        <section className={styles.sectionBlock}>
+          <div className={styles.container}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.eyebrowPill}>FOUNDATIONAL PRINCIPLES</span>
+              <h2 className={styles.sectionTitle}>Our Quantitative Philosophy</h2>
+            </div>
+
+            <div className={styles.philosophyGrid}>
+              {PHILOSOPHY_CARDS.map((card) => (
+                <SpotlightCard key={card.num} tone="gold" className={styles.philCard}>
+                  <div className={styles.philNum}>{card.num}</div>
+                  <div className={styles.philTitle}>{card.title}</div>
+                  <p className={styles.philBody}>{card.body}</p>
+                </SpotlightCard>
               ))}
             </div>
-          </div>
-        </section>
 
-        {/* THE ECOSYSTEM DIRECTORY */}
-        <section className="my-14">
-          <div className="text-center max-w-xl mx-auto mb-8">
-            <span className={styles.badgePill}>ENTITIES DIRECTORY</span>
-            <h2 className={styles.sectionHeading}>The {BRAND_CONFIG.name} Ecosystem</h2>
-            <p className="text-sm text-slate-400 mt-1">
-              {BRAND_CONFIG.name} Platform connects users to the following independent ecosystem
-              companies:
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {ECOSYSTEM_ENTITIES.map((entity) => (
-              <SpotlightCard
-                key={entity.id}
-                tone="gold"
-                className="p-5 flex flex-col justify-between rounded-xl"
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="font-extrabold text-base">{entity.name}</span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-400/10 text-amber-400 border border-amber-400/25">
-                      {entity.badge}
-                    </span>
-                  </div>
-                  <div className="text-xs font-semibold text-amber-400 mb-2">{entity.tagline}</div>
-                  <p className="text-xs text-slate-400 line-clamp-3">{entity.shortDescription}</p>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-                  <span className="text-slate-500">Autonomous Model</span>
-                  <a
-                    href={entity.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-bold text-amber-400 hover:underline flex items-center gap-1"
-                  >
-                    Website <ExternalLink className="h-3 w-3" />
-                  </a>
-                </div>
-              </SpotlightCard>
-            ))}
-          </div>
-
-          <p className="text-xs text-center text-slate-400 mt-5">
-            Each entity operates independently with its own performance model and operational
-            framework.
-          </p>
-        </section>
-
-        {/* HOW WE OPERATE */}
-        <section className={styles.operateSection}>
-          <div className="text-center max-w-xl mx-auto mb-6">
-            <span className={styles.badgePill}>GATEWAY SPECIFICATION</span>
-            <h2 className={styles.sectionHeading}>How We Operate</h2>
-            <p className="text-sm text-slate-400">
-              {BRAND_CONFIG.name} Platform serves as an ecosystem gateway.
-            </p>
-          </div>
-
-          <div className={styles.operateGrid}>
-            <div className={styles.operateCard}>
-              <div className={styles.operateCardTitle}>
-                <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                <span>What We Enable</span>
-              </div>
-              <div className={styles.operateList}>
-                {WHAT_WE_ENABLE.map((item, idx) => (
-                  <div key={idx} className={styles.operateItem}>
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className={styles.operateCard}>
-              <div className={styles.operateCardTitle}>
-                <XCircle className="h-5 w-5 text-rose-400" />
-                <span>What We Do Not Directly Do</span>
-              </div>
-              <div className={styles.operateList}>
-                {WHAT_WE_DO_NOT.map((item, idx) => (
-                  <div key={idx} className={styles.operateItem}>
-                    <span className="h-1.5 w-1.5 rounded-full bg-rose-400 flex-shrink-0" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+              <Link href="/ecosystem">
+                <Button variant="gold" size="lg">
+                  <Layers size={16} />
+                  <span>Explore All 8 Engines</span>
+                </Button>
+              </Link>
+              <Link href="/contact">
+                <Button variant="secondary" size="lg">
+                  <span>Connect With Institutional Desk</span>
+                  <ArrowRight size={16} />
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
+      </main>
 
-        {/* ECOSYSTEM REACH & GROWTH */}
-        <section className="my-14 rounded-2xl bg-gradient-to-r from-amber-500/10 via-slate-900 to-emerald-500/10 p-8 border border-amber-400/25 text-center">
-          <div className="text-xs font-bold uppercase tracking-widest text-amber-400 mb-2">
-            Ecosystem Reach
-          </div>
-          <div className="text-4xl md:text-5xl font-black text-white">
-            <CountUp value={25000} decimals={0} />+
-          </div>
-          <div className="text-sm font-bold text-slate-200 mt-1">Users Globally</div>
-          <p className="max-w-xl mx-auto text-xs text-slate-400 mt-3 leading-relaxed">
-            The {BRAND_CONFIG.name} ecosystem has grown to serve over 25,000+ users globally across
-            trading systems, capital programs, and education platforms. Growth has been driven by
-            diversification, specialization, and system-based financial models.
-          </p>
-        </section>
-
-        {/* OUR PHILOSOPHY */}
-        <section className={styles.philosophySection}>
-          <div className="text-center max-w-lg mx-auto">
-            <span className={styles.badgePill}>FOUNDATIONAL PILLARS</span>
-            <h2 className={styles.sectionHeading}>Our Philosophy</h2>
-          </div>
-
-          <div className={styles.philosophyGrid}>
-            {PHILOSOPHY_POINTS.map((p, idx) => (
-              <div key={idx} className={styles.philosophyCard}>
-                <div className={styles.philosophyNum}>{p.num}</div>
-                <div className={styles.philosophyText}>{p.text}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* BUILD WITH NAVRIX CTA */}
-        <div className="my-10 rounded-2xl p-8 border border-amber-400/30 bg-slate-900/90 text-center">
-          <h2 className="text-2xl md:text-3xl font-extrabold">
-            Explore the Ecosystem. Partner With Structured Financial Infrastructure.
-          </h2>
-          <p className="text-sm text-slate-400 max-w-lg mx-auto mt-2 mb-6">
-            Access independent financial entities through one unified platform built for visibility,
-            specialization, and responsible participation.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link href="/ecosystem">
-              <Button variant="gold" size="lg">
-                <Layers className="h-4 w-4" />
-                Explore Our Ecosystem
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button variant="secondary" size="lg">
-                Partner With {BRAND_CONFIG.name}
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </motion.main>
-
-      {/* FOOTER */}
       <SiteFooter />
     </div>
   );

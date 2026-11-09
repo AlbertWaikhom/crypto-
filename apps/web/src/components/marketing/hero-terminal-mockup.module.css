@@ -1,0 +1,423 @@
+/* 3D Layered Dual-Device Institutional Hero Mockup */
+
+.stageWrap {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0.95rem 0 2.75rem;
+}
+
+/* Ambient Halo Behind Mockup */
+.ambientGlow {
+  position: absolute;
+  inset: 6% 4% 8% 4%;
+  border-radius: 28px;
+  background: radial-gradient(
+    circle at 50% 42%,
+    rgba(245, 184, 46, 0.22) 0%,
+    rgba(16, 185, 129, 0.12) 45%,
+    transparent 74%
+  );
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Floating Live Yield Toast Pill */
+.floatingToast {
+  position: absolute;
+  top: -0.35rem;
+  right: 0.75rem;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.48rem 0.82rem;
+  border-radius: 9999px;
+  background: rgba(9, 15, 28, 0.94);
+  border: 1px solid rgba(16, 185, 129, 0.42);
+  box-shadow: 0 14px 32px -8px rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(16px);
+  font-size: 0.7rem;
+  color: #f8fafc;
+}
+
+[data-theme='light'] .floatingToast {
+  background: rgba(255, 255, 255, 0.97);
+  color: #0f172a;
+  box-shadow: 0 14px 30px -10px rgba(15, 23, 42, 0.2);
+}
+
+.toastDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: nv-pulse-dot 2s infinite;
+}
+
+/* Desktop Sovereign Terminal Window */
+.terminalWindow {
+  position: relative;
+  z-index: 2;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(160deg, rgba(13, 21, 38, 0.96) 0%, rgba(7, 11, 20, 0.98) 100%);
+  border: 1px solid rgba(245, 184, 46, 0.28);
+  box-shadow:
+    0 32px 72px -18px rgba(0, 0, 0, 0.82),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='light'] .terminalWindow {
+  background: linear-gradient(160deg, #ffffff 0%, #f8fafc 100%);
+  border-color: rgba(200, 141, 20, 0.35);
+  box-shadow: 0 28px 64px -18px rgba(15, 23, 42, 0.18);
+}
+
+.windowBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.68rem 1rem;
+  background: rgba(6, 10, 19, 0.78);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+[data-theme='light'] .windowBar {
+  background: #f1f5f9;
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+.windowDots {
+  display: flex;
+  align-items: center;
+  gap: 0.36rem;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.urlPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+[data-theme='light'] .urlPill {
+  background: #ffffff;
+  color: #475569;
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+.chainPill {
+  font-size: 0.63rem;
+  font-weight: 700;
+  color: #f5b82e;
+  letter-spacing: 0.04em;
+}
+
+/* Terminal Body */
+.terminalBody {
+  padding: 1.15rem 1.15rem 2.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.topBalanceRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.accountLabel {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--nv-text-muted);
+}
+
+.balanceMain {
+  display: flex;
+  align-items: baseline;
+  gap: 0.38rem;
+  margin-top: 0.15rem;
+}
+
+.balanceDigits {
+  font-size: clamp(1.55rem, 2.6vw, 1.95rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--nv-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.balanceUnit {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--nv-gold);
+}
+
+.deltaRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.26);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+/* Interactive Tab Switcher inside Mockup */
+.tabGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.22rem;
+  padding: 0.22rem;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+[data-theme='light'] .tabGroup {
+  background: #e2e8f0;
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+.tabBtn {
+  padding: 0.34rem 0.62rem;
+  border-radius: 7px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: var(--nv-text-muted);
+  cursor: pointer;
+  transition: all 0.16s ease;
+  white-space: nowrap;
+}
+
+.tabBtnActive {
+  background: linear-gradient(135deg, #f5b82e 0%, #d99b1e 100%);
+  color: #070b14;
+  box-shadow: 0 3px 10px rgba(245, 184, 46, 0.3);
+}
+
+/* Interactive Viewport Stage inside Terminal */
+.screenPanel {
+  border-radius: 14px;
+  padding: 0.95rem;
+  background: rgba(15, 23, 42, 0.52);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  min-height: 192px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+[data-theme='light'] .screenPanel {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+.chartCaptionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--nv-text-muted);
+  margin-bottom: 0.45rem;
+}
+
+.miniKpiStrip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.miniKpiBox {
+  padding: 0.55rem 0.65rem;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.48);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+[data-theme='light'] .miniKpiBox {
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+.miniKpiLbl {
+  font-size: 0.62rem;
+  color: var(--nv-text-muted);
+}
+
+.miniKpiVal {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--nv-text);
+  margin-top: 0.12rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Engine Split Rows */
+.splitRows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.58rem;
+}
+
+.splitRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.24rem;
+}
+
+.splitRowMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--nv-text);
+}
+
+.splitBarTrack {
+  height: 7px;
+  width: 100%;
+  border-radius: 9999px;
+  background: rgba(148, 163, 184, 0.16);
+  overflow: hidden;
+}
+
+.splitBarFill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.45s ease;
+}
+
+/* Ledger Proof Rows */
+.proofRows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.proofRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  background: rgba(148, 163, 184, 0.07);
+  font-size: 0.72rem;
+}
+
+/* Floating Mobile Vault Overlay Card */
+.mobileVaultCard {
+  position: absolute;
+  right: -0.65rem;
+  bottom: 0;
+  z-index: 5;
+  width: 208px;
+  border-radius: 16px;
+  padding: 0.75rem;
+  background: rgba(8, 13, 25, 0.96);
+  border: 1px solid rgba(245, 184, 46, 0.42);
+  box-shadow: 0 22px 44px -10px rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(18px);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+[data-theme='light'] .mobileVaultCard {
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 20px 42px -12px rgba(15, 23, 42, 0.22);
+}
+
+.qrTile {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 5px;
+  flex-shrink: 0;
+  border: 1px solid rgba(245, 184, 46, 0.45);
+}
+
+.vaultCardTitle {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--nv-text);
+}
+
+.vaultCardHash {
+  font-size: 0.62rem;
+  font-family: monospace;
+  color: var(--nv-text-muted);
+  margin-top: 0.1rem;
+}
+
+.vaultCardStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.22rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #10b981;
+}
+
+@media (max-width: 640px) {
+  .stageWrap {
+    padding: 0.35rem 0 0;
+  }
+
+  .terminalBody {
+    padding: 1rem;
+  }
+
+  .floatingToast {
+    position: static;
+    margin-bottom: 0.65rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mobileVaultCard {
+    position: static;
+    width: 100%;
+    margin-top: 0.75rem;
+  }
+
+  .chainPill {
+    display: none;
+  }
+
+  .miniKpiStrip {
+    grid-template-columns: 1fr;
+  }
+}

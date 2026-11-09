@@ -1,14 +1,16 @@
 import { useUiStore } from '../store/ui-store';
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+export const API_BASE_URL = '/api/v1';
 
 export class ClientApiError extends Error {
   code;
   status;
-  constructor(code, message, status) {
+  details;
+  constructor(code, message, status, details = null) {
     super(message);
     this.code = code;
     this.status = status;
+    this.details = details;
   }
 }
 
@@ -67,8 +69,17 @@ export async function apiRequest(path, options = {}, retryOn401 = true, retryCou
     );
   }
 
-  // Handle 401 Unauthorized via session token refresh
-  if (res.status === 401 && retryOn401 && !path.startsWith('/auth/login')) {
+  // Handle 401 Unauthorized via session token refresh (skip on public auth endpoints)
+  const isPublicAuthCall =
+    path.startsWith('/auth/login') ||
+    path.startsWith('/auth/register') ||
+    path.startsWith('/auth/verify') ||
+    path.startsWith('/auth/google') ||
+    path.startsWith('/auth/forgot-password') ||
+    path.startsWith('/auth/reset-password') ||
+    path.startsWith('/auth/refresh');
+
+  if (res.status === 401 && retryOn401 && !isPublicAuthCall) {
     const refreshedToken = await tryRefreshSession();
     if (refreshedToken) {
       headers.set('Authorization', `Bearer ${refreshedToken}`);
@@ -101,7 +112,12 @@ export async function apiRequest(path, options = {}, retryOn401 = true, retryCou
     const errPayload = !body.success
       ? body.error
       : { code: 'REQUEST_FAILED', message: 'Request failed.' };
-    throw new ClientApiError(errPayload.code, errPayload.message, res.status);
+    throw new ClientApiError(
+      errPayload.code,
+      errPayload.message,
+      res.status,
+      errPayload.details || null,
+    );
   }
 
   return body.data;

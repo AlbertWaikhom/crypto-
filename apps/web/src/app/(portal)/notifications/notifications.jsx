@@ -19,10 +19,10 @@ export default function NotificationsPage() {
   const items = data?.items ?? [];
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold">Notifications</h1>
-          <p className="mt-0.5 text-sm opacity-70">
+          <h1 className="text-xl sm:text-2xl font-extrabold">Notifications</h1>
+          <p className="mt-0.5 text-xs sm:text-sm opacity-70">
             Real-time alerts for deposits, blockchain detections, yield credits, and withdrawals.
           </p>
         </div>
@@ -42,15 +42,15 @@ export default function NotificationsPage() {
         ) : (
           items.map((n) => (
             <div key={n.id} className={cn(styles.item, !n.isRead && styles.itemUnread)}>
-              <div>
-                <div className="text-sm font-bold">{n.title}</div>
-                <p className="mt-1 text-xs opacity-85">{n.message}</p>
+              <div className="min-w-0">
+                <div className="text-sm font-bold break-words">{n.title}</div>
+                <p className="mt-1 text-xs opacity-85 break-words">{n.message}</p>
                 <div className="mt-1.5 text-[11px] opacity-60">
                   {new Date(n.createdAt).toLocaleString()} · {n.eventType}
                 </div>
               </div>
               {!n.isRead ? (
-                <span className="rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-slate-950">
+                <span className="shrink-0 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-slate-950">
                   NEW
                 </span>
               ) : null}

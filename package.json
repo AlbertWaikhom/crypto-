@@ -8,12 +8,13 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
+    "build": "pnpm --filter @navrix/web build",
+    "dev": "pnpm --filter @navrix/backend dev",
+    "start": "pnpm --filter @navrix/backend start",
     "dev:backend": "pnpm --filter @navrix/backend dev",
-    "dev:web": "pnpm --filter @navrix/web dev",
-    "dev:admin": "pnpm --filter @navrix/admin dev",
-    "dev:frontend": "turbo run dev --filter=@navrix/web --filter=@navrix/admin --parallel",
+    "dev:web": "pnpm --filter @navrix/backend dev",
+    "dev:admin": "pnpm --filter @navrix/backend dev",
+    "dev:frontend": "pnpm --filter @navrix/backend dev",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",

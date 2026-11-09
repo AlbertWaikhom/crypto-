@@ -15,8 +15,8 @@ export default function TransactionsPage() {
     <div>
       <div className={styles.toolbar}>
         <div>
-          <h1 className="text-2xl font-extrabold">Immutable Ledger History</h1>
-          <p className="mt-0.5 text-sm opacity-70">
+          <h1 className="text-xl sm:text-2xl font-extrabold">Immutable Ledger History</h1>
+          <p className="mt-0.5 text-xs sm:text-sm opacity-70">
             Append-only double-entry audit trail recording balance before and balance after every
             mutation
           </p>
@@ -44,7 +44,7 @@ export default function TransactionsPage() {
             description="Your immutable ledger entries (DEPOSIT, INTEREST, WITHDRAWAL) will appear here once transactions are finalized."
           />
         ) : (
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[680px] text-left text-sm">
             <thead>
               <tr className="border-b border-slate-700/60 text-xs uppercase opacity-65">
                 <th className="py-3 pr-4">Ledger ID</th>

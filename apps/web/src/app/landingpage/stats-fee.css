@@ -1,0 +1,124 @@
+/* ============================================================================
+   NAVRIX Landing Page — Section 09: StatsFeeSection (React Bits CountUp 1,500ms)
+   Location: d:\crypto\apps\web\src\app\landingpage\stats-fee.css
+   ============================================================================ */
+
+.lp-fees-section {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+.lp-fees-card {
+  border-radius: 22px;
+  padding: 30px 36px;
+  background: linear-gradient(135deg, rgba(20, 30, 52, 0.96) 0%, rgba(10, 16, 30, 0.98) 100%);
+  border: 1.5px solid rgba(245, 184, 46, 0.34);
+  box-shadow:
+    0 24px 52px -18px rgba(0, 0, 0, 0.78),
+    0 0 32px -12px rgba(245, 184, 46, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.95fr);
+  align-items: center;
+  gap: 28px;
+}
+
+.lp-fees-copy-title {
+  font-size: clamp(1.35rem, 2vw, 1.68rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #f8fafc;
+  margin: 0 0 6px;
+}
+
+.lp-fees-copy-sub {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #94a3b8;
+  margin: 0;
+  max-width: 340px;
+}
+
+.lp-fees-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+}
+
+.lp-fee-metric-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6px 14px;
+  border-left: 1px solid rgba(245, 184, 46, 0.16);
+}
+
+.lp-fee-metric-value {
+  font-size: clamp(1.65rem, 2.5vw, 2.2rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.lp-fee-metric-value.is-gold {
+  background: linear-gradient(135deg, #fde68a 0%, #f5b82e 52%, #10b981 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.lp-fee-metric-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #cbd5e1;
+}
+
+.lp-fee-info-icon {
+  color: #f5b82e;
+  opacity: 0.85;
+  display: inline-flex;
+}
+
+@media (max-width: 960px) {
+  .lp-fees-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 24px 20px;
+  }
+
+  .lp-fees-copy-sub {
+    margin: 0 auto;
+  }
+
+  .lp-fees-metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .lp-fee-metric-box {
+    border-left: none;
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.04);
+  }
+}
+
+@media (max-width: 520px) {
+  .lp-fees-section {
+    padding: 0 16px 36px;
+  }
+
+  .lp-fees-metrics-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}

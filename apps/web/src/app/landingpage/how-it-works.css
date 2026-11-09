@@ -1,0 +1,121 @@
+/* ============================================================================
+   NAVRIX Landing Page — Section 07: HowItWorksSection (AnimatedContent)
+   Location: d:\crypto\apps\web\src\app\landingpage\how-it-works.css
+   ============================================================================ */
+
+.lp-steps-section {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 20px 24px 56px;
+  scroll-margin-top: 88px;
+}
+
+.lp-steps-header {
+  margin-bottom: 34px;
+}
+
+.lp-steps-title {
+  font-size: clamp(1.55rem, 2.5vw, 2.05rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #f8fafc;
+  margin: 0 0 8px;
+}
+
+.lp-steps-subtitle {
+  font-size: 14px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.lp-steps-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: center;
+  gap: 18px;
+}
+
+.lp-step-card {
+  position: relative;
+  padding: 24px 24px;
+  border-radius: 20px;
+  background: linear-gradient(165deg, rgba(15, 23, 42, 0.72) 0%, rgba(7, 11, 20, 0.88) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  transition:
+    border-color 220ms ease,
+    transform 220ms ease,
+    box-shadow 220ms ease;
+  height: 100%;
+}
+
+.lp-step-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 184, 46, 0.42);
+  box-shadow: 0 20px 44px -18px rgba(0, 0, 0, 0.8);
+}
+
+.lp-step-icon-box {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: radial-gradient(
+    circle at 30% 25%,
+    rgba(245, 184, 46, 0.25) 0%,
+    rgba(16, 185, 129, 0.12) 55%,
+    rgba(15, 23, 42, 0.96) 100%
+  );
+  border: 1.5px solid rgba(245, 184, 46, 0.44);
+  box-shadow:
+    0 12px 26px -8px rgba(245, 184, 46, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  color: #f5b82e;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.lp-step-heading {
+  font-size: 17px;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.lp-step-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.lp-step-connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(245, 184, 46, 0.55);
+  padding: 0 4px;
+}
+
+@media (max-width: 960px) {
+  .lp-steps-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .lp-step-connector {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .lp-steps-section {
+    padding: 16px 16px 40px;
+  }
+
+  .lp-step-card {
+    padding: 20px 18px;
+  }
+}

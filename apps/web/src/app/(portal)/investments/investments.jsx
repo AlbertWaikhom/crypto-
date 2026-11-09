@@ -15,16 +15,18 @@ export default function InvestmentsPage() {
   });
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+      <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold">Investments & Yield Vaults</h1>
-          <p className="mt-0.5 text-sm opacity-70">
+          <h1 className="text-xl sm:text-2xl font-extrabold">Investments & Yield Vaults</h1>
+          <p className="mt-0.5 text-xs sm:text-sm opacity-70">
             Approved USDT deposits activate dedicated investment records tracked independently from
             your original deposit ledger entry.
           </p>
         </div>
-        <Link href="/deposit">
-          <Button variant="gold">New Deposit Allocation</Button>
+        <Link href="/deposit" className="w-full sm:w-auto">
+          <Button variant="gold" className="w-full sm:w-auto">
+            New Deposit Allocation
+          </Button>
         </Link>
       </div>
 
@@ -32,15 +34,15 @@ export default function InvestmentsPage() {
         <section className={styles.plansGrid}>
           {plans.map((p) => (
             <div key={p.code} className={styles.planCard}>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="font-mono text-xs text-amber-400">{p.code}</span>
                 <span className="rounded-full bg-amber-500/15 px-2.5 py-0.5 text-xs font-bold text-amber-300">
                   {Number(p.interestRate).toFixed(2)}% ({p.interestModel})
                 </span>
               </div>
-              <h2 className="mt-2 text-lg font-bold">{p.name}</h2>
+              <h2 className="mt-2 text-base sm:text-lg font-bold">{p.name}</h2>
               <p className="mt-1 text-xs opacity-70">{p.description}</p>
-              <div className="mt-4 flex items-center justify-between border-t border-slate-700/50 pt-3 text-xs">
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-700/50 pt-3 text-xs">
                 <span>Duration: {p.durationDays} Days</span>
                 <span>
                   Min: {formatUsdt(p.minAmount, 0)} USDT · Max: {formatUsdt(p.maxAmount, 0)} USDT
@@ -59,7 +61,7 @@ export default function InvestmentsPage() {
             description="When an administrator verifies and approves your BEP-20 USDT deposit, an INV-YYYYMMDD-XXXXXX position will appear here."
           />
         ) : (
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[640px] text-left text-sm">
             <thead>
               <tr className="border-b border-slate-700/60 text-xs uppercase opacity-65">
                 <th className="py-3 pr-4">Investment ID</th>

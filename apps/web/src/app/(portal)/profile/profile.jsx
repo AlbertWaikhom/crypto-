@@ -55,9 +55,9 @@ export default function ProfilePage() {
   };
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold">Profile & Compliance</h1>
-        <p className="mt-0.5 text-sm opacity-70">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-extrabold">Profile & Compliance</h1>
+        <p className="mt-0.5 text-xs sm:text-sm opacity-70">
           Manage your public account UID, contact preferences, and configurable compliance
           placeholders.
         </p>
@@ -71,10 +71,10 @@ export default function ProfilePage() {
 
       <div className={styles.grid}>
         <section className={styles.card}>
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <div>
               <div className="text-xs opacity-65">Public Investor UID</div>
-              <div className="font-mono text-lg font-extrabold text-amber-400">
+              <div className="font-mono text-base sm:text-lg font-extrabold text-amber-400">
                 {me?.uid || '—'}
               </div>
             </div>
@@ -104,14 +104,14 @@ export default function ProfilePage() {
                 className={styles.input}
               />
             </div>
-            <Button type="submit" variant="gold">
+            <Button type="submit" variant="gold" className="w-full sm:w-auto">
               Save Profile
             </Button>
           </form>
         </section>
 
         <section className={styles.card}>
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-base font-bold">KYC, Tax & Legal Disclosures</h2>
             <StatusBadge status={me?.compliance?.kycStatus || 'NOT_SUBMITTED'} />
           </div>
@@ -163,7 +163,7 @@ export default function ProfilePage() {
               </span>
             </label>
 
-            <Button type="submit" variant="secondary">
+            <Button type="submit" variant="secondary" className="w-full sm:w-auto">
               Update Compliance Declarations
             </Button>
           </form>

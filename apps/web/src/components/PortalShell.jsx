@@ -26,7 +26,6 @@ import { useUiStore } from '../store/ui-store';
 import { apiRequest } from '../lib/api';
 import { PortalHeader } from './PortalHeader';
 import styles from './portal-shell.module.css';
-const ADMIN_BASE_URL = process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:3001';
 const NAV_GROUPS = [
   {
     heading: 'Portfolio',
@@ -73,9 +72,7 @@ export function PortalShell({ children }) {
       return;
     }
     if (isAdminRole(user.role)) {
-      const target = isMasterAdminRole(user.role) ? '/master' : '/dashboard';
-      const hash = `token=${encodeURIComponent(accessToken)}&user=${encodeURIComponent(JSON.stringify(user))}&target=${encodeURIComponent(target)}`;
-      window.location.replace(`${ADMIN_BASE_URL}/sso#${hash}`);
+      router.replace(isMasterAdminRole(user.role) ? '/admin/master' : '/admin/dashboard');
     }
   }, [hydrated, accessToken, user, router]);
   React.useEffect(() => {

@@ -31,27 +31,16 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    {
-      className,
-      variant = 'gold',
-      size = 'md',
-      isLoading = false,
-      disabled,
-      children,
-      ...props
-    },
+    { className, variant = 'gold', size = 'md', isLoading = false, disabled, children, ...props },
     ref,
   ) => {
     const base =
       'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 disabled:opacity-50 disabled:cursor-not-allowed';
     const variants: Record<NonNullable<ButtonProps['variant']>, string> = {
       gold: 'bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20 hover:brightness-110',
-      secondary:
-        'bg-slate-800/90 text-slate-100 border border-slate-700 hover:bg-slate-700/90',
-      outline:
-        'border border-amber-500/40 bg-transparent text-amber-300 hover:bg-amber-500/10',
-      danger:
-        'bg-rose-600/90 text-white border border-rose-500/40 hover:bg-rose-500',
+      secondary: 'bg-slate-800/90 text-slate-100 border border-slate-700 hover:bg-slate-700/90',
+      outline: 'border border-amber-500/40 bg-transparent text-amber-300 hover:bg-amber-500/10',
+      danger: 'bg-rose-600/90 text-white border border-rose-500/40 hover:bg-rose-500',
       ghost: 'bg-transparent text-slate-300 hover:bg-slate-800/60 hover:text-white',
     };
     const sizes: Record<NonNullable<ButtonProps['size']>, string> = {
@@ -88,10 +77,8 @@ export function Card({ className, glow = false, children, ...props }: CardProps)
   return (
     <div
       className={cn(
-        'rounded-2xl border p-6 transition-colors',
-        glow
-          ? 'border-amber-500/35 shadow-lg shadow-amber-500/10'
-          : 'border-slate-800/80',
+        'min-w-0 max-w-full rounded-2xl border p-4 sm:p-6 transition-colors',
+        glow ? 'border-amber-500/35 shadow-lg shadow-amber-500/10' : 'border-slate-800/80',
         className,
       )}
       style={{
@@ -132,9 +119,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
     ].includes(normalized)
   ) {
     palette = 'bg-amber-500/15 text-amber-300 border-amber-500/35';
-  } else if (
-    ['REJECTED', 'FAILED', 'SUSPENDED', 'EXPIRED', 'CANCELLED'].includes(normalized)
-  ) {
+  } else if (['REJECTED', 'FAILED', 'SUSPENDED', 'EXPIRED', 'CANCELLED'].includes(normalized)) {
     palette = 'bg-rose-500/15 text-rose-300 border-rose-500/35';
   }
 
@@ -158,12 +143,7 @@ export interface EmptyStateProps {
   compact?: boolean;
 }
 
-export function EmptyState({
-  title,
-  description,
-  action,
-  compact = false,
-}: EmptyStateProps) {
+export function EmptyState({ title, description, action, compact = false }: EmptyStateProps) {
   return (
     <div
       className={cn(
@@ -215,13 +195,7 @@ export function CopyButton({ value, label = 'Copy', className }: CopyButtonProps
   };
 
   return (
-    <Button
-      type="button"
-      variant="outline"
-      size="sm"
-      onClick={handleCopy}
-      className={className}
-    >
+    <Button type="button" variant="outline" size="sm" onClick={handleCopy} className={className}>
       {copied ? 'Copied!' : label}
     </Button>
   );

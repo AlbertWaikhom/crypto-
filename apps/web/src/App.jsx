@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 // Public Pages
-import HomePage from './app/home';
+import HomePage from './app/landingpage/landingpage';
 import AboutPage from './app/about/about';
 import EcosystemPage from './app/ecosystem/ecosystem';
 import ContactPage from './app/contact/contact';
@@ -14,7 +14,7 @@ import LoginPage from './app/auth/login/login';
 import RegisterPage from './app/auth/register/register';
 import ForgotPasswordPage from './app/auth/forgot-password/forgot-password';
 
-// Portal Shell & Pages
+// Customer Portal Shell & Pages
 import { PortalShell } from './components/PortalShell';
 import DashboardPage from './app/(portal)/dashboard/dashboard';
 import DepositPage from './app/(portal)/deposit/deposit';
@@ -28,8 +28,28 @@ import NotificationsPage from './app/(portal)/notifications/notifications';
 import ProfilePage from './app/(portal)/profile/profile';
 import SecurityPage from './app/(portal)/security/security';
 
+// Unified Admin & Master Command Console (Merged onto Port 3000)
+import { AdminShell } from './admin/components/AdminShell';
+import MasterAdminDashboardPage from './admin/app/(console)/master/masteradmindashboard';
+import AdminDashboardPage from './admin/app/(console)/dashboard/admindashboard';
+import AdminDepositsPage from './admin/app/(console)/deposits/admindeposits';
+import AdminDepositReviewPage from './admin/app/(console)/deposits/[id]/admindepositreview';
+import AdminWithdrawalsPage from './admin/app/(console)/withdrawals/adminwithdrawals';
+import AdminUsersPage from './admin/app/(console)/users/adminuserslist';
+import AdminInvestmentsPage from './admin/app/(console)/investments/admininvestments';
+import AdminLedgerPage from './admin/app/(console)/ledger/adminledger';
+import AdminUsersManagementPage from './admin/app/(console)/admin-users/adminusers';
+import AuditLogsPage from './admin/app/(console)/audit-logs/auditlogs';
+import BlockchainTransactionsPage from './admin/app/(console)/blockchain-transactions/blockchaintransactions';
+import AdminSettingsPage from './admin/app/(console)/settings/adminsettings';
+import AdminInterestPage from './admin/app/(console)/interest/admininterest';
+
 function PortalLayout({ children }) {
   return <PortalShell>{children}</PortalShell>;
+}
+
+function AdminConsoleLayout({ children }) {
+  return <AdminShell>{children}</AdminShell>;
 }
 
 export default function App() {
@@ -43,7 +63,7 @@ export default function App() {
       <Route path="/terms-conditions" element={<TermsConditionsPage />} />
       <Route path="/risk-disclosure" element={<RiskDisclosurePage />} />
 
-      {/* Auth Pages */}
+      {/* Unified Auth Suite */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -138,6 +158,114 @@ export default function App() {
           <PortalLayout>
             <SecurityPage />
           </PortalLayout>
+        }
+      />
+
+      {/* Unified Admin & Master Command Console (/admin/*) */}
+      <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+      <Route path="/admin/login" element={<Navigate to="/login?portal=admin" replace />} />
+      <Route
+        path="/admin/master"
+        element={
+          <AdminConsoleLayout>
+            <MasterAdminDashboardPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <AdminConsoleLayout>
+            <AdminDashboardPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/deposits"
+        element={
+          <AdminConsoleLayout>
+            <AdminDepositsPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/deposits/:id"
+        element={
+          <AdminConsoleLayout>
+            <AdminDepositReviewPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/withdrawals"
+        element={
+          <AdminConsoleLayout>
+            <AdminWithdrawalsPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <AdminConsoleLayout>
+            <AdminUsersPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/investments"
+        element={
+          <AdminConsoleLayout>
+            <AdminInvestmentsPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/interest"
+        element={
+          <AdminConsoleLayout>
+            <AdminInterestPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/ledger"
+        element={
+          <AdminConsoleLayout>
+            <AdminLedgerPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/admin-users"
+        element={
+          <AdminConsoleLayout>
+            <AdminUsersManagementPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/audit-logs"
+        element={
+          <AdminConsoleLayout>
+            <AuditLogsPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/blockchain-transactions"
+        element={
+          <AdminConsoleLayout>
+            <BlockchainTransactionsPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/settings"
+        element={
+          <AdminConsoleLayout>
+            <AdminSettingsPage />
+          </AdminConsoleLayout>
         }
       />
 

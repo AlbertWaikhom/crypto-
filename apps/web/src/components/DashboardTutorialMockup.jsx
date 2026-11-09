@@ -475,7 +475,7 @@ export function DashboardTutorialMockup() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-xs font-extrabold text-white">5,000 USDT</div>
+                      <div className="text-xs font-extrabold">5,000 USDT</div>
                       <div className={styles.strategyYield}>+12.4% MTD</div>
                     </div>
                   </div>
@@ -495,7 +495,7 @@ export function DashboardTutorialMockup() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-xs font-extrabold text-white">3,000 USDT</div>
+                      <div className="text-xs font-extrabold">3,000 USDT</div>
                       <div className={styles.strategyYield}>+8.9% MTD</div>
                     </div>
                   </div>
@@ -515,7 +515,7 @@ export function DashboardTutorialMockup() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-xs font-extrabold text-white">2,000 USDT</div>
+                      <div className="text-xs font-extrabold">2,000 USDT</div>
                       <div className={styles.strategyYield}>Weekly Yield</div>
                     </div>
                   </div>

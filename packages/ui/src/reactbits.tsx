@@ -79,16 +79,27 @@ export function AuroraBackground({
           position: 'absolute',
           inset: 0,
           pointerEvents: 'none',
-          backgroundImage:
-            'radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px)',
           backgroundSize: '22px 22px',
-          maskImage:
-            'linear-gradient(to bottom, rgba(0,0,0,0.65), rgba(0,0,0,0.08))',
-          WebkitMaskImage:
-            'linear-gradient(to bottom, rgba(0,0,0,0.65), rgba(0,0,0,0.08))',
+          maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.65), rgba(0,0,0,0.08))',
+          WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.65), rgba(0,0,0,0.08))',
         }}
       />
-      <div style={{ position: 'relative', zIndex: 1 }}>{children}</div>
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          width: '100%',
+          display: 'inherit',
+          flexDirection: 'inherit',
+          flexWrap: 'inherit',
+          alignItems: 'inherit',
+          justifyContent: 'inherit',
+          gap: 'inherit',
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 }
@@ -174,6 +185,8 @@ export function SpotlightCard({
         {
           position: 'relative',
           overflow: 'hidden',
+          minWidth: 0,
+          maxWidth: '100%',
           borderRadius: '1.25rem',
           backgroundColor: 'var(--nv-surface, rgba(15, 23, 42, 0.86))',
           border: `1px solid ${elevated ? palette.border : 'var(--nv-border, rgba(148, 163, 184, 0.16))'}`,
@@ -201,9 +214,7 @@ export function SpotlightCard({
           background: `radial-gradient(380px circle at var(--spot-x) var(--spot-y), ${palette.glow}, transparent 68%)`,
         }}
       />
-      <div style={{ position: 'relative', zIndex: 1, height: '100%' }}>
-        {children}
-      </div>
+      <div style={{ position: 'relative', zIndex: 1, height: '100%' }}>{children}</div>
     </div>
   );
 }
@@ -231,6 +242,8 @@ export function StarBorder({
       style={{
         position: 'relative',
         overflow: 'hidden',
+        minWidth: 0,
+        maxWidth: '100%',
         borderRadius: '1.5rem',
         padding: '1px',
         background:
@@ -377,13 +390,7 @@ export interface ShinyTextProps extends React.HTMLAttributes<HTMLSpanElement> {
   speedSec?: number;
 }
 
-export function ShinyText({
-  text,
-  speedSec = 3.6,
-  className,
-  style,
-  ...props
-}: ShinyTextProps) {
+export function ShinyText({ text, speedSec = 3.6, className, style, ...props }: ShinyTextProps) {
   return (
     <span
       className={cx('nv-rb-shiny', className)}
@@ -451,11 +458,7 @@ export interface DecryptedTextProps {
   speedMs?: number;
 }
 
-export function DecryptedText({
-  text,
-  className,
-  speedMs = 26,
-}: DecryptedTextProps) {
+export function DecryptedText({ text, className, speedMs = 26 }: DecryptedTextProps) {
   const [output, setOutput] = React.useState(text);
 
   const runScramble = React.useCallback(() => {
@@ -592,13 +595,14 @@ export function AnimatedTabs({
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: compact ? '0.22rem' : '0.35rem',
-        padding: compact ? '0.22rem' : '0.32rem',
+        gap: compact ? '0.18rem' : '0.35rem',
+        padding: compact ? '0.2rem' : '0.32rem',
         borderRadius: compact ? '0.78rem' : '1rem',
         backgroundColor: 'var(--nv-bg-elevated, rgba(11, 17, 32, 0.9))',
         border: '1px solid var(--nv-border, rgba(148, 163, 184, 0.16))',
         overflowX: 'auto',
         WebkitOverflowScrolling: 'touch',
+        minWidth: 0,
         maxWidth: '100%',
       }}
     >
@@ -616,11 +620,11 @@ export function AnimatedTabs({
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: compact ? '0.32rem' : '0.45rem',
-              padding: compact ? '0.32rem 0.65rem' : '0.52rem 0.92rem',
+              gap: compact ? '0.28rem' : '0.45rem',
+              padding: compact ? '0.3rem 0.54rem' : '0.52rem 0.92rem',
               minHeight: compact ? '30px' : '38px',
               borderRadius: compact ? '0.58rem' : '0.75rem',
-              fontSize: compact ? '0.74rem' : '0.82rem',
+              fontSize: compact ? '0.72rem' : '0.82rem',
               fontWeight: active ? 700 : 500,
               whiteSpace: 'nowrap',
               color: active ? '#070b14' : 'var(--nv-text-muted, #94a3b8)',
@@ -639,8 +643,7 @@ export function AnimatedTabs({
                   position: 'absolute',
                   inset: 0,
                   borderRadius: '0.75rem',
-                  background:
-                    'linear-gradient(135deg, #f5b82e 0%, #fbbf24 55%, #d99b1e 100%)',
+                  background: 'linear-gradient(135deg, #f5b82e 0%, #fbbf24 55%, #d99b1e 100%)',
                   boxShadow: '0 4px 14px rgba(245, 184, 46, 0.28)',
                   zIndex: 0,
                 }}
@@ -663,9 +666,7 @@ export function AnimatedTabs({
                   fontSize: '0.7rem',
                   fontWeight: 700,
                   fontVariantNumeric: 'tabular-nums',
-                  backgroundColor: active
-                    ? 'rgba(7, 11, 20, 0.18)'
-                    : 'rgba(148, 163, 184, 0.14)',
+                  backgroundColor: active ? 'rgba(7, 11, 20, 0.18)' : 'rgba(148, 163, 184, 0.14)',
                   color: active ? '#070b14' : 'var(--nv-text, #f8fafc)',
                 }}
               >
@@ -753,11 +754,7 @@ export interface MobileDockProps {
   className?: string;
 }
 
-export function MobileDock({
-  items,
-  dockId = 'nv-mobile-dock',
-  className,
-}: MobileDockProps) {
+export function MobileDock({ items, dockId = 'nv-mobile-dock', className }: MobileDockProps) {
   return (
     <nav
       aria-label="Mobile Quick Navigation"
@@ -768,10 +765,10 @@ export function MobileDock({
         right: 0,
         bottom: 0,
         zIndex: 45,
-        paddingLeft: '0.65rem',
-        paddingRight: '0.65rem',
-        paddingTop: '0.4rem',
-        paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom, 0px))',
+        paddingLeft: '0.4rem',
+        paddingRight: '0.4rem',
+        paddingTop: '0.35rem',
+        paddingBottom: 'calc(0.45rem + env(safe-area-inset-bottom, 0px))',
         background: 'var(--nv-dock-bg, rgba(9, 14, 26, 0.88))',
         backdropFilter: 'blur(22px) saturate(180%)',
         WebkitBackdropFilter: 'blur(22px) saturate(180%)',
@@ -784,7 +781,7 @@ export function MobileDock({
           display: 'grid',
           gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))`,
           alignItems: 'center',
-          gap: '0.25rem',
+          gap: '0.18rem',
           maxWidth: '540px',
           margin: '0 auto',
         }}
@@ -803,15 +800,14 @@ export function MobileDock({
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.2rem',
-                minHeight: '50px',
-                padding: '0.3rem 0.2rem',
+                gap: '0.18rem',
+                minWidth: 0,
+                minHeight: '48px',
+                padding: '0.28rem 0.15rem',
                 borderRadius: '0.9rem',
                 border: 'none',
                 background: 'transparent',
-                color: isActive
-                  ? 'var(--nv-gold, #f5b82e)'
-                  : 'var(--nv-text-muted, #94a3b8)',
+                color: isActive ? 'var(--nv-gold, #f5b82e)' : 'var(--nv-text-muted, #94a3b8)',
                 cursor: 'pointer',
                 WebkitTapHighlightColor: 'transparent',
                 transition: 'color 0.18s ease, transform 0.14s ease',
@@ -889,4 +885,3 @@ export function MobileDock({
     </nav>
   );
 }
-

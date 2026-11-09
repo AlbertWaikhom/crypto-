@@ -23,13 +23,13 @@ export default defineConfig({
     },
   },
   define: {
-    'process.env.NEXT_PUBLIC_API_URL': JSON.stringify(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1'),
-    'process.env.NEXT_PUBLIC_ADMIN_URL': JSON.stringify(process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:3001'),
+    'process.env.NEXT_PUBLIC_API_URL': JSON.stringify('/api/v1'),
+    'process.env.NEXT_PUBLIC_ADMIN_URL': JSON.stringify(''),
     'process.env': {},
   },
   server: {
     port: 3000,
     host: '0.0.0.0',
-    strictPort: false,
+    strictPort: true,
   },
 });

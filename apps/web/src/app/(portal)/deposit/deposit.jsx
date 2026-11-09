@@ -76,9 +76,9 @@ export default function DepositPage() {
   };
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold">Deposit USDT</h1>
-        <p className="mt-1 text-sm opacity-70">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-extrabold">Deposit USDT</h1>
+        <p className="mt-1 text-xs sm:text-sm opacity-70">
           Create a tracked deposit request, transfer BEP-20 USDT, and submit your transaction hash
           for on-chain verification.
         </p>
@@ -182,21 +182,21 @@ export default function DepositPage() {
               size="lg"
               isLoading={creating}
               disabled={config?.depositsEnabled === false}
-              className="w-full"
+              className="w-full text-xs sm:text-base px-3 sm:px-6"
             >
               Generate Unique Deposit ID & Proceed
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4 shrink-0" />
             </Button>
           </form>
         </section>
 
         <section className={styles.panel}>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
                 USDT · BEP-20
               </div>
-              <h2 className="text-lg font-bold">Platform Receiving Vault</h2>
+              <h2 className="text-base sm:text-lg font-bold">Platform Receiving Vault</h2>
             </div>
             <span className="rounded-full border border-emerald-500/35 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">
               BNB Smart Chain
@@ -239,7 +239,7 @@ export default function DepositPage() {
             description="Generate a deposit request above to receive your dedicated DEP-YYYYMMDD-XXXXXX reference."
           />
         ) : (
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[600px] text-left text-sm">
             <thead>
               <tr className="border-b border-slate-700/60 text-xs uppercase opacity-65">
                 <th className="py-3 pr-4">Deposit ID</th>

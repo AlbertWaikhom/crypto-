@@ -40,9 +40,9 @@ export default function SecurityPage() {
   };
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold">Security & Active Sessions</h1>
-        <p className="mt-0.5 text-sm opacity-70">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-extrabold">Security & Active Sessions</h1>
+        <p className="mt-0.5 text-xs sm:text-sm opacity-70">
           Rotate your account password and audit active refresh-token sessions.
         </p>
       </div>
@@ -85,7 +85,7 @@ export default function SecurityPage() {
                 className={styles.input}
               />
             </div>
-            <Button type="submit" variant="gold" isLoading={saving}>
+            <Button type="submit" variant="gold" isLoading={saving} className="w-full sm:w-auto">
               Update Password
             </Button>
           </form>
@@ -97,15 +97,21 @@ export default function SecurityPage() {
             {sessions.map((s) => (
               <div
                 key={s.id}
-                className="flex items-center justify-between gap-3 rounded-xl border border-slate-700/60 p-3.5 text-xs"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 rounded-xl border border-slate-700/60 p-3.5 text-xs"
               >
                 <div className="min-w-0">
                   <div className="truncate font-semibold">{s.userAgent || 'Browser Session'}</div>
-                  <div className="mt-1 opacity-65">
+                  <div className="mt-1 opacity-65 break-words">
                     IP: {s.ipAddress || 'Local'} · Created {new Date(s.createdAt).toLocaleString()}
                   </div>
                 </div>
-                <Button type="button" variant="danger" size="sm" onClick={() => handleRevoke(s.id)}>
+                <Button
+                  type="button"
+                  variant="danger"
+                  size="sm"
+                  onClick={() => handleRevoke(s.id)}
+                  className="w-full sm:w-auto shrink-0"
+                >
                   Revoke
                 </Button>
               </div>

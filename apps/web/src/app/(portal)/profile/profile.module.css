@@ -1,12 +1,13 @@
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.25rem;
 }
 
 .card {
+  min-width: 0;
   border-radius: 1.35rem;
-  padding: 1.65rem;
+  padding: 1.5rem;
   background-color: var(--nv-surface);
   border: 1px solid var(--nv-border);
 }
@@ -28,7 +29,14 @@
 
 @media (max-width: 920px) {
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
   }
 }
 
+@media (max-width: 640px) {
+  .card {
+    padding: 1rem;
+    border-radius: 1.05rem;
+  }
+}

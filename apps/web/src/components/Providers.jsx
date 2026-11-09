@@ -2,6 +2,8 @@
 import * as React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useUiStore } from '../store/ui-store';
+import { ToastProvider } from './ToastProvider';
+
 export function Providers({ children }) {
   const [queryClient] = React.useState(
     () =>
@@ -15,8 +17,14 @@ export function Providers({ children }) {
         },
       }),
   );
+
   React.useEffect(() => {
     useUiStore.getState().hydrate();
   }, []);
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ToastProvider>{children}</ToastProvider>
+    </QueryClientProvider>
+  );
 }

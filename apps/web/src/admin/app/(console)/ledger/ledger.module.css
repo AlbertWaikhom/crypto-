@@ -1,0 +1,41 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.35rem;
+}
+
+.panel {
+  min-width: 0;
+  border-radius: 1.35rem;
+  padding: 1.5rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--nv-border);
+}
+
+@media (max-width: 640px) {
+  .toolbar {
+    margin-bottom: 1rem;
+    gap: 0.75rem;
+  }
+
+  .panel {
+    padding: 1rem;
+    border-radius: 1.05rem;
+  }
+}

@@ -1,3 +1,10 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const toPosix = (p) => p.replace(/\\/g, '/');
+
 const SF_PRO_STACK = [
   'var(--nv-font-sf)',
   '"SF Pro Display"',
@@ -15,8 +22,9 @@ const SF_PRO_STACK = [
 const config = {
   darkMode: ['class', '[data-theme="dark"]'],
   content: [
-    './src/**/*.{js,jsx}',
-    '../../packages/ui/src/**/*.{ts,tsx}',
+    toPosix(path.resolve(__dirname, './index.html')),
+    toPosix(path.resolve(__dirname, './src/**/*.{js,jsx,ts,tsx}')),
+    toPosix(path.resolve(__dirname, '../../packages/ui/src/**/*.{ts,tsx}')),
   ],
   theme: {
     extend: {
@@ -38,4 +46,3 @@ const config = {
 };
 
 export default config;
-

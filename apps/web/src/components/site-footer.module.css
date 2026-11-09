@@ -1,29 +1,92 @@
+/* Market-Standard Institutional Investment Footer */
+
 .footerRoot {
   width: 100%;
   border-top: 1px solid var(--nv-border);
-  background-color: #070b14;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(245, 184, 46, 0.06), transparent 65%),
+    var(--nv-bg);
   color: var(--nv-text);
-  padding: 3.5rem 1.5rem 2rem;
+  padding: 3.75rem 1.5rem 2.25rem;
   font-family: var(--nv-font-sf);
 }
 
-[data-theme='light'] .footerRoot {
-  background-color: #f8fafc;
-}
-
 .footerInner {
-  max-width: 1240px;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
-.topGrid {
+/* Pre-Footer Sovereign Briefing Strip */
+.topCtaStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.65rem 1.85rem;
+  border-radius: 18px;
+  background: linear-gradient(
+    135deg,
+    rgba(245, 184, 46, 0.11) 0%,
+    rgba(15, 23, 42, 0.85) 55%,
+    rgba(16, 185, 129, 0.08) 100%
+  );
+  border: 1px solid rgba(245, 184, 46, 0.28);
+  margin-bottom: 3rem;
+}
+
+[data-theme='light'] .topCtaStrip {
+  background: linear-gradient(
+    135deg,
+    rgba(245, 184, 46, 0.14) 0%,
+    rgba(255, 255, 255, 0.96) 60%,
+    rgba(16, 185, 129, 0.08) 100%
+  );
+}
+
+.topCtaCopy {
+  max-width: 640px;
+}
+
+.topCtaEyebrow {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--nv-gold);
+  margin-bottom: 0.3rem;
+}
+
+.topCtaHeading {
+  margin: 0;
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--nv-text);
+}
+
+.topCtaSub {
+  margin: 0.3rem 0 0;
+  font-size: 0.82rem;
+  color: var(--nv-text-muted);
+  line-height: 1.55;
+}
+
+.topCtaActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* 4-Column Main Directory */
+.mainGrid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr;
-  gap: 3rem;
+  grid-template-columns: 1.55fr 1fr 1fr 1fr;
+  gap: 2.5rem;
   align-items: start;
 }
 
-/* Col 1 */
 .brandCol {
   display: flex;
   flex-direction: column;
@@ -31,25 +94,25 @@
 }
 
 .brandRow {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  text-decoration: none;
+  width: fit-content;
 }
 
 .logoTile {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
   background: radial-gradient(
-    circle at 35% 25%,
-    rgba(245, 184, 46, 0.25),
-    rgba(12, 19, 34, 0.9) 75%
+    circle at 30% 25%,
+    rgba(245, 184, 46, 0.3),
+    rgba(12, 19, 34, 0.92) 76%
   );
-  border: 1px solid rgba(245, 184, 46, 0.35);
+  border: 1px solid rgba(245, 184, 46, 0.38);
 }
 
 .brandName {
@@ -60,41 +123,40 @@
 }
 
 .brandMotto {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.13em;
   color: var(--nv-gold);
 }
 
 .brandSummary {
-  font-size: 0.84rem;
-  line-height: 1.55;
-  color: var(--nv-text-muted);
-  max-width: 420px;
   margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.62;
+  color: var(--nv-text-muted);
+  max-width: 390px;
 }
 
-.socialBadges {
+.trustPills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem;
-  margin-top: 0.35rem;
+  gap: 0.5rem;
 }
 
-.socialBadge {
+.trustPill {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.38rem;
+  padding: 0.3rem 0.65rem;
   border-radius: 9999px;
-  padding: 0.28rem 0.65rem;
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.68rem;
+  font-weight: 700;
   background: rgba(148, 163, 184, 0.08);
   border: 1px solid var(--nv-border);
   color: var(--nv-text-muted);
 }
 
-/* Nav Cols */
+/* Nav Columns */
 .navCol {
   display: flex;
   flex-direction: column;
@@ -102,42 +164,11 @@
 }
 
 .colHeader {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.11em;
   color: var(--nv-gold);
-}
-
-.entityList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-}
-
-.entityItem {
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  padding: 0.35rem 0.5rem;
-  border-radius: 0.5rem;
-  transition: all 0.15s ease;
-}
-
-.entityItem:hover {
-  background: rgba(245, 184, 46, 0.08);
-  transform: translateX(3px);
-}
-
-.entityName {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--nv-text);
-}
-
-.entityRole {
-  font-size: 0.68rem;
-  color: var(--nv-text-muted);
 }
 
 .linkList {
@@ -146,60 +177,83 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 0.52rem;
 }
 
-.navLink {
-  font-size: 0.82rem;
+.footerLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  font-size: 0.81rem;
+  font-weight: 600;
   color: var(--nv-text-muted);
-  text-decoration: none;
-  transition: color 0.15s ease, transform 0.15s ease;
-  display: inline-block;
+  transition:
+    color 0.16s ease,
+    transform 0.16s ease;
 }
 
-.navLink:hover {
+.footerLink:hover {
   color: var(--nv-text);
   transform: translateX(2px);
 }
 
-.navLinkHighlight {
-  font-size: 0.82rem;
+.linkRoleBadge {
+  font-size: 0.62rem;
   font-weight: 700;
-  color: var(--nv-gold);
-  text-decoration: none;
-  transition: opacity 0.15s ease;
+  padding: 0.08rem 0.42rem;
+  border-radius: 6px;
+  background: rgba(148, 163, 184, 0.1);
+  color: var(--nv-text-muted);
+  white-space: nowrap;
 }
 
-.navLinkHighlight:hover {
-  opacity: 0.85;
+.footerLinkHighlight {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--nv-gold);
+  margin-top: 0.2rem;
+}
+
+.footerLinkHighlight:hover {
   text-decoration: underline;
 }
 
-/* Divider */
 .divider {
   height: 1px;
   background: var(--nv-border);
   margin: 2.5rem 0 1.5rem;
 }
 
-/* Regulatory Disclaimer (Zero Contact Information) */
+/* Mandatory Institutional Disclosure Box */
 .disclaimerBlock {
-  background: rgba(148, 163, 184, 0.04);
-  border-radius: 0.75rem;
-  padding: 0.95rem 1.15rem;
-  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 14px;
+  padding: 1.05rem 1.25rem;
+  background: rgba(148, 163, 184, 0.05);
+  border: 1px solid var(--nv-border);
   margin-bottom: 1.5rem;
 }
 
-.disclaimerText {
-  font-size: 0.72rem;
-  line-height: 1.6;
-  color: var(--nv-text-muted);
-  margin: 0;
+.disclaimerHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nv-text);
+  margin-bottom: 0.35rem;
 }
 
-.disclaimerText strong {
-  color: var(--nv-text);
+.disclaimerText {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.65;
+  color: var(--nv-text-muted);
 }
 
 /* Bottom Bar */
@@ -213,31 +267,61 @@
   color: var(--nv-text-muted);
 }
 
-.copyText {
-  font-variant-numeric: tabular-nums;
+.bottomMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
 }
 
 .protocolStatus {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.48rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 700;
+  color: #10b981;
 }
 
 .statusDot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #10b981;
+  background: #10b981;
   box-shadow: 0 0 8px #10b981;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-  .topGrid {
-    grid-template-columns: 1fr;
+@media (max-width: 1024px) {
+  .mainGrid {
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
   }
 }
 
+@media (max-width: 640px) {
+  .footerRoot {
+    padding: 2.75rem 1rem 1.75rem;
+  }
+
+  .topCtaStrip {
+    padding: 1.25rem 1.15rem;
+    margin-bottom: 2.25rem;
+  }
+
+  .topCtaActions {
+    width: 100%;
+  }
+
+  .topCtaActions a {
+    flex: 1 1 100%;
+  }
+
+  .mainGrid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}

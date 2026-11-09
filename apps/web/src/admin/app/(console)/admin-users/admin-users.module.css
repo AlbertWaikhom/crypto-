@@ -1,0 +1,42 @@
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.35rem;
+}
+
+.panel {
+  min-width: 0;
+  border-radius: 1.35rem;
+  padding: 1.5rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1.35rem;
+}
+
+@media (max-width: 640px) {
+  .header {
+    margin-bottom: 1rem;
+  }
+
+  .panel {
+    padding: 1rem;
+    border-radius: 1.05rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.roleSelect {
+  border-radius: 0.65rem;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-input-bg);
+  color: var(--nv-text);
+  padding: 0.45rem 0.7rem;
+  font-size: 0.78rem;
+  font-family: var(--nv-font-sf);
+  font-variant-numeric: tabular-nums;
+}

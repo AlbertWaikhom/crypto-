@@ -19,8 +19,8 @@ export default function InvestmentDetailPage() {
   }
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
+      <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
           <Link
             href="/investments"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:underline"
@@ -28,7 +28,9 @@ export default function InvestmentDetailPage() {
             <ArrowLeft className="h-3.5 w-3.5" />
             Back to Investments
           </Link>
-          <h1 className="mt-1 font-mono text-2xl font-extrabold">{inv.investmentUid}</h1>
+          <h1 className="mt-1 font-mono text-lg sm:text-2xl font-extrabold break-all">
+            {inv.investmentUid}
+          </h1>
         </div>
         <StatusBadge status={inv.status} />
       </div>
@@ -36,25 +38,25 @@ export default function InvestmentDetailPage() {
       <div className={styles.summaryGrid}>
         <div className={styles.metricCard}>
           <div className="text-xs opacity-65">Principal Amount</div>
-          <div className="mt-1 font-mono text-xl font-extrabold">
+          <div className="mt-1 font-mono text-base sm:text-xl font-extrabold">
             {formatUsdt(inv.principalAmount)} USDT
           </div>
         </div>
         <div className={styles.metricCard}>
           <div className="text-xs opacity-65">Interest Model & Rate</div>
-          <div className="mt-1 font-mono text-xl font-extrabold text-amber-400">
+          <div className="mt-1 font-mono text-base sm:text-xl font-extrabold text-amber-400">
             {formatUsdt(inv.interestRate)}% ({inv.interestModel})
           </div>
         </div>
         <div className={styles.metricCard}>
           <div className="text-xs opacity-65">Total Interest Credited</div>
-          <div className="mt-1 font-mono text-xl font-extrabold text-emerald-400">
+          <div className="mt-1 font-mono text-base sm:text-xl font-extrabold text-emerald-400">
             +{formatUsdt(inv.interestAmount)} USDT
           </div>
         </div>
         <div className={styles.metricCard}>
           <div className="text-xs opacity-65">Maturity Date</div>
-          <div className="mt-1 text-base font-bold">
+          <div className="mt-1 text-sm sm:text-base font-bold">
             {new Date(inv.maturityDate).toLocaleDateString()}
           </div>
         </div>
@@ -68,7 +70,7 @@ export default function InvestmentDetailPage() {
             description="Each interest distribution creates an independent INT-YYYYMMDD-XXXXXX record and immutable INTEREST ledger entry."
           />
         ) : (
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[600px] text-left text-sm">
             <thead>
               <tr className="border-b border-slate-700/60 text-xs uppercase opacity-65">
                 <th className="py-3 pr-4">Interest UID</th>

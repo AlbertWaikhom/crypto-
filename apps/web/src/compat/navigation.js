@@ -1,14 +1,18 @@
+import * as React from 'react';
 import { useNavigate, useLocation, useParams as useRouterParams } from 'react-router-dom';
 
 export function useRouter() {
   const navigate = useNavigate();
-  return {
-    push: (url) => navigate(url),
-    replace: (url) => navigate(url, { replace: true }),
-    back: () => navigate(-1),
-    forward: () => navigate(1),
-    prefetch: () => {},
-  };
+  return React.useMemo(
+    () => ({
+      push: (url) => navigate(url),
+      replace: (url) => navigate(url, { replace: true }),
+      back: () => navigate(-1),
+      forward: () => navigate(1),
+      prefetch: () => {},
+    }),
+    [navigate],
+  );
 }
 
 export function usePathname() {

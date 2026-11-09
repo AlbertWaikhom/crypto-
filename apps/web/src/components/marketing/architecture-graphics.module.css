@@ -1,0 +1,87 @@
+/* Custom Institutional Vector & Animated SVG Graphics */
+
+.graphicCard {
+  width: 100%;
+  border-radius: 16px;
+  padding: 1.15rem;
+  background: var(--nv-bg-elevated);
+  border: 1px solid var(--nv-border);
+  overflow: hidden;
+}
+
+.pipelineGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.pipeNode {
+  position: relative;
+  border-radius: 12px;
+  padding: 0.8rem 0.75rem;
+  background: rgba(148, 163, 184, 0.06);
+  border: 1px solid var(--nv-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pipeStep {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--nv-gold);
+}
+
+.pipeTitle {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--nv-text);
+}
+
+.pipeSub {
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: var(--nv-text-muted);
+}
+
+.ledgerStream {
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+  margin-top: 0.55rem;
+}
+
+.ledgerEntry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.46rem 0.65rem;
+  border-radius: 9px;
+  background: rgba(148, 163, 184, 0.06);
+  border: 1px solid var(--nv-border);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.ledgerTypePill {
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 0.1rem 0.42rem;
+  border-radius: 5px;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 768px) {
+  .pipelineGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 460px) {
+  .pipelineGrid {
+    grid-template-columns: 1fr;
+  }
+}

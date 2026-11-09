@@ -58,9 +58,9 @@ export default function WithdrawPage() {
   };
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold">Withdraw USDT</h1>
-        <p className="mt-0.5 text-sm opacity-70">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-extrabold">Withdraw USDT</h1>
+        <p className="mt-0.5 text-xs sm:text-sm opacity-70">
           Request outbound BEP-20 USDT settlement. Requested funds are immediately locked to prevent
           negative balances or double-spending.
         </p>
@@ -68,16 +68,16 @@ export default function WithdrawPage() {
 
       <div className={styles.grid}>
         <section className={styles.card}>
-          <div className="mb-4 grid grid-cols-2 gap-3 rounded-xl border border-slate-700/60 p-3.5 text-xs">
-            <div>
+          <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-xl border border-slate-700/60 p-3.5 text-xs">
+            <div className="min-w-0">
               <div className="opacity-65">Available Balance</div>
-              <div className="mt-1 font-mono text-lg font-extrabold text-emerald-400">
+              <div className="mt-1 font-mono text-base sm:text-lg font-extrabold text-emerald-400 truncate">
                 {formatUsdt(wallet?.availableBalance)} USDT
               </div>
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="opacity-65">Locked Balance</div>
-              <div className="mt-1 font-mono text-lg font-extrabold text-amber-400">
+              <div className="mt-1 font-mono text-base sm:text-lg font-extrabold text-amber-400 truncate">
                 {formatUsdt(wallet?.lockedBalance)} USDT
               </div>
             </div>
@@ -158,7 +158,7 @@ export default function WithdrawPage() {
             />
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <table className="w-full min-w-[520px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-700/60 text-xs uppercase opacity-65">
                     <th className="py-3 pr-3">ID</th>

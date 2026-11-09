@@ -1,96 +1,63 @@
 'use client';
+
 import * as React from 'react';
-import { motion } from 'framer-motion';
-import { AlertTriangle } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
-import { SiteHeader } from '../../components/SiteHeader';
-import { SiteFooter } from '../../components/SiteFooter';
+import { LegalDocLayout } from '../../components/marketing/LegalDocLayout';
+
+const RISK_CLAUSES = [
+  {
+    id: 'market-capital-risk',
+    num: '01',
+    title: 'General Market, Digital Asset & Principal Risk',
+    body: `Participation in digital asset transfers, algorithmic trading systems, foreign exchange, commodities, and pooled capital vaults involves substantial risk—including the potential partial or total loss of deployed capital. Historical model telemetry, simulated projections, or prior settlement cycles of any ecosystem entity are never a guarantee of future performance.`,
+  },
+  {
+    id: 'entity-separation',
+    num: '02',
+    title: 'Independent Entity Ring-Fencing (S.E.R.P.O. Standard)',
+    body: `Each company within the ${BRAND_CONFIG.name} ecosystem—Botxp, Tradex0.3, ARB24x5, Novex Portfolio, Volatility Blaze, Funded Master, Stockarth Academy, and Finup Global—operates autonomously. Each entity enforces its own execution venue, drawdown guardrails, lock-up durations, and contractual terms without cross-entity liability commingling. Participants must evaluate each entity independently prior to participation.`,
+  },
+  {
+    id: 'blockchain-bep20',
+    num: '03',
+    title: 'BNB Smart Chain (BEP-20) & On-Chain Settlement Risks',
+    body: `USDT deposits and outbound payouts inside the Investor Portal utilize the BNB Smart Chain (BEP-20, Chain ID 56). Sending unsupported tokens, routing funds across an incompatible network, or entering an inaccurate withdrawal address may result in irreversible on-chain loss. Network congestion or RPC latency can occasionally extend confirmation times beyond standard block intervals.`,
+  },
+  {
+    id: 'algorithmic-execution',
+    num: '04',
+    title: 'Algorithmic, Bridge & Liquidity Venue Risks',
+    body: `Automated and semi-automated models rely on software logic, third-party brokerage bridges (such as MT5), and market-maker liquidity pools. Flash volatility, spread widening, slippage, or venue maintenance windows can materially impact strategy execution despite active circuit breakers.`,
+  },
+  {
+    id: 'non-advisory',
+    num: '05',
+    title: 'Non-Advisory Status of Intelligence & Academies',
+    body: `Market dispatches from Volatility Blaze and educational curricula delivered by Stockarth Academy and Finup Global are provided strictly for analytical and educational purposes. Nothing published across the ${BRAND_CONFIG.name} ecosystem constitutes personalized investment, legal, or tax advice.`,
+  },
+  {
+    id: 'due-diligence',
+    num: '06',
+    title: 'Participant Eligibility & Independent Due Diligence',
+    body: `Before deploying capital, participants should verify jurisdictional eligibility, assess personal risk tolerance, never allocate capital they cannot afford to lose, and consult qualified independent financial or legal advisors where appropriate.`,
+  },
+];
+
 export default function RiskDisclosurePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-sans">
-      <SiteHeader mode="sticky" />
-
-      <motion.main
-        className="flex-1 max-w-3xl mx-auto px-5 py-12"
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="mb-8">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-400/10 text-amber-400 border border-amber-400/30 mb-3">
-            <AlertTriangle className="h-3.5 w-3.5" />
-            MANDATORY LEGAL DISCLOSURE
-          </span>
-          <h1 className="text-3xl font-extrabold tracking-tight">Risk Disclosure Statement</h1>
-          <p className="text-sm text-slate-400 mt-2">
-            Last Updated: November 2026 · {BRAND_CONFIG.name} Platform Ecosystem
-          </p>
-        </div>
-
-        <div className="space-y-6 text-sm text-slate-300 leading-relaxed">
-          <div className="p-4 rounded-xl border border-amber-400/30 bg-amber-400/5 text-amber-300 text-xs">
-            <strong>Important Notice:</strong> {BRAND_CONFIG.name} Platform is a financial ecosystem
-            service provider. It does not directly manage client funds, execute trades, or provide
-            regulated investment advisory services. Each ecosystem company operates independently
-            under its own structure and risk framework.
-          </div>
-
-          <section>
-            <h2 className="text-lg font-bold text-white mb-2">1. General Market & Capital Risk</h2>
-            <p>
-              Participation in digital asset, algorithmic trading, foreign exchange, and hedge
-              systems involves substantial financial risk, including the potential loss of principal
-              capital. Past performance of any ecosystem entity, model, or strategy is not
-              indicative of future results.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-bold text-white mb-2">2. Independent Entity Separation</h2>
-            <p>
-              Each independent company within the {BRAND_CONFIG.name} ecosystem (including Botxp,
-              Tradex0.3, ARB24x5, Novex Portfolio, Volatility Blaze, Funded Master, Stockarth
-              Academy, and Finup Global) operates autonomously. Each entity maintains its own risk
-              management parameters, drawdown limits, terms of service, and operational policies.
-              Users must evaluate each entity independently prior to participation.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-bold text-white mb-2">
-              3. Technology & Algorithmic Execution Risks
-            </h2>
-            <p>
-              Automated and semi-automated trading systems rely on algorithmic code, network
-              connectivity, latency stability, and third-party brokerage bridges (such as MT5).
-              Market anomalies, slippage, liquidity dry-ups, and connectivity interruptions may
-              impact execution performance.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-bold text-white mb-2">
-              4. Educational Services Non-Advisory Status
-            </h2>
-            <p>
-              Educational resources provided by Stockarth Academy and Finup Global are strictly for
-              educational and informational purposes and do not constitute financial, investment,
-              legal, or tax advice.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-bold text-white mb-2">5. User Due Diligence</h2>
-            <p>
-              Users are encouraged to review individual company disclosures, understand risk
-              exposure, and conduct independent evaluation before participating in any ecosystem
-              engine.
-            </p>
-          </section>
-        </div>
-      </motion.main>
-
-      <SiteFooter />
-    </div>
+    <LegalDocLayout
+      activeDoc="risk"
+      title="Mandatory Risk Disclosure Statement"
+      subtitle={`Comprehensive structural, market, smart-contract, and operational risk disclosures governing the ${BRAND_CONFIG.name} Platform gateway and its eight independent ecosystem entities.`}
+      executiveSummary={
+        <>
+          <strong>Mandatory Notice:</strong> {BRAND_CONFIG.name} Platform operates strictly as a
+          financial technology ecosystem gateway and double-entry ledger coordinator.{' '}
+          {BRAND_CONFIG.name} is not a commercial bank, custodian of fiat deposits, or licensed
+          securities broker-dealer, and never guarantees fixed or risk-free returns.
+        </>
+      }
+      clauses={RISK_CLAUSES}
+    />
   );
 }

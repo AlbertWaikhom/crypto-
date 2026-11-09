@@ -1,184 +1,299 @@
 'use client';
+
 import * as React from 'react';
 import Link from 'next/link';
+import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, ExternalLink, Layers, Sparkles } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ExternalLink, Search, Sparkles } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
 import { Button, GradientText, ShinyText, SpotlightCard } from '@navrix/ui';
-import { SiteHeader } from '../../components/SiteHeader';
 import { SiteFooter } from '../../components/SiteFooter';
+import { SiteHeader } from '../../components/SiteHeader';
+import { EngineShowcaseCarousel } from '../../components/marketing/EngineShowcaseCarousel';
 import { ECOSYSTEM_CATEGORIES, ECOSYSTEM_ENTITIES } from '../../data/ecosystem';
 import styles from './ecosystem.module.css';
+
+function renderMiniSparkline(points = [], color = '#F5B82E') {
+  if (!points.length) return null;
+  const min = Math.min(...points) - 4;
+  const max = Math.max(...points) + 4;
+  const span = Math.max(1, max - min);
+  const d = points
+    .map((v, i) => {
+      const x = (i / Math.max(1, points.length - 1)) * 108;
+      const y = 36 - ((v - min) / span) * 28 - 4;
+      return `${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`;
+    })
+    .join(' ');
+
+  return (
+    <svg viewBox="0 0 108 38" className="w-full h-full overflow-visible" aria-hidden="true">
+      <path d={d} fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export default function EcosystemPage() {
+  const location = useLocation();
+  const queryEngineId = React.useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get('engine');
+  }, [location.search]);
+
   const [selectedCategory, setSelectedCategory] = React.useState('All Entities');
+  const [searchQuery, setSearchQuery] = React.useState('');
+
   const filteredEntities = React.useMemo(() => {
-    if (selectedCategory === 'All Entities') return ECOSYSTEM_ENTITIES;
-    return ECOSYSTEM_ENTITIES.filter((e) => e.category === selectedCategory);
-  }, [selectedCategory]);
-  const categoriesToRender = React.useMemo(() => {
-    if (selectedCategory !== 'All Entities') {
-      return [selectedCategory];
-    }
-    const cats = Array.from(new Set(ECOSYSTEM_ENTITIES.map((e) => e.category)));
-    return cats;
-  }, [selectedCategory]);
+    return ECOSYSTEM_ENTITIES.filter((e) => {
+      const matchCat = selectedCategory === 'All Entities' || e.category === selectedCategory;
+      const q = searchQuery.trim().toLowerCase();
+      const matchSearch =
+        !q ||
+        e.name.toLowerCase().includes(q) ||
+        e.tagline.toLowerCase().includes(q) ||
+        e.category.toLowerCase().includes(q) ||
+        e.badge.toLowerCase().includes(q);
+      return matchCat && matchSearch;
+    });
+  }, [selectedCategory, searchQuery]);
+
   return (
     <div className={styles.pageRoot}>
       <SiteHeader mode="sticky" />
 
-      <motion.main
-        className={styles.mainContent}
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-      >
-        {/* HERO HEADER */}
-        <motion.div
-          className={styles.heroHeader}
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          <span className={styles.badgePill}>
-            <Sparkles className="h-3 w-3 text-amber-400" />
-            <ShinyText text="INTEGRATED FINANCIAL ECOSYSTEM" />
-          </span>
-
-          <h1 className={styles.pageTitle}>
-            {BRAND_CONFIG.name} Platform Ecosystem —{' '}
-            <GradientText variant="sovereign">An Integrated Financial Ecosystem</GradientText>
-          </h1>
-
-          <p className={styles.pageSubtitle}>
-            {BRAND_CONFIG.name} Platform connects specialized financial companies operating across
-            automation, hedge systems, hybrid investment models, funded programs, and professional
-            education — each functioning independently under its own framework.
-          </p>
-        </motion.div>
-
-        <div className={styles.filterTabsRow}>
-          {ECOSYSTEM_CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              onClick={() => setSelectedCategory(cat)}
-              className={`${styles.tabBtn} ${selectedCategory === cat ? styles.tabBtnActive : ''}`}
+      <main className={styles.mainContent}>
+        {/* 1. HERO + INTERACTIVE ENGINE CAROUSEL */}
+        <section className={styles.heroBlock}>
+          <div className={styles.container}>
+            <motion.div
+              className={styles.heroCenter}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55 }}
             >
-              {cat}
-            </button>
-          ))}
-        </div>
+              <span className={styles.eyebrowPill}>
+                <Sparkles size={13} />
+                <ShinyText text="ECOSYSTEM ENGINE MARKETPLACE" />
+              </span>
 
-        {/* CATEGORIES & DETAILED ENTITY CARDS */}
-        {categoriesToRender.map((catName) => {
-          const entitiesInCat = filteredEntities.filter((e) => e.category === catName);
-          if (entitiesInCat.length === 0) return null;
-          return (
-            <section key={catName} className={styles.categoryGroup}>
-              <div className={styles.categoryHeader}>
-                <div className={styles.categoryTitle}>
-                  <Layers className="h-5 w-5 text-amber-400" />
-                  <span>{catName}</span>
-                </div>
-                <span className={styles.categoryTag}>
-                  {entitiesInCat.length} {entitiesInCat.length === 1 ? 'Entity' : 'Entities'}
-                </span>
-              </div>
+              <h1 className={styles.pageTitle}>
+                Eight Autonomous Financial Engines.{' '}
+                <GradientText variant="sovereign">One Sovereign Gateway.</GradientText>
+              </h1>
 
-              <div className={styles.cardsGrid}>
-                {entitiesInCat.map((entity) => (
-                  <SpotlightCard key={entity.id} tone="gold" className={styles.entityDetailCard}>
-                    <div>
-                      <div className={styles.cardTop}>
-                        <div>
-                          <h3 className={styles.entityName}>{entity.name}</h3>
-                          <div className={styles.entityTagline}>{entity.tagline}</div>
-                        </div>
-                        <span className={styles.badgePillSmall}>{entity.badge}</span>
-                      </div>
+              <p className={styles.pageSubtitle}>
+                Compare systematic algorithmic desks, 24/5 hedge architectures, duration-matched
+                USDT vaults, proprietary funded evaluations, and live market academies—each
+                operating under independent S.E.R.P.O. risk isolation.
+              </p>
+            </motion.div>
 
-                      <p className={styles.entityDescription}>{entity.fullDescription}</p>
-
-                      {/* Who It's For */}
-                      <div className={styles.specBox}>
-                        <div className={styles.specLabel}>Who It&apos;s For</div>
-                        <div className={styles.chipList}>
-                          {entity.whoItsFor.map((w, idx) => (
-                            <span key={idx} className={styles.specChip}>
-                              {w}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className={styles.specBox}>
-                        <div className={styles.specLabel}>Performance Model</div>
-                        <p className={styles.specValue}>{entity.performanceModel}</p>
-                      </div>
-
-                      {/* Risk Structure */}
-                      <div className={styles.specBox}>
-                        <div className={styles.specLabel}>Risk Structure</div>
-                        <div className="flex flex-col gap-1">
-                          {entity.riskStructure.map((r, idx) => (
-                            <div
-                              key={idx}
-                              className="flex items-center gap-1.5 text-xs text-slate-300"
-                            >
-                              <span className="h-1 w-1 rounded-full bg-amber-400" />
-                              <span>{r}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className={styles.cardFooter}>
-                      <span className="text-xs text-slate-500">Independent Framework</span>
-                      <a
-                        href={entity.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.visitBtn}
-                      >
-                        Visit Official Website
-                        <ExternalLink className="h-3.5 w-3.5" />
-                      </a>
-                    </div>
-                  </SpotlightCard>
-                ))}
-              </div>
-            </section>
-          );
-        })}
-
-        {/* JOIN THE ECOSYSTEM CTA */}
-        <section className={styles.ctaBox}>
-          <span className={styles.badgePill}>JOIN THE ECOSYSTEM</span>
-          <h2 className="text-2xl md:text-3xl font-extrabold max-w-xl mx-auto">
-            Access Specialized Financial Engines Through One Structured Gateway
-          </h2>
-          <p className="text-sm text-slate-400 max-w-lg mx-auto mt-2 mb-6">
-            Explore independent companies across automation, hedge systems, funded programs, hybrid
-            investment structures, and professional education.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link href="/login">
-              <Button variant="gold" size="lg">
-                Explore Portal
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button variant="secondary" size="lg">
-                Partner With {BRAND_CONFIG.name}
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
+            <EngineShowcaseCarousel initialEngineId={queryEngineId} />
           </div>
         </section>
-      </motion.main>
 
-      {/* FOOTER */}
+        {/* 2. FILTERABLE DIRECTORY OF ALL 8 ENTITIES */}
+        <section className={styles.sectionBlockAlt}>
+          <div className={styles.container}>
+            <div className={styles.toolbar}>
+              <div className={`${styles.filterTabs} nv-no-scrollbar`} role="tablist">
+                {ECOSYSTEM_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    role="tab"
+                    aria-selected={selectedCategory === cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`${styles.filterBtn} ${selectedCategory === cat ? styles.filterBtnActive : ''}`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+              <div className={styles.searchWrap}>
+                <Search size={15} className={styles.searchIcon} />
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Filter engine, hedge, MT5..."
+                  className={styles.searchInput}
+                  aria-label="Filter ecosystem engines"
+                />
+              </div>
+            </div>
+
+            <div className={styles.cardsGrid}>
+              {filteredEntities.map((entity) => (
+                <SpotlightCard key={entity.id} tone="gold" className={styles.engineCard}>
+                  <div className="flex flex-col gap-3">
+                    <div className={styles.cardHeader}>
+                      <div>
+                        <span className="text-[11px] font-extrabold tracking-wider text-amber-400">
+                          {entity.code} · {entity.badge}
+                        </span>
+                        <h2 className={styles.engineName}>{entity.name}</h2>
+                        <div
+                          className="text-xs font-bold mt-0.5"
+                          style={{ color: entity.accentColor }}
+                        >
+                          {entity.tagline}
+                        </div>
+                      </div>
+
+                      <div className={styles.miniSparkBox}>
+                        {renderMiniSparkline(entity.sparkline, entity.accentColor)}
+                      </div>
+                    </div>
+
+                    <p
+                      className="text-sm leading-relaxed m-0"
+                      style={{ color: 'var(--nv-text-muted)' }}
+                    >
+                      {entity.fullDescription}
+                    </p>
+
+                    <div className={styles.metaRow}>
+                      <div className={styles.metaCell}>
+                        <div className={styles.metaLbl}>Cadence</div>
+                        <div className={styles.metaVal}>{entity.cadence}</div>
+                      </div>
+                      <div className={styles.metaCell}>
+                        <div className={styles.metaLbl}>Risk Profile</div>
+                        <div className={styles.metaVal}>{entity.riskTier}</div>
+                      </div>
+                      <div className={styles.metaCell}>
+                        <div className={styles.metaLbl}>Access</div>
+                        <div className={styles.metaVal}>{entity.accessModel}</div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5 pt-1">
+                      {entity.riskStructure.map((r) => (
+                        <div key={r} className="flex items-center gap-2 text-xs font-semibold">
+                          <CheckCircle2 size={13} className="text-emerald-400 flex-shrink-0" />
+                          <span>{r}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className={styles.chipRow}>
+                      {entity.whoItsFor.map((w) => (
+                        <span key={w} className={styles.chip}>
+                          {w}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className={styles.cardFooter}>
+                    <span
+                      className="text-xs font-semibold"
+                      style={{ color: 'var(--nv-text-muted)' }}
+                    >
+                      {entity.category}
+                    </span>
+                    <a
+                      href={entity.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-400 hover:underline"
+                    >
+                      <span>Visit Official Portal</span>
+                      <ExternalLink size={13} />
+                    </a>
+                  </div>
+                </SpotlightCard>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 3. SIDE-BY-SIDE INSTITUTIONAL COMPARISON MATRIX */}
+        <section className={styles.sectionBlock}>
+          <div className={styles.container}>
+            <div className="max-w-2xl mb-6">
+              <span className={styles.eyebrowPill}>COMPARISON MATRIX</span>
+              <h2 className="text-2xl md:text-3xl font-extrabold mt-3 mb-1">
+                Side-by-Side Engine Specification Matrix
+              </h2>
+              <p className="text-sm m-0" style={{ color: 'var(--nv-text-muted)' }}>
+                Evaluate execution cadence, risk classification, and onboarding pathway across all
+                eight independent companies.
+              </p>
+            </div>
+
+            <div className={styles.tableScroller}>
+              <table className={styles.matrixTable}>
+                <thead>
+                  <tr>
+                    <th>Engine</th>
+                    <th>Vertical</th>
+                    <th>Settlement Cadence</th>
+                    <th>Risk Classification</th>
+                    <th>Onboarding Pathway</th>
+                    <th>Portal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ECOSYSTEM_ENTITIES.map((e) => (
+                    <tr key={e.id}>
+                      <td>
+                        <strong className="font-extrabold">{e.name}</strong>
+                        <div className="text-xs" style={{ color: 'var(--nv-text-muted)' }}>
+                          {e.code}
+                        </div>
+                      </td>
+                      <td>{e.badge}</td>
+                      <td>{e.cadence}</td>
+                      <td>{e.riskTier}</td>
+                      <td>{e.accessModel}</td>
+                      <td>
+                        <a
+                          href={e.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 font-bold text-amber-400 hover:underline"
+                        >
+                          <span>Open</span>
+                          <ExternalLink size={12} />
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-4 p-6 rounded-2xl border border-amber-400/30 bg-amber-400/5">
+              <div>
+                <div className="text-base font-extrabold">
+                  Ready to fund your dedicated BEP-20 USDT Sovereign Account?
+                </div>
+                <div className="text-xs mt-1" style={{ color: 'var(--nv-text-muted)' }}>
+                  Create your unified investor profile in under two minutes or contact our
+                  Institutional Desk for bespoke liquidity routing.
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                <Link href="/register">
+                  <Button variant="gold" size="md">
+                    <span>Open Sovereign Account</span>
+                    <ArrowRight size={14} />
+                  </Button>
+                </Link>
+                <Link href="/contact">
+                  <Button variant="secondary" size="md">
+                    <span>Institutional Desk</span>
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
       <SiteFooter />
     </div>
   );

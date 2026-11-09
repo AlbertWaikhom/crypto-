@@ -10,9 +10,9 @@ export default function InterestHistoryPage() {
   });
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold">Interest & Yield History</h1>
-        <p className="mt-0.5 text-sm opacity-70">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-extrabold">Interest & Yield History</h1>
+        <p className="mt-0.5 text-xs sm:text-sm opacity-70">
           Every yield credit generates a dedicated ledger entry and is protected against duplicate
           period payouts.
         </p>
@@ -25,7 +25,7 @@ export default function InterestHistoryPage() {
             description="Yield distributions credited to your active investment positions will be itemized here."
           />
         ) : (
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[660px] text-left text-sm">
             <thead>
               <tr className="border-b border-slate-700/60 text-xs uppercase opacity-65">
                 <th className="py-3 pr-4">Interest ID</th>

@@ -1,0 +1,147 @@
+/* ============================================================================
+   NAVRIX Landing Page — Section 10: FaqSection (Accessible Accordion)
+   Location: d:\crypto\apps\web\src\app\landingpage\faq-section.css
+   ============================================================================ */
+
+.lp-faq-section {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 6px 24px 56px;
+  scroll-margin-top: 88px;
+}
+
+.lp-faq-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.lp-faq-title {
+  font-size: clamp(1.55rem, 2.5vw, 2.05rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #f8fafc;
+  margin: 0 0 6px;
+}
+
+.lp-faq-subtitle {
+  font-size: 14px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.lp-faq-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #f5b82e;
+  text-decoration: none;
+  transition:
+    transform 180ms ease,
+    color 180ms ease;
+}
+
+.lp-faq-view-all:hover {
+  color: #fde68a;
+  transform: translateX(3px);
+}
+
+.lp-faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lp-faq-item {
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(12, 19, 34, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.lp-faq-item.is-open {
+  border-color: rgba(245, 184, 46, 0.55);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.78);
+}
+
+.lp-faq-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  border: none;
+  background: transparent;
+  color: #f1f5f9;
+  font-size: 15.5px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 200ms ease,
+    color 200ms ease;
+}
+
+.lp-faq-trigger:hover {
+  background: rgba(245, 184, 46, 0.08);
+}
+
+/* Mockup Signature Active Header Bar in NAVRIX Gold */
+.lp-faq-item.is-open .lp-faq-trigger {
+  background: linear-gradient(90deg, #fde68a 0%, #f5b82e 52%, #d99b1e 100%);
+  color: #070b14;
+  font-weight: 800;
+}
+
+.lp-faq-trigger-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(148, 163, 184, 0.14);
+  color: #e2e8f0;
+  transition: all 200ms ease;
+}
+
+.lp-faq-item.is-open .lp-faq-trigger-icon {
+  background: rgba(7, 11, 20, 0.16);
+  color: #070b14;
+}
+
+.lp-faq-panel {
+  padding: 18px 22px 20px;
+  font-size: 14px;
+  line-height: 1.66;
+  color: #cbd5e1;
+  background: rgba(9, 14, 26, 0.96);
+  border-top: 1px solid rgba(245, 184, 46, 0.18);
+}
+
+@media (max-width: 640px) {
+  .lp-faq-section {
+    padding: 4px 16px 40px;
+  }
+
+  .lp-faq-trigger {
+    padding: 15px 16px;
+    font-size: 14px;
+  }
+
+  .lp-faq-panel {
+    padding: 15px 16px 18px;
+    font-size: 13.5px;
+  }
+}

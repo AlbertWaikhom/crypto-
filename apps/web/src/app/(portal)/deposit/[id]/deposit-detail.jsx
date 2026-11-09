@@ -79,8 +79,8 @@ export default function DepositDetailPage() {
   }
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div>
+      <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
           <Link
             href="/deposit"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:underline"
@@ -88,23 +88,25 @@ export default function DepositDetailPage() {
             <ArrowLeft className="h-3.5 w-3.5" />
             Back to Deposit USDT
           </Link>
-          <h1 className="mt-1.5 text-2xl font-extrabold font-mono">{deposit.depositUid}</h1>
+          <h1 className="mt-1.5 text-lg sm:text-2xl font-extrabold font-mono break-all">
+            {deposit.depositUid}
+          </h1>
         </div>
         <StatusBadge status={deposit.status} />
       </div>
 
       <div className={styles.grid}>
         <section className={styles.card}>
-          <div className="flex items-center justify-between border-b border-slate-700/50 pb-3">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/50 pb-3">
             <div>
               <div className="text-xs opacity-65">You are sending</div>
-              <div className="font-mono text-2xl font-extrabold text-amber-400">
+              <div className="font-mono text-xl sm:text-2xl font-extrabold text-amber-400">
                 {formatUsdt(deposit.requestedAmount)} {deposit.token}
               </div>
             </div>
-            <div className="text-right">
+            <div className="sm:text-right">
               <div className="text-xs opacity-65">Network</div>
-              <div className="text-sm font-bold">{deposit.networkLabel}</div>
+              <div className="text-xs sm:text-sm font-bold">{deposit.networkLabel}</div>
             </div>
           </div>
 

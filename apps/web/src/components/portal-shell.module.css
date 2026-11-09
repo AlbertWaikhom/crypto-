@@ -49,11 +49,7 @@
   width: 30px;
   height: 30px;
   border-radius: 0.6rem;
-  background: radial-gradient(
-    circle at 30% 20%,
-    rgba(245, 184, 46, 0.22),
-    transparent 70%
-  );
+  background: radial-gradient(circle at 30% 20%, rgba(245, 184, 46, 0.22), transparent 70%);
   border: 1px solid rgba(245, 184, 46, 0.28);
 }
 
@@ -145,11 +141,7 @@
 }
 
 .navItemActive {
-  background: linear-gradient(
-    90deg,
-    rgba(245, 184, 46, 0.18) 0%,
-    rgba(245, 184, 46, 0.05) 100%
-  );
+  background: linear-gradient(90deg, rgba(245, 184, 46, 0.18) 0%, rgba(245, 184, 46, 0.05) 100%);
   color: var(--nv-gold);
   border-color: var(--nv-border-gold);
   font-weight: 700;
@@ -238,6 +230,7 @@
   padding: 0.55rem 0.75rem 0.75rem;
   max-width: 1420px;
   width: 100%;
+  min-width: 0;
   margin: 0 auto;
 }
 
@@ -272,12 +265,12 @@
     left: 0;
     top: 0;
     bottom: 0;
-    width: min(80vw, 270px);
+    width: min(84vw, 276px);
     height: 100dvh;
-    border-radius: 0 0.85rem 0.85rem 0;
+    border-radius: 0 1rem 1rem 0;
     z-index: 55;
-    padding-top: calc(0.75rem + env(safe-area-inset-top, 0px));
-    padding-bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px));
+    padding: calc(0.75rem + env(safe-area-inset-top, 0px)) 0.65rem
+      calc(0.9rem + env(safe-area-inset-bottom, 0px));
     transform: translateX(-105%);
     transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
     box-shadow: 20px 0 48px rgba(0, 0, 0, 0.55);
@@ -289,13 +282,32 @@
 
   .closeBtn {
     display: inline-flex;
+    width: 34px;
+    height: 34px;
+  }
+
+  .navItem {
+    min-height: 38px;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.82rem;
+  }
+
+  .logoutBtn {
+    min-height: 36px !important;
+    font-size: 0.78rem !important;
   }
 
   .contentInner {
-    padding: 0.65rem 0.7rem calc(5.5rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.7rem 0.75rem calc(5.65rem + env(safe-area-inset-bottom, 0px));
   }
 
   .mobileDockWrap {
     display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .contentInner {
+    padding: 0.55rem 0.55rem calc(5.65rem + env(safe-area-inset-bottom, 0px));
   }
 }
