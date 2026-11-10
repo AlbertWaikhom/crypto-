@@ -13,7 +13,6 @@
   display: none;
 }
 
-/* Visually Separated Fixed Sidebar Card */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -182,7 +181,6 @@
   color: #fb7185 !important;
 }
 
-/* Visually Separated Right Workspace Panel */
 .workspacePanel {
   display: flex;
   flex-direction: column;
@@ -196,7 +194,6 @@
   box-shadow: 0 10px 28px -14px rgba(0, 0, 0, 0.45);
 }
 
-/* Only This Inner Area Scrolls Beneath Header */
 .contentScrollArea {
   flex: 1;
   min-height: 0;

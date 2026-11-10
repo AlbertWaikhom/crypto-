@@ -13,6 +13,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  Settings,
   ShieldCheck,
   Sparkles,
   TrendingUp,
@@ -54,7 +55,7 @@ const NAV_GROUPS = [
     heading: 'Governance',
     items: [
       { href: '/notifications', label: 'Notifications', icon: Bell, tourId: 'nav-notifications' },
-      { href: '/profile', label: 'Profile & Settings', icon: UserCheck, tourId: 'nav-profile' },
+      { href: '/settings', label: 'Settings', icon: Settings, tourId: 'nav-settings' },
       { href: '/security', label: 'Security', icon: ShieldCheck, tourId: 'nav-security' },
     ],
   },
@@ -163,6 +164,7 @@ export function PortalShell({ children }) {
         mobileNavOpen ||
         isRouteActive('/transactions') ||
         isRouteActive('/notifications') ||
+        isRouteActive('/settings') ||
         isRouteActive('/profile') ||
         isRouteActive('/security'),
       badge: unreadCount,

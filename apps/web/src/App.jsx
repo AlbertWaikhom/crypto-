@@ -166,6 +166,14 @@ export default function App() {
         }
       />
       <Route
+        path="/settings"
+        element={
+          <PortalLayout>
+            <ProfilePage />
+          </PortalLayout>
+        }
+      />
+      <Route
         path="/security"
         element={
           <PortalLayout>

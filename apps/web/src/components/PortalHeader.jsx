@@ -26,8 +26,11 @@ function resolvePortalTitle(pathname) {
   if (pathname.startsWith('/notifications')) {
     return { title: 'Notifications', subtitle: 'System & Settlement Alerts' };
   }
-  if (pathname.startsWith('/profile')) {
-    return { title: 'Profile & Compliance', subtitle: 'Account Identity & Verification' };
+  if (pathname.startsWith('/profile') || pathname.startsWith('/settings')) {
+    return {
+      title: 'Settings & Preferences',
+      subtitle: 'Account Identity, Payout Wallet & Controls',
+    };
   }
   if (pathname.startsWith('/security')) {
     return { title: 'Security & Sessions', subtitle: 'Password & Active Token Governance' };
