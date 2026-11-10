@@ -1,0 +1,383 @@
+{
+  "state": {
+    "isStdOutTTY": false,
+    "isStdErrTTY": false,
+    "testRunDurationMs": 62394.4918
+  },
+  "metrics": {
+    "http_req_blocked": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 16.4915,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0.020690458372310577,
+        "min": 0,
+        "med": 0
+      }
+    },
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 380822,
+        "rate": 6103.455433545178
+      }
+    },
+    "vus": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "value": 1,
+        "min": 1,
+        "max": 3
+      }
+    },
+    "group_duration": {
+      "values": {
+        "p(95)": 1116.3477,
+        "avg": 533.7879786516853,
+        "min": 91.7894,
+        "med": 603.9552000000001,
+        "max": 1386.9768,
+        "p(90)": 988.5043400000001
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0
+      }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "fails": 1069,
+        "rate": 0,
+        "passes": 0
+      },
+      "thresholds": {
+        "rate<0.01": {
+          "ok": true
+        }
+      }
+    },
+    "http_req_sending": {
+      "values": {
+        "max": 1.0008,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0.01620280636108512,
+        "min": 0,
+        "med": 0
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "checks": {
+      "values": {
+        "rate": 0.8825082508250826,
+        "passes": 1337,
+        "fails": 178
+      },
+      "type": "rate",
+      "contains": "default"
+    },
+    "http_reqs": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 1069,
+        "rate": 17.132922621224075
+      }
+    },
+    "http_req_waiting": {
+      "contains": "time",
+      "values": {
+        "max": 471.6608,
+        "p(90)": 222.39500000000058,
+        "p(95)": 250.65545999999995,
+        "avg": 88.66458419083249,
+        "min": 0,
+        "med": 73.7534
+      },
+      "type": "trend"
+    },
+    "data_received": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 14247821,
+        "rate": 228350.62180921555
+      }
+    },
+    "iteration_duration": {
+      "contains": "time",
+      "values": {
+        "p(90)": 2238.30126,
+        "p(95)": 2386.15264,
+        "avg": 2068.037056179775,
+        "min": 1961.6479,
+        "med": 2013.7315,
+        "max": 2542.2883
+      },
+      "type": "trend"
+    },
+    "http_req_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 472.076,
+        "p(90)": 222.9183000000006,
+        "p(95)": 251.20618,
+        "avg": 89.0984941066417,
+        "min": 0,
+        "med": 74.249
+      },
+      "thresholds": {
+        "p(95)<500": {
+          "ok": true
+        },
+        "p(99)<1000": {
+          "ok": true
+        }
+      }
+    },
+    "iterations": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 89,
+        "rate": 1.4264079637875984
+      }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 0.5178,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0.0019269410664172122,
+        "min": 0,
+        "med": 0
+      }
+    },
+    "http_req_receiving": {
+      "contains": "time",
+      "values": {
+        "max": 17.7188,
+        "p(90)": 0.8802000000000001,
+        "p(95)": 0.9914599999999999,
+        "avg": 0.4177071094480823,
+        "min": 0,
+        "med": 0.3264
+      },
+      "type": "trend"
+    },
+    "http_req_duration{expected_response:true}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 472.076,
+        "p(90)": 222.9183000000006,
+        "p(95)": 251.20618,
+        "avg": 89.0984941066417,
+        "min": 0,
+        "med": 74.249
+      }
+    },
+    "vus_max": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "value": 3,
+        "min": 3,
+        "max": 3
+      }
+    }
+  },
+  "setup_data": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTcwMzM1Ny01ZDk2LTQxNjMtOWJlNy0wYmNjMzBlYjQwY2QiLCJlbWFpbCI6ImFsaWNlLnRlc3RAbmF2cml4LmxvY2FsIiwicm9sZSI6IlVTRVIiLCJ1aWQiOiJVU1ItMDAwMDAzIiwiaWF0IjoxNzk0MzEyMTUxLCJleHAiOjE3OTQzMTkzNTF9.eG1DC5_WYCr6uUJ6fFEIOI7BNyHhNMtjknmv8yy0q4A"
+  },
+  "root_group": {
+    "name": "",
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": [
+      {
+        "name": "setup",
+        "path": "::setup",
+        "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+        "groups": [],
+        "checks": [
+          {
+            "path": "::setup::setup login status is 200",
+            "id": "503a584e6a4bdaf6865666d845a66b58",
+            "passes": 1,
+            "fails": 0,
+            "name": "setup login status is 200"
+          },
+          {
+            "fails": 0,
+            "name": "setup received accessToken",
+            "path": "::setup::setup received accessToken",
+            "id": "fb6f29926c8df34f9e2db61e52be0bf9",
+            "passes": 1
+          }
+        ]
+      },
+      {
+        "checks": [
+          {
+            "id": "e89c7ba8759fdeac9028cabc5fa2605c",
+            "passes": 89,
+            "fails": 0,
+            "name": "health is 200",
+            "path": "::01. Public Platform APIs::health is 200"
+          },
+          {
+            "name": "auth config is 200",
+            "path": "::01. Public Platform APIs::auth config is 200",
+            "id": "752978b3d66ee9e2a0a777c8c06d3bda",
+            "passes": 89,
+            "fails": 0
+          },
+          {
+            "id": "36f0cd8854303bc6553fca63421dd5c7",
+            "passes": 89,
+            "fails": 0,
+            "name": "plans status is 200",
+            "path": "::01. Public Platform APIs::plans status is 200"
+          },
+          {
+            "name": "plans has items",
+            "path": "::01. Public Platform APIs::plans has items",
+            "id": "a3d0c0701021df744929da2906372c08",
+            "passes": 89,
+            "fails": 0
+          },
+          {
+            "passes": 89,
+            "fails": 0,
+            "name": "market-data is 200",
+            "path": "::01. Public Platform APIs::market-data is 200",
+            "id": "ff14cb79c5b38f2009ba16b117dba5d2"
+          },
+          {
+            "fails": 0,
+            "name": "check-email is 200",
+            "path": "::01. Public Platform APIs::check-email is 200",
+            "id": "9c98a835237cf421ba0355bed50a4d68",
+            "passes": 89
+          },
+          {
+            "name": "user exists in db",
+            "path": "::01. Public Platform APIs::user exists in db",
+            "id": "58069dd0be4082431af3de0837f05d12",
+            "passes": 89,
+            "fails": 0
+          }
+        ],
+        "name": "01. Public Platform APIs",
+        "path": "::01. Public Platform APIs",
+        "id": "0fa1b84dda2accbbde33707e63c0508a",
+        "groups": []
+      },
+      {
+        "path": "::02. Authenticated Investor APIs",
+        "id": "02bc86c4888593cbd69f78642ad51f1c",
+        "groups": [],
+        "checks": [
+          {
+            "name": "users/me is 200",
+            "path": "::02. Authenticated Investor APIs::users/me is 200",
+            "id": "a7d36540b33b078a298ca96ac4b4a660",
+            "passes": 89,
+            "fails": 0
+          },
+          {
+            "passes": 89,
+            "fails": 0,
+            "name": "users/me has email",
+            "path": "::02. Authenticated Investor APIs::users/me has email",
+            "id": "bbafddb72bfd5284c75fdb753502119c"
+          },
+          {
+            "path": "::02. Authenticated Investor APIs::wallet is 200",
+            "id": "d2ffcbe2569326b65838fdbdafee3336",
+            "passes": 89,
+            "fails": 0,
+            "name": "wallet is 200"
+          },
+          {
+            "fails": 89,
+            "name": "wallet has balances",
+            "path": "::02. Authenticated Investor APIs::wallet has balances",
+            "id": "c25b06f68301fe02612118bbef453fb1",
+            "passes": 0
+          },
+          {
+            "passes": 89,
+            "fails": 0,
+            "name": "ledger is 200",
+            "path": "::02. Authenticated Investor APIs::ledger is 200",
+            "id": "7b03868e9e4ea9bfd24c2133d2c8d12a"
+          },
+          {
+            "id": "dfa41b16c9d3a587e7828896d2255e38",
+            "passes": 0,
+            "fails": 89,
+            "name": "ledger is array",
+            "path": "::02. Authenticated Investor APIs::ledger is array"
+          },
+          {
+            "name": "deposits is 200",
+            "path": "::02. Authenticated Investor APIs::deposits is 200",
+            "id": "c5fd3e4964a101d5165f991cefab3930",
+            "passes": 89,
+            "fails": 0
+          },
+          {
+            "name": "investments is 200",
+            "path": "::02. Authenticated Investor APIs::investments is 200",
+            "id": "e1879100480dcba2eb59172fb0934ffb",
+            "passes": 89,
+            "fails": 0
+          },
+          {
+            "name": "notifications is 200",
+            "path": "::02. Authenticated Investor APIs::notifications is 200",
+            "id": "873cc3ceaf6520840db6ca22903e65c8",
+            "passes": 89,
+            "fails": 0
+          },
+          {
+            "path": "::02. Authenticated Investor APIs::referrals is 200",
+            "id": "446f452a36da6977d14a17efab6748eb",
+            "passes": 89,
+            "fails": 0,
+            "name": "referrals is 200"
+          }
+        ],
+        "name": "02. Authenticated Investor APIs"
+      }
+    ],
+    "checks": []
+  },
+  "options": {
+    "summaryTimeUnit": "",
+    "noColor": false,
+    "summaryTrendStats": ["avg", "min", "med", "max", "p(90)", "p(95)"]
+  }
+}

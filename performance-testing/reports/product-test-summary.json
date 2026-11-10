@@ -1,0 +1,325 @@
+{
+  "state": {
+    "isStdOutTTY": false,
+    "isStdErrTTY": false,
+    "testRunDurationMs": 60288.2649
+  },
+  "metrics": {
+    "http_req_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 4356
+      },
+      "thresholds": {
+        "rate<0.01": {
+          "ok": true
+        }
+      }
+    },
+    "vus": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "value": 1,
+        "min": 1,
+        "max": 24
+      }
+    },
+    "vus_max": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "max": 25,
+        "value": 25,
+        "min": 25
+      }
+    },
+    "iteration_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 714.3991,
+        "max": 1221.87,
+        "p(90)": 753.4671800000001,
+        "p(95)": 772.3087400000001,
+        "avg": 723.3458249770437,
+        "min": 681.5632
+      }
+    },
+    "http_req_duration{expected_response:true}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 20.4524,
+        "med": 43.12525,
+        "max": 381.2923,
+        "p(90)": 113.604,
+        "p(95)": 123.98717500000001,
+        "avg": 55.42529763544532
+      }
+    },
+    "data_sent": {
+      "values": {
+        "count": 785169,
+        "rate": 13023.57932016053
+      },
+      "type": "counter",
+      "contains": "data"
+    },
+    "data_received": {
+      "values": {
+        "count": 14588244,
+        "rate": 241974.85238955682
+      },
+      "type": "counter",
+      "contains": "data"
+    },
+    "http_reqs": {
+      "contains": "default",
+      "values": {
+        "count": 4356,
+        "rate": 72.25286724083512
+      },
+      "type": "counter"
+    },
+    "http_req_duration": {
+      "thresholds": {
+        "p(95)<500": {
+          "ok": true
+        },
+        "p(99)<1000": {
+          "ok": true
+        }
+      },
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 20.4524,
+        "med": 43.12525,
+        "max": 381.2923,
+        "p(90)": 113.604,
+        "p(95)": 123.98717500000001,
+        "avg": 55.42529763544532
+      }
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0,
+        "min": 0
+      }
+    },
+    "group_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 124.49865,
+        "avg": 55.70749742883379,
+        "min": 20.4524,
+        "med": 43.32245,
+        "max": 382.3627,
+        "p(90)": 114.04945000000001
+      }
+    },
+    "http_req_connecting": {
+      "contains": "time",
+      "values": {
+        "avg": 0.00427070707070707,
+        "min": 0,
+        "med": 0,
+        "max": 2.1486,
+        "p(90)": 0,
+        "p(95)": 0
+      },
+      "type": "trend"
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 16.4379,
+        "med": 42.80375,
+        "max": 381.2923,
+        "p(90)": 113.20605,
+        "p(95)": 123.69297499999999,
+        "avg": 55.09607660697881
+      }
+    },
+    "http_req_sending": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 0,
+        "max": 2.4139,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0.023037442607897158,
+        "min": 0
+      }
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 6.449,
+        "p(90)": 0.87435,
+        "p(95)": 0.976375,
+        "avg": 0.3061835858585858,
+        "min": 0,
+        "med": 0
+      }
+    },
+    "checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0.7,
+        "passes": 7623,
+        "fails": 3267
+      }
+    },
+    "http_req_blocked": {
+      "contains": "time",
+      "values": {
+        "avg": 0.0123307621671258,
+        "min": 0,
+        "med": 0,
+        "max": 13.4122,
+        "p(90)": 0,
+        "p(95)": 0
+      },
+      "type": "trend"
+    },
+    "iterations": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 1089,
+        "rate": 18.06321681020878
+      }
+    }
+  },
+  "root_group": {
+    "groups": [
+      {
+        "checks": [
+          {
+            "name": "plans status is 200",
+            "path": "::1. Investment Vault Plans Catalog::plans status is 200",
+            "id": "869d6cd973ab3661c82a09023345fb51",
+            "passes": 1089,
+            "fails": 0
+          },
+          {
+            "id": "3ee56e6a1d1e9d6e20f157b1b0fa5edd",
+            "passes": 1089,
+            "fails": 0,
+            "name": "plans payload success is true",
+            "path": "::1. Investment Vault Plans Catalog::plans payload success is true"
+          },
+          {
+            "passes": 0,
+            "fails": 1089,
+            "name": "plans array contains active vaults",
+            "path": "::1. Investment Vault Plans Catalog::plans array contains active vaults",
+            "id": "2e7f84ca925d2e7b3b1c8faae611d541"
+          },
+          {
+            "name": "each plan has required APY & limits",
+            "path": "::1. Investment Vault Plans Catalog::each plan has required APY & limits",
+            "id": "e7a62c061c8ac38ba07f4a6b6739017d",
+            "passes": 0,
+            "fails": 1089
+          }
+        ],
+        "name": "1. Investment Vault Plans Catalog",
+        "path": "::1. Investment Vault Plans Catalog",
+        "id": "98540462993c8fa5c7f025e6b43c9050",
+        "groups": []
+      },
+      {
+        "name": "2. Market Data & Asset Feed Config",
+        "path": "::2. Market Data & Asset Feed Config",
+        "id": "71a1293f4943308de182e3ccf6bd0544",
+        "groups": [],
+        "checks": [
+          {
+            "id": "aa394a2c9d84a1515970c9ddbb9b93e2",
+            "passes": 1089,
+            "fails": 0,
+            "name": "market-data status is 200",
+            "path": "::2. Market Data & Asset Feed Config::market-data status is 200"
+          },
+          {
+            "path": "::2. Market Data & Asset Feed Config::market-data has symbols",
+            "id": "03b8ff2a6fa7f029d00a69d3cc35504a",
+            "passes": 1089,
+            "fails": 0,
+            "name": "market-data has symbols"
+          }
+        ]
+      },
+      {
+        "name": "3. Payment Gateways & Chains",
+        "path": "::3. Payment Gateways & Chains",
+        "id": "9c594127e6f949d3544b9780bd9f2450",
+        "groups": [],
+        "checks": [
+          {
+            "name": "payment-methods status is 200",
+            "path": "::3. Payment Gateways & Chains::payment-methods status is 200",
+            "id": "5bf76b658172cbc36c82d8c7ea63f159",
+            "passes": 1089,
+            "fails": 0
+          },
+          {
+            "name": "supports BEP-20 chain",
+            "path": "::3. Payment Gateways & Chains::supports BEP-20 chain",
+            "id": "82c42573ed264c05ed6736bec50a1d83",
+            "passes": 0,
+            "fails": 1089
+          }
+        ]
+      },
+      {
+        "groups": [],
+        "checks": [
+          {
+            "name": "deposits/config status is 200",
+            "path": "::4. Deposit Limits & Network Rules::deposits/config status is 200",
+            "id": "baab93aef200e7906b7ee43becf8ee47",
+            "passes": 1089,
+            "fails": 0
+          },
+          {
+            "fails": 0,
+            "name": "valid min/max deposit range",
+            "path": "::4. Deposit Limits & Network Rules::valid min/max deposit range",
+            "id": "2a38adc9d00ee73a3fbc356190c010a5",
+            "passes": 1089
+          }
+        ],
+        "name": "4. Deposit Limits & Network Rules",
+        "path": "::4. Deposit Limits & Network Rules",
+        "id": "e059e434a0646bc16deed2f0b21c572f"
+      }
+    ],
+    "checks": [],
+    "name": "",
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "options": {
+    "noColor": false,
+    "summaryTrendStats": ["avg", "min", "med", "max", "p(90)", "p(95)"],
+    "summaryTimeUnit": ""
+  }
+}

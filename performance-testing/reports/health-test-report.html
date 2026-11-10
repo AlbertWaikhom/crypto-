@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAVRIX Performance Report - health-test</title>
+  <style>
+    :root {
+      --bg: #070B14;
+      --card-bg: #0D1424;
+      --border: rgba(245, 184, 46, 0.24);
+      --gold: #F5B82E;
+      --gold-light: #FDE68A;
+      --text: #F1F5F9;
+      --text-muted: #94A3B8;
+      --success: #10B981;
+      --danger: #EF4444;
+      --warning: #F59E0B;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      padding: 2rem 1.5rem;
+      line-height: 1.5;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .brand-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: -0.02em;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-pass { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.4); }
+    .badge-fail { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.4); }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 8px 24px -6px rgba(0,0,0,0.5);
+    }
+    .card-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 0.35rem; }
+    .card-value { font-size: 1.85rem; font-weight: 800; color: var(--text); }
+    .card-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem; }
+    .section-title { font-size: 1.2rem; font-weight: 700; color: var(--gold-light); margin-bottom: 1rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.88rem; }
+    th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+    td:last-child, th:last-child { text-align: right; }
+    .pill { padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
+    .pill-green { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .pill-red { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+    .footer { margin-top: 3rem; text-align: center; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <div class="brand-title">NAVRIX · Performance Engineering</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+          Scenario: <strong>health-test</strong> · Generated at 2026-11-10T11:53:33.949Z
+        </p>
+      </div>
+      <div>
+        <span class="badge badge-pass">
+          ✓ Meets Performance Targets
+        </span>
+      </div>
+    </header>
+
+    <div class="grid-4">
+      <div class="card">
+        <div class="card-label">Total Requests</div>
+        <div class="card-value">40</div>
+        <div class="card-sub">12.56 requests / sec</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Peak Concurrency</div>
+        <div class="card-value">2 VUs</div>
+        <div class="card-sub">Virtual user load</div>
+      </div>
+      <div class="card">
+        <div class="card-label">P95 Response Time</div>
+        <div class="card-value" style="color: var(--success);">102.77 ms</div>
+        <div class="card-sub">Target: &lt; 500ms</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Failed Requests</div>
+        <div class="card-value" style="color: var(--success);">0.00%</div>
+        <div class="card-sub">Target: &lt; 1.00%</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 2rem;">
+      <div class="section-title">Latency Percentiles &amp; Network Telemetry</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Measured Value</th>
+            <th>Target SLA</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Average Latency</td>
+            <td>33.19 ms</td>
+            <td>&lt; 350 ms</td>
+            <td><span class="pill pill-green">PASSED</span></td>
+          </tr>
+          <tr>
+            <td>Median Latency (P50)</td>
+            <td>12.64 ms</td>
+            <td>&lt; 250 ms</td>
+            <td><span class="pill pill-green">PASSED</span></td>
+          </tr>
+          <tr>
+            <td>90th Percentile (P90)</td>
+            <td>100.41 ms</td>
+            <td>&lt; 450 ms</td>
+            <td><span class="pill pill-green">PASSED</span></td>
+          </tr>
+          <tr>
+            <td>95th Percentile (P95)</td>
+            <td>102.77 ms</td>
+            <td>&lt; 500 ms</td>
+            <td><span class="pill pill-green">PASSED</span></td>
+          </tr>
+          <tr>
+            <td>99th Percentile (P99)</td>
+            <td>0.00 ms</td>
+            <td>&lt; 1000 ms</td>
+            <td><span class="pill pill-green">PASSED</span></td>
+          </tr>
+          <tr>
+            <td>Min / Max Latency</td>
+            <td>0.00 ms / 116.70 ms</td>
+            <td>-</td>
+            <td><span class="pill pill-green">RECORDED</span></td>
+          </tr>
+          <tr>
+            <td>Network Bandwidth</td>
+            <td>0.12 MB Rx / 6.87 KB Tx</td>
+            <td>-</td>
+            <td><span class="pill pill-green">ACTIVE</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="footer">
+      NAVRIX Enterprise Platform · Senior Performance Testing Suite · Generated by k6
+    </footer>
+  </div>
+</body>
+</html>
