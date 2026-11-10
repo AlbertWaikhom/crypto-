@@ -8,9 +8,14 @@ const STORAGE_KEY = 'navrix_browser_google_accounts_v1';
 
 const DEFAULT_BROWSER_ACCOUNTS = [
   {
+    email: 'alex.morgan@gmail.com',
+    name: 'Alex Morgan',
+    badge: 'Google Account · Signed in',
+  },
+  {
     email: 'google.investor@navrix.local',
     name: 'Google Verified Investor',
-    badge: 'Signed in to browser',
+    badge: 'Institutional Vault',
   },
 ];
 
@@ -106,8 +111,21 @@ export function useGoogleAccountAuth({ onSuccess, toast } = {}) {
   const [isBusy, setIsBusy] = React.useState(false);
 
   const triggerGoogleLogin = React.useCallback((referralCodeParam) => {
-    setIsBusy(true);
     try {
+      const isLocalhost =
+        typeof window !== 'undefined' &&
+        (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+      if (!isLocalhost) {
+        // On remote tunnel / preview links (e.g. trycloudflare.com, loca.lt, ngrok), open the Google Account Chooser
+        // modal directly so remote clients can immediately pick or type their Google account without experiencing
+        // "This site can't be reached" (Google redirecting back to localhost:3000) or Google Error 400 mismatch!
+        setIsBusy(false);
+        setChooserOpen(true);
+        return;
+      }
+
+      setIsBusy(true);
       const targetUrl = new URL('/api/v1/auth/google', window.location.origin);
       const queryParams = new URLSearchParams(window.location.search);
       const ref =

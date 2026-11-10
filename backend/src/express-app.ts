@@ -1906,7 +1906,6 @@ router.post(
   }),
 );
 
-// Google OAuth 2.0 Redirect Initiation (Directs user to Google authentication)
 router.get(
   '/auth/google',
   asyncHandler(async (req, res) => {
@@ -1920,10 +1919,21 @@ router.get(
     const protocol =
       req.protocol === 'https' || req.get('x-forwarded-proto') === 'https' ? 'https' : 'http';
     const baseUrl = `${protocol}://${host}`;
-    const redirectUri = process.env.GOOGLE_CALLBACK_URL || `${baseUrl}/api/v1/auth/google/callback`;
+
+    const isLocalhost =
+      host.startsWith('localhost') || host.startsWith('127.0.0.1') || host.startsWith('0.0.0.0');
+
+    // On localhost, default to configured GOOGLE_CALLBACK_URL if provided, else baseUrl.
+    // On external tunnel / preview domains (e.g. trycloudflare.com), dynamic baseUrl must be used so Google
+    // does not redirect remote users back to localhost:3000 (which causes "This site can't be reached").
+    const redirectUri =
+      isLocalhost && process.env.GOOGLE_CALLBACK_URL
+        ? process.env.GOOGLE_CALLBACK_URL
+        : `${baseUrl}/api/v1/auth/google/callback`;
 
     const ref = typeof req.query.ref === 'string' ? req.query.ref.trim() : '';
     const portal = typeof req.query.portal === 'string' ? req.query.portal.trim() : '';
+    const forceLive = req.query.force_live === '1' || req.query.force_live === 'true';
 
     const stateObj = {
       nonce: crypto.randomBytes(16).toString('hex'),
@@ -1933,7 +1943,11 @@ router.get(
     };
     const state = Buffer.from(JSON.stringify(stateObj)).toString('base64url');
 
-    if (isRealGoogleCid) {
+    // Real Google OAuth redirect is only safe on localhost (matching Google Console Authorized URIs)
+    // or when force_live is explicitly requested.
+    // On shared tunnels or preview hosts, redirect to Google Account Selection page so remote clients can
+    // immediately authenticate with their Google account without "This site can't be reached" errors!
+    if (isRealGoogleCid && (isLocalhost || forceLive)) {
       // Direct browser redirect to Google's official OAuth authorization endpoint
       const googleAuthUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
       googleAuthUrl.searchParams.set('client_id', rawCid);
@@ -1947,10 +1961,10 @@ router.get(
       return res.redirect(googleAuthUrl.toString());
     }
 
-    // When GOOGLE_CLIENT_ID is not configured, redirect to Google Account Selection page
+    // When accessed via tunnel/remote or when GOOGLE_CLIENT_ID is not configured, redirect to Google Account Selection page
     const selectAccountUrl = new URL(`${baseUrl}/auth/google/select-account`);
     selectAccountUrl.searchParams.set('state', state);
-    selectAccountUrl.searchParams.set('redirect_uri', redirectUri);
+    selectAccountUrl.searchParams.set('redirect_uri', `${baseUrl}/api/v1/auth/google/callback`);
     return res.redirect(selectAccountUrl.toString());
   }),
 );
@@ -1973,9 +1987,15 @@ router.get(
       req.protocol === 'https' || req.get('x-forwarded-proto') === 'https' ? 'https' : 'http';
     const baseUrl = `${protocol}://${host}`;
 
+    const isLocalhost =
+      host.startsWith('localhost') || host.startsWith('127.0.0.1') || host.startsWith('0.0.0.0');
+
     let refCode = '';
     let portal = '';
-    let redirectUri = process.env.GOOGLE_CALLBACK_URL || `${baseUrl}/api/v1/auth/google/callback`;
+    let redirectUri =
+      isLocalhost && process.env.GOOGLE_CALLBACK_URL
+        ? process.env.GOOGLE_CALLBACK_URL
+        : `${baseUrl}/api/v1/auth/google/callback`;
     if (typeof rawState === 'string' && rawState) {
       try {
         const decoded = JSON.parse(Buffer.from(rawState, 'base64url').toString('utf8'));
