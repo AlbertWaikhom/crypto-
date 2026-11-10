@@ -25,7 +25,6 @@ import {
   StatusBadge,
 } from '@navrix/ui';
 import { apiRequest, ClientApiError } from '../../../lib/api';
-import { ModernParticleQRCode } from '../../../components/ModernParticleQRCode';
 import styles from './deposit.module.css';
 export default function DepositPage() {
   const router = useRouter();
@@ -342,12 +341,13 @@ export default function DepositPage() {
             </span>
           </div>
 
-          <ModernParticleQRCode
-            value={receivingAddress}
-            token={selectedMethod?.symbol || 'USDT'}
-            network={selectedMethod?.network || 'BEP-20'}
-            size={220}
-          />
+          <div className={styles.qrBox}>
+            <QRCodeSVG value={receivingAddress} size={196} level="M" includeMargin={false} />
+            <span className="mt-2 text-[11px] font-bold tracking-wide text-slate-700">
+              {selectedMethod?.symbol || 'USDT'} ({selectedMethod?.network || 'BEP-20'}) PUBLIC
+              ADDRESS
+            </span>
+          </div>
 
           <div className={styles.addressBox}>{receivingAddress}</div>
 

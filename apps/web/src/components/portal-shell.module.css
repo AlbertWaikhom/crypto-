@@ -249,11 +249,18 @@
     grid-template-columns: minmax(0, 1fr);
     padding: 0;
     gap: 0;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
   }
 
   .workspacePanel {
     border-radius: 0;
     border: none;
+    height: 100%;
+    max-height: 100%;
+    box-shadow: none;
   }
 
   .scrim {
@@ -303,8 +310,14 @@
     font-size: 0.78rem !important;
   }
 
+  .contentScrollArea {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
   .contentInner {
-    padding: 0.7rem 0.75rem calc(5.65rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.75rem 0.75rem calc(8rem + env(safe-area-inset-bottom, 32px));
+    min-height: 100%;
   }
 
   .mobileDockWrap {
@@ -314,6 +327,6 @@
 
 @media (max-width: 480px) {
   .contentInner {
-    padding: 0.55rem 0.55rem calc(5.65rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.5rem 0.5rem calc(8.5rem + env(safe-area-inset-bottom, 32px));
   }
 }

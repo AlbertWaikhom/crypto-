@@ -9,7 +9,6 @@ import { BLOCKCHAIN_DEFAULTS } from '@navrix/config';
 import { Button, CopyButton, formatUsdt, StatusBadge } from '@navrix/ui';
 import { bscTxHashSchema } from '@navrix/validation';
 import { apiRequest, ClientApiError } from '../../../../lib/api';
-import { ModernParticleQRCode } from '../../../../components/ModernParticleQRCode';
 import styles from './deposit-detail.module.css';
 export default function DepositDetailPage() {
   const params = useParams();
@@ -111,12 +110,12 @@ export default function DepositDetailPage() {
             </div>
           </div>
 
-          <ModernParticleQRCode
-            value={deposit.receivingAddress}
-            token={deposit.token || 'USDT'}
-            network={deposit.networkLabel || deposit.network || 'BEP-20'}
-            size={220}
-          />
+          <div className={styles.qrFrame}>
+            <QRCodeSVG value={deposit.receivingAddress} size={200} level="M" />
+            <span className="mt-2 text-[11px] font-bold text-slate-700">
+              {deposit.token || 'USDT'} ({deposit.networkLabel || deposit.network}) PUBLIC ADDRESS
+            </span>
+          </div>
 
           <div className="mb-1 text-center text-xs font-semibold opacity-70">Receiving Address</div>
           <div className={styles.addressPill}>{deposit.receivingAddress}</div>

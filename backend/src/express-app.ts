@@ -617,9 +617,6 @@ async function verifyDepositOnChain(params: {
   });
 }
 
-// =============================================================================
-// PLATFORM WALLETS & MARKET DATA HELPERS
-// =============================================================================
 export interface PlatformWalletConfig {
   id: string;
   name: string;
@@ -988,7 +985,6 @@ function formatDepositRecord(deposit: any) {
   };
 }
 
-// Screenshot private storage helpers
 const PRIVATE_UPLOAD_DIR = path.resolve(
   __dirname,
   '..',
@@ -1031,12 +1027,8 @@ async function savePaymentScreenshot(file: Express.Multer.File) {
   };
 }
 
-// =============================================================================
-// API ROUTER (/api/v1)
-// =============================================================================
 const router = express.Router();
 
-// 1. HEALTH
 router.get(
   '/health',
   asyncHandler(async (_req, res) => {
@@ -1055,9 +1047,6 @@ router.get(
   }),
 );
 
-// =============================================================================
-// 2. AUTHENTICATION & OTP & GOOGLE OAUTH (/auth)
-// =============================================================================
 router.get(
   '/auth/config',
   asyncHandler(async (_req, res) => {
@@ -3363,9 +3352,6 @@ router.get(
   }),
 );
 
-// =============================================================================
-// 7. USERS & COMPLIANCE (/users)
-// =============================================================================
 async function buildMePayload(userId: string) {
   const user = await prisma.user.findUniqueOrThrow({
     where: { id: userId },
@@ -3436,7 +3422,6 @@ router.patch(
   }),
 );
 
-// Update or Reset Tutorial Mode (Persistent per user/admin)
 router.patch(
   '/users/me/tutorial',
   requireAuth,
@@ -3469,16 +3454,11 @@ router.patch(
   }),
 );
 
-// =============================================================================
-// PAYOUT WALLET (WALLET ID) — mandatory destination for every withdrawal
-// =============================================================================
 const PAYOUT_WALLET_CHANGE_LOCK_HOURS = Math.max(
   0,
   Number(process.env.PAYOUT_WALLET_CHANGE_LOCK_HOURS ?? 0),
 );
 
-// Step 1 (optional): email a 6-digit confirmation code (used when the account has no
-// password, e.g. Google sign-in accounts, or when the user prefers email verification)
 router.post(
   '/users/me/payout-wallet/otp',
   requireAuth,
@@ -3501,7 +3481,6 @@ router.post(
   }),
 );
 
-// Step 2: save / update the Wallet ID after password or email-OTP re-verification
 router.put(
   '/users/me/payout-wallet',
   requireAuth,
@@ -3560,7 +3539,6 @@ router.put(
       );
     }
 
-    // Re-verification: current password OR a fresh 6-digit email code
     let verifiedVia: 'PASSWORD' | 'EMAIL_OTP' | null = null;
     const otpDigits = String(otp || '').replace(/\D/g, '');
     if (otpDigits.length === 6) {
