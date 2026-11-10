@@ -55,6 +55,12 @@ function resolveAdminTitle(pathname: string): { title: string; subtitle: string 
   if (clean.startsWith('/admin-users')) {
     return { title: 'Admin RBAC Governance', subtitle: 'Operator Role & Privilege Control' };
   }
+  if (clean.startsWith('/wallets')) {
+    return {
+      title: 'Platform Wallet Management',
+      subtitle: 'Multi-Network Receiving Addresses & Payment Methods',
+    };
+  }
   if (clean.startsWith('/settings')) {
     return { title: 'Platform System Settings', subtitle: 'Runtime Thresholds & Vault Parameters' };
   }

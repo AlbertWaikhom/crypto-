@@ -43,6 +43,7 @@ import {
 } from '@navrix/ui';
 import { apiRequest } from '../../../lib/api';
 import { useUiStore } from '../../../store/ui-store';
+import { LiveMarketStation } from '../../../components/LiveMarketStation';
 import styles from './dashboard.module.css';
 export default function CustomerDashboardPage() {
   const { user } = useUiStore();
@@ -238,7 +239,10 @@ export default function CustomerDashboardPage() {
         ))}
       </section>
 
-      {/* Row 3: 3-Column Bento Workspace (Fits Cleanly in Single Screen!) */}
+      {/* Row 3: Live Real-Time Market Station (Binance WebSocket Streams) */}
+      <LiveMarketStation />
+
+      {/* Row 4: 3-Column Bento Workspace (Fits Cleanly in Single Screen!) */}
       <div className={styles.mainBento}>
         {/* Col 1: Ledger Equity Progression */}
         <SpotlightCard tone="gold" className={styles.bentoCard}>

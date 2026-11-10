@@ -48,6 +48,16 @@ export default function InvestmentsPage() {
                   Min: {formatUsdt(p.minAmount, 0)} USDT · Max: {formatUsdt(p.maxAmount, 0)} USDT
                 </span>
               </div>
+              <div className="mt-3 flex items-center justify-between gap-2 pt-2">
+                <span className="text-[11px] text-slate-400 font-mono">
+                  Accepts TRC-20, BEP-20, ERC-20, BTC, ETH
+                </span>
+                <Link href={`/deposit?plan=${p.code}`}>
+                  <Button variant="gold" size="sm" className="text-xs">
+                    Invest Now
+                  </Button>
+                </Link>
+              </div>
             </div>
           ))}
         </section>

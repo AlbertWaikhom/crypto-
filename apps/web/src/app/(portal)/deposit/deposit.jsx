@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { QRCodeSVG } from 'qrcode.react';
-import { AlertTriangle, ArrowRight, Share2 } from 'lucide-react';
+import { AlertTriangle, ArrowRight, CheckCircle2, Coins, Share2, Wallet } from 'lucide-react';
 import { BLOCKCHAIN_DEFAULTS } from '@navrix/config';
 import {
   Button,
@@ -22,22 +22,70 @@ export default function DepositPage() {
   const queryClient = useQueryClient();
   const [amount, setAmount] = React.useState('100');
   const [planCode, setPlanCode] = React.useState('');
+  const [selectedMethodId, setSelectedMethodId] = React.useState('');
   const [creating, setCreating] = React.useState(false);
   const [error, setError] = React.useState(null);
+
   const { data: config } = useQuery({
     queryKey: ['deposit-config'],
     queryFn: () => apiRequest('/deposits/config'),
   });
+
   const { data: deposits = [] } = useQuery({
     queryKey: ['my-deposits'],
     queryFn: () => apiRequest('/deposits'),
   });
+
+  const paymentMethods = React.useMemo(() => {
+    if (config?.paymentMethods && config.paymentMethods.length > 0) {
+      return config.paymentMethods;
+    }
+    return [
+      {
+        id: 'default-bep20',
+        name: 'USDT (BNB Smart Chain)',
+        symbol: 'USDT',
+        network: 'BEP20',
+        walletAddress: config?.receivingAddress || BLOCKCHAIN_DEFAULTS.defaultReceivingAddress,
+        paymentInstructions:
+          'Send BEP-20 USDT only. Transfer will be verified after 12 block confirmations.',
+        minDeposit: config?.minDeposit ?? 10,
+        maxDeposit: config?.maxDeposit ?? 100000,
+        isActive: true,
+      },
+    ];
+  }, [config]);
+
+  React.useEffect(() => {
+    if (!selectedMethodId && paymentMethods.length > 0) {
+      const def = paymentMethods.find((m) => m.isDefault) || paymentMethods[0];
+      setSelectedMethodId(def.id);
+    }
+  }, [paymentMethods, selectedMethodId]);
+
+  // Check URL query param for plan or method preselection
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const urlPlan = params.get('plan');
+      const urlMethod = params.get('method');
+      if (urlPlan) setPlanCode(urlPlan);
+      if (urlMethod) setSelectedMethodId(urlMethod);
+    }
+  }, []);
+
   React.useEffect(() => {
     if (!planCode && config?.plans?.[0]?.code) {
       setPlanCode(config.plans[0].code);
     }
   }, [config, planCode]);
-  const receivingAddress = config?.receivingAddress || BLOCKCHAIN_DEFAULTS.defaultReceivingAddress;
+
+  const selectedMethod = paymentMethods.find((m) => m.id === selectedMethodId) || paymentMethods[0];
+  const receivingAddress =
+    selectedMethod?.walletAddress ||
+    config?.receivingAddress ||
+    BLOCKCHAIN_DEFAULTS.defaultReceivingAddress;
+
   const handleCreateDeposit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -47,7 +95,9 @@ export default function DepositPage() {
         method: 'POST',
         body: JSON.stringify({
           amount: Number(amount),
-          network: 'BNB_SMART_CHAIN',
+          paymentMethodId: selectedMethod?.id,
+          network: selectedMethod?.network || 'BEP20',
+          token: selectedMethod?.symbol || 'USDT',
           planCode: planCode || undefined,
         }),
       });
@@ -59,12 +109,13 @@ export default function DepositPage() {
       setCreating(false);
     }
   };
+
   const handleShare = async () => {
-    const shareText = `USDT Deposit (${BLOCKCHAIN_DEFAULTS.networkDisplayName}): ${receivingAddress}`;
+    const shareText = `${selectedMethod?.symbol || 'USDT'} Deposit (${selectedMethod?.network || BLOCKCHAIN_DEFAULTS.networkDisplayName}): ${receivingAddress}`;
     if (typeof navigator !== 'undefined' && navigator.share) {
       try {
         await navigator.share({
-          title: 'NAVRIX USDT (BEP-20) Receiving Address',
+          title: `NAVRIX ${selectedMethod?.symbol || 'USDT'} (${selectedMethod?.network || 'BEP-20'}) Receiving Address`,
           text: shareText,
         });
       } catch {
@@ -120,20 +171,30 @@ export default function DepositPage() {
             </div>
 
             <div>
-              <label
-                htmlFor="network-select"
-                className="mb-1.5 block text-xs font-semibold opacity-80"
-              >
-                Blockchain Network
+              <label className="mb-1.5 block text-xs font-semibold opacity-80">
+                Choose Payment Method &amp; Network
               </label>
-              <select
-                id="network-select"
-                value="BNB_SMART_CHAIN"
-                disabled
-                className={styles.select}
-              >
-                <option value="BNB_SMART_CHAIN">BNB Smart Chain (BEP-20) — USDT</option>
-              </select>
+              <div className={styles.methodsGrid}>
+                {paymentMethods.map((m) => {
+                  const isSelected = m.id === selectedMethod?.id;
+                  return (
+                    <div
+                      key={m.id}
+                      onClick={() => setSelectedMethodId(m.id)}
+                      className={cn(styles.methodCard, isSelected && styles.methodCardActive)}
+                    >
+                      <div className={styles.methodCardHead}>
+                        <span className={styles.tokenBadge}>{m.symbol}</span>
+                        <span className={styles.networkBadge}>{m.network}</span>
+                      </div>
+                      <div className={styles.methodCardTitle}>{m.name}</div>
+                      <div className={styles.methodCardSub}>
+                        Min: {m.minDeposit} {m.symbol}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             {config?.plans && config.plans.length > 0 ? (
@@ -163,16 +224,22 @@ export default function DepositPage() {
               <div className="flex justify-between">
                 <span className="opacity-70">You are sending:</span>
                 <span className="font-mono font-bold text-amber-400">
-                  {formatUsdt(amount || 0)} USDT
+                  {formatUsdt(amount || 0)} {selectedMethod?.symbol || 'USDT'}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="opacity-70">Network:</span>
-                <span className="font-semibold">BNB Smart Chain (BEP-20)</span>
+                <span className="opacity-70">Payment Network:</span>
+                <span className="font-semibold text-sky-400">
+                  {selectedMethod?.name || 'BNB Smart Chain (BEP-20)'}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span className="opacity-70">Required Confirmations:</span>
-                <span>{config?.requiredConfirmations ?? 12} Blocks</span>
+                <span className="opacity-70">Transfer Limits:</span>
+                <span>
+                  {selectedMethod?.minDeposit ?? 10} –{' '}
+                  {formatUsdt(selectedMethod?.maxDeposit ?? 100000, 0)}{' '}
+                  {selectedMethod?.symbol || 'USDT'}
+                </span>
               </div>
             </div>
 
@@ -194,19 +261,20 @@ export default function DepositPage() {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                USDT · BEP-20
+                {selectedMethod?.symbol || 'USDT'} · {selectedMethod?.network || 'BEP-20'}
               </div>
               <h2 className="text-base sm:text-lg font-bold">Platform Receiving Vault</h2>
             </div>
             <span className="rounded-full border border-emerald-500/35 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">
-              BNB Smart Chain
+              {selectedMethod?.network || 'BEP-20'}
             </span>
           </div>
 
           <div className={styles.qrBox}>
             <QRCodeSVG value={receivingAddress} size={196} level="M" includeMargin={false} />
             <span className="mt-2 text-[11px] font-bold tracking-wide text-slate-700">
-              USDT (BEP-20) PUBLIC ADDRESS
+              {selectedMethod?.symbol || 'USDT'} ({selectedMethod?.network || 'BEP-20'}) PUBLIC
+              ADDRESS
             </span>
           </div>
 
@@ -219,6 +287,15 @@ export default function DepositPage() {
               Share
             </Button>
           </div>
+
+          {selectedMethod?.paymentInstructions && (
+            <div className={styles.instructionsBox}>
+              <div className="font-semibold mb-1 text-sky-300 flex items-center gap-1.5">
+                <Coins className="h-3.5 w-3.5" /> Instructions ({selectedMethod.network})
+              </div>
+              <div>{selectedMethod.paymentInstructions}</div>
+            </div>
+          )}
 
           <div className={styles.warningBanner} role="note">
             <div className="flex items-start gap-2.5">

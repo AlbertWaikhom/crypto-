@@ -63,7 +63,7 @@ export default function DepositDetailPage() {
   };
   const handleShare = async () => {
     if (!deposit) return;
-    const text = `Send ${deposit.requestedAmount} USDT on BNB Smart Chain (BEP-20) to ${deposit.receivingAddress}`;
+    const text = `Send ${deposit.requestedAmount} ${deposit.token || 'USDT'} on ${deposit.networkLabel || 'BNB Smart Chain'} to ${deposit.receivingAddress}`;
     if (typeof navigator !== 'undefined' && navigator.share) {
       try {
         await navigator.share({ title: deposit.depositUid, text });
@@ -113,7 +113,7 @@ export default function DepositDetailPage() {
           <div className={styles.qrFrame}>
             <QRCodeSVG value={deposit.receivingAddress} size={200} level="M" />
             <span className="mt-2 text-[11px] font-bold text-slate-700">
-              BNB SMART CHAIN (BEP-20)
+              {deposit.token || 'USDT'} ({deposit.networkLabel || deposit.network}) PUBLIC ADDRESS
             </span>
           </div>
 
@@ -128,6 +128,15 @@ export default function DepositDetailPage() {
             </Button>
           </div>
 
+          {deposit.paymentInstructions ? (
+            <div className="mt-4 rounded-xl border border-sky-500/40 bg-sky-500/10 p-3.5 text-xs text-sky-200">
+              <div className="font-semibold text-sky-300 mb-1">
+                Payment Instructions ({deposit.networkLabel || deposit.network}):
+              </div>
+              <div>{deposit.paymentInstructions}</div>
+            </div>
+          ) : null}
+
           <div className="mt-4 rounded-xl border border-amber-500/40 bg-amber-500/10 p-3.5 text-xs text-amber-200">
             <div className="flex items-start gap-2">
               <AlertTriangle className="h-4 w-4 shrink-0 text-amber-400 mt-0.5" />
@@ -141,8 +150,8 @@ export default function DepositDetailPage() {
             <>
               <h2 className="text-lg font-bold">Submit Blockchain Payment</h2>
               <p className="mt-1 text-xs opacity-70">
-                After transferring {formatUsdt(deposit.requestedAmount)} USDT on BNB Smart Chain,
-                paste your 66-character transaction hash below.
+                After transferring {formatUsdt(deposit.requestedAmount)} {deposit.token || 'USDT'}{' '}
+                on {deposit.networkLabel || deposit.network}, paste your transaction hash below.
               </p>
 
               {error ? (
@@ -162,11 +171,11 @@ export default function DepositDetailPage() {
                     required
                     value={txHash}
                     onChange={(e) => setTxHash(e.target.value)}
-                    placeholder="0x..."
+                    placeholder="Enter blockchain transaction hash..."
                     className={styles.input}
                   />
                   <p className="mt-1 text-[11px] opacity-60">
-                    Paste only the 0x... transaction hash, not a BscScan URL.
+                    Paste only the transaction hash, not a block explorer URL.
                   </p>
                 </div>
 

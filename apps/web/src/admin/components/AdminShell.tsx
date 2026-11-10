@@ -20,6 +20,7 @@ import {
   ShieldAlert,
   TrendingUp,
   Users,
+  Wallet,
   X,
 } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
@@ -61,6 +62,13 @@ const ADMIN_GROUPS: AdminNavGroup[] = [
   {
     heading: 'Treasury Ops',
     items: [
+      {
+        href: '/admin/wallets',
+        label: 'Wallet Management',
+        icon: Wallet,
+        masterOnly: false,
+        tourId: 'admin-wallets',
+      },
       {
         href: '/admin/deposits',
         label: 'Deposits Queue',
@@ -242,6 +250,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       icon: <Menu className="h-[18px] w-[18px]" />,
       active:
         mobileOpen ||
+        isRouteActive('/admin/wallets') ||
         isRouteActive('/admin/investments') ||
         isRouteActive('/admin/interest') ||
         isRouteActive('/admin/ledger') ||

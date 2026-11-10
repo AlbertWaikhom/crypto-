@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "build": "nest build",
-    "dev": "npx tsx watch src/express-app.ts",
-    "start": "npx tsx src/express-app.ts",
+    "dev": "tsx watch src/express-app.ts",
+    "start": "tsx src/express-app.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run"

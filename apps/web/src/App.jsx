@@ -47,6 +47,7 @@ import AuditLogsPage from './admin/app/(console)/audit-logs/auditlogs';
 import BlockchainTransactionsPage from './admin/app/(console)/blockchain-transactions/blockchaintransactions';
 import AdminSettingsPage from './admin/app/(console)/settings/adminsettings';
 import AdminInterestPage from './admin/app/(console)/interest/admininterest';
+import AdminWalletsPage from './admin/app/(console)/wallets/adminwallets';
 
 function PortalLayout({ children }) {
   return <PortalShell>{children}</PortalShell>;
@@ -302,6 +303,14 @@ export default function App() {
         element={
           <AdminConsoleLayout>
             <AdminSettingsPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/wallets"
+        element={
+          <AdminConsoleLayout>
+            <AdminWalletsPage />
           </AdminConsoleLayout>
         }
       />

@@ -1,11 +1,7 @@
 import { z } from 'zod';
-import {
-  BlockchainNetwork,
-  InterestCalculationModel,
-  UserRole,
-} from '@navrix/types';
+import { BlockchainNetwork, InterestCalculationModel, UserRole } from '@navrix/types';
 
-export const BSC_TX_HASH_REGEX = /^0x[a-fA-F0-9]{64}$/;
+export const BSC_TX_HASH_REGEX = /^(0x)?[a-fA-F0-9]{64}$/;
 export const EVM_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 
 export const bscTxHashSchema = z
@@ -13,11 +9,11 @@ export const bscTxHashSchema = z
   .trim()
   .refine(
     (val) => !/^https?:\/\//i.test(val),
-    'Paste only the 66-character transaction hash (0x...), not a block explorer URL.',
+    'Paste only the transaction hash, not a block explorer URL.',
   )
   .refine(
-    (val) => BSC_TX_HASH_REGEX.test(val),
-    'Invalid BNB Smart Chain transaction hash. Expected 0x followed by 64 hexadecimal characters.',
+    (val) => /^(0x)?[a-fA-F0-9]{64}$/.test(val),
+    'Invalid blockchain transaction hash. Expected a valid 64-character hash (or 66-character with 0x prefix).',
   );
 
 export const evmAddressSchema = z

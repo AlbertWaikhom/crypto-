@@ -200,12 +200,15 @@ export default function AdminDepositReviewPage() {
             </span>
           </div>
           <div className={styles.kvRow}>
-            <span className="opacity-65">Network</span>
-            <span>{dep.network} (BEP-20)</span>
+            <span className="opacity-65">Payment Network</span>
+            <span className="font-semibold text-amber-400">{dep.network}</span>
           </div>
           <div className={styles.kvRow}>
-            <span className="opacity-65">Receiving Address</span>
-            <span className="font-mono text-right break-all">{dep.receivingAddress}</span>
+            <span className="opacity-65">Platform Receiving Address</span>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-right break-all text-xs">{dep.receivingAddress}</span>
+              <CopyButton value={dep.receivingAddress} label="Copy" />
+            </div>
           </div>
           <div className={styles.kvRow}>
             <span className="opacity-65">Submitted Tx Hash</span>

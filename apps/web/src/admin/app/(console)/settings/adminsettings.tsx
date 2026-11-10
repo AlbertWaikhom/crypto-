@@ -21,6 +21,12 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
+  TrendingUp,
+  Wifi,
+  WifiOff,
+  Radio,
+  Plus,
+  Trash2,
 } from 'lucide-react';
 import { Button, CopyButton, EmptyState } from '@navrix/ui';
 import { adminApi, AdminApiError } from '../../../lib/api';
@@ -35,6 +41,17 @@ interface SystemSettingRow {
   description: string | null;
   isPublic: boolean;
   updatedAt: string;
+}
+
+interface MarketSymbolConfig {
+  id: string;
+  symbol: string;
+  baseAsset: string;
+  quoteAsset: string;
+  name: string;
+  stream: string;
+  isActive: boolean;
+  displayOrder: number;
 }
 
 const PRESET_KEYS = [
@@ -64,6 +81,13 @@ const ADMIN_TABS = [
     shortLabel: 'Blockchain',
     description: 'BEP-20 receiving wallet, contract addresses & confirmations',
     icon: Coins,
+  },
+  {
+    id: 'market-data',
+    label: 'Market Feeds & Symbols',
+    shortLabel: 'Market Feeds',
+    description: 'Binance WebSocket streams, active symbols & user dashboard visibility',
+    icon: TrendingUp,
   },
   {
     id: 'tutorial',
@@ -118,6 +142,155 @@ export default function AdminSystemSettingsPage() {
 
   const tutorialEnabled = user?.tutorialEnabled ?? true;
   const tutorialCompleted = user?.tutorialCompleted ?? false;
+
+  // Market Data Configuration Query & Mutation
+  const { data: marketConfig, refetch: refetchMarketConfig } = useQuery<{
+    provider: string;
+    wsBaseUrl: string;
+    symbols: MarketSymbolConfig[];
+  }>({
+    queryKey: ['admin-market-data'],
+    queryFn: () => adminApi('/admin/market-data'),
+  });
+
+  const [marketSymbols, setMarketSymbols] = React.useState<MarketSymbolConfig[]>([]);
+
+  React.useEffect(() => {
+    if (marketConfig?.symbols) {
+      setMarketSymbols(marketConfig.symbols);
+    }
+  }, [marketConfig]);
+
+  const updateMarketConfigMutation = useMutation({
+    mutationFn: (symbolsToSave: MarketSymbolConfig[]) =>
+      adminApi('/admin/market-data', {
+        method: 'PUT',
+        body: JSON.stringify({ symbols: symbolsToSave }),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-market-data'] });
+      setFeedback({ type: 'ok', message: 'Market data configuration updated successfully.' });
+    },
+    onError: (err) => {
+      setFeedback({
+        type: 'err',
+        message: err instanceof AdminApiError ? err.message : 'Failed to update market data.',
+      });
+    },
+  });
+
+  const handleToggleSymbolActive = (symbolId: string) => {
+    const updated = marketSymbols.map((s) =>
+      s.id === symbolId ? { ...s, isActive: !s.isActive } : s,
+    );
+    setMarketSymbols(updated);
+    updateMarketConfigMutation.mutate(updated);
+  };
+
+  const handleRemoveSymbol = (symbolId: string) => {
+    if (marketSymbols.length <= 1) {
+      alert('At least one market symbol must remain configured.');
+      return;
+    }
+    const updated = marketSymbols.filter((s) => s.id !== symbolId);
+    setMarketSymbols(updated);
+    updateMarketConfigMutation.mutate(updated);
+  };
+
+  // New Symbol Form State
+  const [newSymbolInput, setNewSymbolInput] = React.useState({
+    symbol: '',
+    name: '',
+    baseAsset: '',
+    quoteAsset: 'USDT',
+    stream: '',
+  });
+
+  const handleAddSymbol = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newSymbolInput.symbol || !newSymbolInput.name) return;
+    const cleanSym = newSymbolInput.symbol.toUpperCase().trim();
+    const cleanBase = (newSymbolInput.baseAsset || cleanSym.replace('USDT', ''))
+      .toUpperCase()
+      .trim();
+    const cleanStream = (newSymbolInput.stream || `${cleanSym.toLowerCase()}@ticker`).trim();
+
+    const newObj: MarketSymbolConfig = {
+      id: cleanSym,
+      symbol: cleanSym,
+      name: newSymbolInput.name.trim(),
+      baseAsset: cleanBase,
+      quoteAsset: newSymbolInput.quoteAsset.toUpperCase().trim(),
+      stream: cleanStream,
+      isActive: true,
+      displayOrder: marketSymbols.length + 1,
+    };
+
+    const updated = [...marketSymbols, newObj];
+    setMarketSymbols(updated);
+    updateMarketConfigMutation.mutate(updated);
+    setNewSymbolInput({ symbol: '', name: '', baseAsset: '', quoteAsset: 'USDT', stream: '' });
+  };
+
+  // Live WebSocket Test Monitor
+  const [wsStatus, setWsStatus] = React.useState<'CONNECTING' | 'CONNECTED' | 'DISCONNECTED'>(
+    'CONNECTING',
+  );
+  const [liveTick, setLiveTick] = React.useState<{
+    symbol: string;
+    price: string;
+    change: string;
+    changePercent: string;
+    high: string;
+    low: string;
+    volume: string;
+    timestamp: number;
+  } | null>(null);
+
+  React.useEffect(() => {
+    if (activeTabId !== 'market-data') return;
+    let ws: WebSocket | null = null;
+    let cancelled = false;
+
+    try {
+      setWsStatus('CONNECTING');
+      ws = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@ticker');
+      ws.onopen = () => {
+        if (!cancelled) setWsStatus('CONNECTED');
+      };
+      ws.onmessage = (event) => {
+        if (cancelled) return;
+        try {
+          const data = JSON.parse(event.data);
+          if (data && data.s) {
+            setLiveTick({
+              symbol: data.s,
+              price: data.c,
+              change: data.p,
+              changePercent: data.P,
+              high: data.h,
+              low: data.l,
+              volume: data.v,
+              timestamp: Date.now(),
+            });
+          }
+        } catch {}
+      };
+      ws.onerror = () => {
+        if (!cancelled) setWsStatus('DISCONNECTED');
+      };
+      ws.onclose = () => {
+        if (!cancelled) setWsStatus('DISCONNECTED');
+      };
+    } catch {
+      setWsStatus('DISCONNECTED');
+    }
+
+    return () => {
+      cancelled = true;
+      if (ws) ws.close();
+    };
+  }, [activeTabId]);
 
   const handleToggleAdminTutorial = async (enabled: boolean) => {
     setTutorialUpdating(true);
@@ -714,6 +887,260 @@ export default function AdminSystemSettingsPage() {
                       Blocks
                     </div>
                   </div>
+                </div>
+              </section>
+            </div>
+          )}
+
+          {/* TAB: MARKET DATA & FEEDS */}
+          {activeTabId === 'market-data' && (
+            <div className="space-y-5">
+              {/* Live WebSocket Feed Diagnostics */}
+              <section className={styles.panel}>
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+                  <div>
+                    <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                      WebSocket Telemetry
+                    </div>
+                    <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                      <Radio className="h-5 w-5 text-amber-400" />
+                      Live Binance WebSocket Feed Diagnostics
+                    </h2>
+                  </div>
+
+                  <div>
+                    {wsStatus === 'CONNECTED' ? (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 px-3 py-1 text-xs font-bold text-emerald-300">
+                        <Wifi className="h-3.5 w-3.5 text-emerald-400 animate-pulse" />
+                        Live Feed Connected (Binance)
+                      </span>
+                    ) : wsStatus === 'CONNECTING' ? (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 px-3 py-1 text-xs font-bold text-amber-300">
+                        <Radio className="h-3.5 w-3.5 text-amber-400 animate-spin" />
+                        Connecting to WebSocket...
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-500/15 border border-rose-500/30 px-3 py-1 text-xs font-bold text-rose-300">
+                        <WifiOff className="h-3.5 w-3.5 text-rose-400" />
+                        Disconnected
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-4 p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-xs font-mono text-slate-300 flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-slate-500">Active Test Stream:</span>
+                    <span className="text-amber-400 font-bold">
+                      wss://stream.binance.com:9443/ws/btcusdt@ticker
+                    </span>
+                  </div>
+                  {liveTick && (
+                    <div className="text-slate-400 text-[11px]">
+                      Last Tick: {new Date(liveTick.timestamp).toLocaleTimeString()}
+                    </div>
+                  )}
+                </div>
+
+                {liveTick ? (
+                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="p-3 rounded-xl border border-slate-800 bg-slate-900/60">
+                      <div className="text-[11px] text-slate-400 uppercase tracking-wider">
+                        Live BTC Price
+                      </div>
+                      <div className="mt-1 font-mono text-base sm:text-lg font-bold text-amber-300">
+                        $
+                        {Number(liveTick.price).toLocaleString('en-US', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </div>
+                    </div>
+                    <div className="p-3 rounded-xl border border-slate-800 bg-slate-900/60">
+                      <div className="text-[11px] text-slate-400 uppercase tracking-wider">
+                        24h Change
+                      </div>
+                      <div
+                        className={`mt-1 font-mono text-base sm:text-lg font-bold ${Number(liveTick.changePercent) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}
+                      >
+                        {Number(liveTick.changePercent) >= 0 ? '+' : ''}
+                        {Number(liveTick.changePercent).toFixed(2)}%
+                      </div>
+                    </div>
+                    <div className="p-3 rounded-xl border border-slate-800 bg-slate-900/60">
+                      <div className="text-[11px] text-slate-400 uppercase tracking-wider">
+                        24h High
+                      </div>
+                      <div className="mt-1 font-mono text-sm sm:text-base font-bold text-slate-200">
+                        $
+                        {Number(liveTick.high).toLocaleString('en-US', {
+                          minimumFractionDigits: 2,
+                        })}
+                      </div>
+                    </div>
+                    <div className="p-3 rounded-xl border border-slate-800 bg-slate-900/60">
+                      <div className="text-[11px] text-slate-400 uppercase tracking-wider">
+                        24h Low
+                      </div>
+                      <div className="mt-1 font-mono text-sm sm:text-base font-bold text-slate-200">
+                        $
+                        {Number(liveTick.low).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-4 py-6 text-center text-xs text-slate-400">
+                    Awaiting live ticker payload from Binance WebSocket...
+                  </div>
+                )}
+              </section>
+
+              {/* Supported Market Assets & Dashboard Visibility */}
+              <section className={styles.panel}>
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                  <div>
+                    <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5 text-amber-400" />
+                      Supported Market Assets &amp; Dashboard Feeds
+                    </h2>
+                    <p className="mt-0.5 text-xs text-slate-400">
+                      Manage which assets appear on the User Dashboard real-time market chart.
+                      Changes take effect immediately.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {marketSymbols.map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-4 rounded-xl border border-slate-800 bg-slate-900/60 flex flex-wrap items-center justify-between gap-4"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-400 font-bold font-mono text-xs">
+                          {item.baseAsset}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm text-white">{item.name}</span>
+                            <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-amber-400">
+                              {item.symbol}
+                            </span>
+                          </div>
+                          <div className="mt-0.5 text-xs font-mono text-slate-400">
+                            Stream: <span className="text-slate-300">{item.stream}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleSymbolActive(item.id)}
+                          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-all ${
+                            item.isActive
+                              ? 'bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/25'
+                              : 'bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-750'
+                          }`}
+                        >
+                          <span
+                            className={`h-2 w-2 rounded-full ${item.isActive ? 'bg-emerald-400' : 'bg-slate-500'}`}
+                          />
+                          {item.isActive ? 'Visible on Dashboard' : 'Hidden from Dashboard'}
+                        </button>
+
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveSymbol(item.id)}
+                          className="text-rose-400 hover:text-rose-300 hover:bg-rose-950/30 text-xs"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Add Custom Symbol Section */}
+                <div className="mt-6 pt-5 border-t border-slate-800">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-amber-400 mb-3 flex items-center gap-1.5">
+                    <Plus className="h-4 w-4" /> Add Custom Market Asset
+                  </h3>
+                  <form
+                    onSubmit={handleAddSymbol}
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3"
+                  >
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                        Symbol (e.g. XRPUSDT)
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="XRPUSDT"
+                        value={newSymbolInput.symbol}
+                        onChange={(e) =>
+                          setNewSymbolInput({ ...newSymbolInput, symbol: e.target.value })
+                        }
+                        className="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs font-mono text-white focus:border-amber-400 focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                        Asset Name
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Ripple / Tether"
+                        value={newSymbolInput.name}
+                        onChange={(e) =>
+                          setNewSymbolInput({ ...newSymbolInput, name: e.target.value })
+                        }
+                        className="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white focus:border-amber-400 focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                        Base Asset
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="XRP"
+                        value={newSymbolInput.baseAsset}
+                        onChange={(e) =>
+                          setNewSymbolInput({ ...newSymbolInput, baseAsset: e.target.value })
+                        }
+                        className="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs font-mono text-white focus:border-amber-400 focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                        Binance Stream
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="xrpusdt@ticker"
+                        value={newSymbolInput.stream}
+                        onChange={(e) =>
+                          setNewSymbolInput({ ...newSymbolInput, stream: e.target.value })
+                        }
+                        className="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-xs font-mono text-white focus:border-amber-400 focus:outline-none"
+                      />
+                    </div>
+                    <div className="flex items-end">
+                      <Button
+                        type="submit"
+                        variant="gold"
+                        size="sm"
+                        isLoading={updateMarketConfigMutation.isPending}
+                        className="w-full text-xs h-[38px]"
+                      >
+                        <Plus className="h-3.5 w-3.5 mr-1" /> Add Asset
+                      </Button>
+                    </div>
+                  </form>
                 </div>
               </section>
             </div>

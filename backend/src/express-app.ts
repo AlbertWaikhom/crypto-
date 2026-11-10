@@ -617,7 +617,304 @@ async function verifyDepositOnChain(params: {
   });
 }
 
-async function buildDepositQrPayload(receivingAddress: string, amount?: string) {
+// =============================================================================
+// PLATFORM WALLETS & MARKET DATA HELPERS
+// =============================================================================
+export interface PlatformWalletConfig {
+  id: string;
+  name: string;
+  symbol: string;
+  network: string;
+  walletAddress: string;
+  qrCodeUrl?: string | null;
+  paymentInstructions: string;
+  minDeposit: number;
+  maxDeposit: number;
+  isActive: boolean;
+  isDefault?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MarketSymbolConfig {
+  symbol: string;
+  name: string;
+  baseAsset: string;
+  quoteAsset: string;
+  stream: string;
+  isActive: boolean;
+  displayOrder: number;
+}
+
+const DEFAULT_PLATFORM_WALLETS: PlatformWalletConfig[] = [
+  {
+    id: 'wallet-usdt-bep20',
+    name: 'USDT (BNB Smart Chain)',
+    symbol: 'USDT',
+    network: 'BEP20',
+    walletAddress: '0x98386622d3937c0A3582E07aEc06041C3fb7b521',
+    paymentInstructions:
+      'Transfer BEP-20 USDT over BNB Smart Chain (BSC). Funds are automatically detected and credited after network confirmations.',
+    minDeposit: 10,
+    maxDeposit: 100000,
+    isActive: true,
+    isDefault: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'wallet-usdt-trc20',
+    name: 'USDT (TRON Network)',
+    symbol: 'USDT',
+    network: 'TRC20',
+    walletAddress: 'TXj9L2k4hBq3vN7m8ZpYxR1sW5vF6gH8jK',
+    paymentInstructions:
+      'Send TRC-20 USDT strictly via the TRON network. Low network gas fees with rapid settlement.',
+    minDeposit: 10,
+    maxDeposit: 100000,
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'wallet-usdt-erc20',
+    name: 'USDT (Ethereum Mainnet)',
+    symbol: 'USDT',
+    network: 'ERC20',
+    walletAddress: '0x71C836e4b3708D59F0469611D30eE2090F8e312A',
+    paymentInstructions:
+      'Send USDT via Ethereum ERC-20 standard. Ensure adequate ETH is reserved in your outbound wallet for gas fees.',
+    minDeposit: 50,
+    maxDeposit: 100000,
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'wallet-btc',
+    name: 'Bitcoin (BTC Native)',
+    symbol: 'BTC',
+    network: 'BTC',
+    walletAddress: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
+    paymentInstructions:
+      'Send Native Bitcoin (BTC) to this SegWit address. Requires 3 blockchain network confirmations.',
+    minDeposit: 50,
+    maxDeposit: 250000,
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'wallet-eth',
+    name: 'Ethereum (ETH Native)',
+    symbol: 'ETH',
+    network: 'ETH',
+    walletAddress: '0x71C836e4b3708D59F0469611D30eE2090F8e312A',
+    paymentInstructions:
+      'Send native ETH directly to this receiving treasury address. Requires 12 network block confirmations.',
+    minDeposit: 50,
+    maxDeposit: 100000,
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
+
+const DEFAULT_MARKET_SYMBOLS: MarketSymbolConfig[] = [
+  {
+    symbol: 'BTCUSDT',
+    name: 'Bitcoin',
+    baseAsset: 'BTC',
+    quoteAsset: 'USDT',
+    stream: 'btcusdt@ticker',
+    isActive: true,
+    displayOrder: 1,
+  },
+  {
+    symbol: 'BNBUSDT',
+    name: 'BNB',
+    baseAsset: 'BNB',
+    quoteAsset: 'USDT',
+    stream: 'bnbusdt@ticker',
+    isActive: true,
+    displayOrder: 2,
+  },
+  {
+    symbol: 'ETHUSDT',
+    name: 'Ethereum',
+    baseAsset: 'ETH',
+    quoteAsset: 'USDT',
+    stream: 'ethusdt@ticker',
+    isActive: true,
+    displayOrder: 3,
+  },
+  {
+    symbol: 'SOLUSDT',
+    name: 'Solana',
+    baseAsset: 'SOL',
+    quoteAsset: 'USDT',
+    stream: 'solusdt@ticker',
+    isActive: true,
+    displayOrder: 4,
+  },
+];
+
+async function getPlatformWallets(): Promise<PlatformWalletConfig[]> {
+  try {
+    const row = await prisma.systemSetting.findUnique({
+      where: { key: 'PLATFORM_PAYMENT_WALLETS' },
+    });
+    if (row && row.value) {
+      const parsed = JSON.parse(row.value);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.warn('[WALLETS] Failed to parse PLATFORM_PAYMENT_WALLETS from DB:', err);
+  }
+  // Initialize default if not found
+  try {
+    await prisma.systemSetting.upsert({
+      where: { key: 'PLATFORM_PAYMENT_WALLETS' },
+      update: {},
+      create: {
+        key: 'PLATFORM_PAYMENT_WALLETS',
+        value: JSON.stringify(DEFAULT_PLATFORM_WALLETS),
+        category: 'FINANCIAL',
+        isPublic: true,
+        description: 'Multi-network platform receiving wallet addresses and payment instructions',
+      },
+    });
+  } catch {
+    // Ignore upsert error
+  }
+  return DEFAULT_PLATFORM_WALLETS;
+}
+
+async function savePlatformWallets(wallets: PlatformWalletConfig[], adminId?: string) {
+  const jsonStr = JSON.stringify(wallets);
+  await prisma.systemSetting.upsert({
+    where: { key: 'PLATFORM_PAYMENT_WALLETS' },
+    update: {
+      value: jsonStr,
+      updatedById: adminId || null,
+      updatedAt: new Date(),
+    },
+    create: {
+      key: 'PLATFORM_PAYMENT_WALLETS',
+      value: jsonStr,
+      category: 'FINANCIAL',
+      isPublic: true,
+      description: 'Multi-network platform receiving wallet addresses and payment instructions',
+      updatedById: adminId || null,
+    },
+  });
+}
+
+async function getActivePlatformWallets(): Promise<PlatformWalletConfig[]> {
+  const wallets = await getPlatformWallets();
+  return wallets.filter((w) => w.isActive);
+}
+
+async function getDefaultPlatformWallet(): Promise<PlatformWalletConfig> {
+  const active = await getActivePlatformWallets();
+  return active.find((w) => w.isDefault) || active[0] || DEFAULT_PLATFORM_WALLETS[0];
+}
+
+async function getMarketDataConfig(): Promise<{
+  symbols: MarketSymbolConfig[];
+  wsBaseUrl: string;
+  provider: string;
+}> {
+  let symbols = DEFAULT_MARKET_SYMBOLS;
+  let wsBaseUrl = 'wss://stream.binance.com:9443/ws';
+  try {
+    const row = await prisma.systemSetting.findUnique({
+      where: { key: 'MARKET_DATA_SYMBOLS' },
+    });
+    if (row && row.value) {
+      const parsed = JSON.parse(row.value);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        symbols = parsed;
+      }
+    }
+    const wsRow = await prisma.systemSetting.findUnique({
+      where: { key: 'MARKET_DATA_WS_URL' },
+    });
+    if (wsRow && wsRow.value) {
+      wsBaseUrl = wsRow.value.trim();
+    }
+  } catch (err) {
+    console.warn('[MARKET_DATA] Failed to parse MARKET_DATA_SYMBOLS from DB:', err);
+  }
+  return {
+    symbols,
+    wsBaseUrl,
+    provider: 'Binance Live Ticker Stream',
+  };
+}
+
+async function saveMarketDataConfig(
+  symbols: MarketSymbolConfig[],
+  wsBaseUrl?: string,
+  adminId?: string,
+) {
+  const jsonStr = JSON.stringify(symbols);
+  await prisma.systemSetting.upsert({
+    where: { key: 'MARKET_DATA_SYMBOLS' },
+    update: {
+      value: jsonStr,
+      updatedById: adminId || null,
+      updatedAt: new Date(),
+    },
+    create: {
+      key: 'MARKET_DATA_SYMBOLS',
+      value: jsonStr,
+      category: 'MARKET_DATA',
+      isPublic: true,
+      description: 'Configured market data symbols and live WebSocket streams',
+      updatedById: adminId || null,
+    },
+  });
+  if (wsBaseUrl) {
+    await prisma.systemSetting.upsert({
+      where: { key: 'MARKET_DATA_WS_URL' },
+      update: {
+        value: wsBaseUrl.trim(),
+        updatedById: adminId || null,
+        updatedAt: new Date(),
+      },
+      create: {
+        key: 'MARKET_DATA_WS_URL',
+        value: wsBaseUrl.trim(),
+        category: 'MARKET_DATA',
+        isPublic: true,
+        description: 'Live market data WebSocket provider base URL',
+        updatedById: adminId || null,
+      },
+    });
+  }
+}
+
+function resolveNetworkLabel(network: string, token: string) {
+  const norm = (network || '').toUpperCase();
+  if (norm.includes('TRC') || norm === 'TRON') return 'TRON (TRC-20)';
+  if (norm.includes('ERC') || norm === 'ETHEREUM') return 'Ethereum (ERC-20)';
+  if (norm === 'BTC' || norm.includes('BITCOIN')) return 'Bitcoin (Native)';
+  if (norm === 'ETH') return 'Ethereum (Native)';
+  if (norm.includes('BEP') || norm.includes('BSC') || norm.includes('BNB'))
+    return 'BNB Smart Chain (BEP-20)';
+  return `${token} (${network})`;
+}
+
+async function buildDepositQrPayload(
+  receivingAddress: string,
+  amount?: string,
+  token = 'USDT',
+  network = 'BNB_SMART_CHAIN',
+  customInstructions?: string,
+) {
   const qrDataUrl = await QRCode.toDataURL(receivingAddress, {
     errorCorrectionLevel: 'M',
     margin: 2,
@@ -627,12 +924,12 @@ async function buildDepositQrPayload(receivingAddress: string, amount?: string) 
   return {
     qrContent: receivingAddress,
     qrDataUrl,
-    token: 'USDT',
-    network: 'BNB_SMART_CHAIN',
-    networkLabel: BLOCKCHAIN_DEFAULTS.networkDisplayName,
+    token,
+    network,
+    networkLabel: resolveNetworkLabel(network, token),
     receivingAddress,
     amount: amount || null,
-    warning: BLOCKCHAIN_DEFAULTS.networkWarning,
+    warning: customInstructions || BLOCKCHAIN_DEFAULTS.networkWarning,
     reviewNotice: BLOCKCHAIN_DEFAULTS.reviewSlaNotice,
   };
 }
@@ -644,7 +941,7 @@ function formatDepositRecord(deposit: any) {
     verifiedAmount: deposit.verifiedAmount ? deposit.verifiedAmount.toFixed(2) : null,
     token: deposit.token,
     network: deposit.network,
-    networkLabel: BLOCKCHAIN_DEFAULTS.networkDisplayName,
+    networkLabel: resolveNetworkLabel(deposit.network, deposit.token),
     receivingAddress: deposit.receivingAddress,
     planCode: deposit.planCode,
     status: deposit.status,
@@ -2393,10 +2690,34 @@ router.get(
 // 4. DEPOSITS (/deposits)
 // =============================================================================
 router.get(
+  '/payment-methods',
+  asyncHandler(async (_req, res) => {
+    const active = await getActivePlatformWallets();
+    return sendSuccess(res, active);
+  }),
+);
+
+router.get(
+  '/market-data/config',
+  asyncHandler(async (_req, res) => {
+    const config = await getMarketDataConfig();
+    return sendSuccess(res, config);
+  }),
+);
+
+router.get(
   '/deposits/config',
   asyncHandler(async (_req, res) => {
     const runtime = await getRuntimeSettings();
-    const qr = await buildDepositQrPayload(runtime.receivingWalletAddress);
+    const paymentMethods = await getActivePlatformWallets();
+    const defaultWallet = await getDefaultPlatformWallet();
+    const qr = await buildDepositQrPayload(
+      defaultWallet.walletAddress,
+      undefined,
+      defaultWallet.symbol,
+      defaultWallet.network,
+      defaultWallet.paymentInstructions,
+    );
     const plans = await prisma.investmentPlan.findMany({
       where: { isActive: true },
       orderBy: { minAmount: 'asc' },
@@ -2410,6 +2731,8 @@ router.get(
       requiredConfirmations: runtime.requiredConfirmations,
       depositExpiryMinutes: runtime.depositExpiryMinutes,
       reviewSlaHours: runtime.reviewSlaHours,
+      paymentMethods,
+      defaultWallet,
       ...qr,
       plans,
     });
@@ -2445,12 +2768,28 @@ router.post(
 
     const amount = Number(req.body?.amount);
     const planCode = req.body?.planCode ? String(req.body.planCode).trim() : undefined;
+    const paymentMethodId = req.body?.paymentMethodId
+      ? String(req.body.paymentMethodId).trim()
+      : undefined;
 
-    if (!Number.isFinite(amount) || amount < runtime.minDeposit || amount > runtime.maxDeposit) {
+    // Resolve target platform receiving wallet
+    let targetWallet = await getDefaultPlatformWallet();
+    if (paymentMethodId) {
+      const allWallets = await getPlatformWallets();
+      const match = allWallets.find((w) => w.id === paymentMethodId && w.isActive);
+      if (match) {
+        targetWallet = match;
+      }
+    }
+
+    const minRequired = targetWallet.minDeposit || runtime.minDeposit;
+    const maxRequired = targetWallet.maxDeposit || runtime.maxDeposit;
+
+    if (!Number.isFinite(amount) || amount < minRequired || amount > maxRequired) {
       return sendError(
         res,
         'DEPOSIT_AMOUNT_OUT_OF_RANGE',
-        `Deposit amount must be between ${runtime.minDeposit} USDT and ${runtime.maxDeposit} USDT.`,
+        `Deposit amount must be between ${minRequired} ${targetWallet.symbol} and ${maxRequired} ${targetWallet.symbol}.`,
         400,
       );
     }
@@ -2477,13 +2816,13 @@ router.post(
           depositUid,
           userId: req.userId!,
           requestedAmount: requestedDecimal,
-          token: 'USDT',
-          network: 'BNB_SMART_CHAIN',
-          receivingAddress: runtime.receivingWalletAddress,
+          token: targetWallet.symbol,
+          network: targetWallet.network,
+          receivingAddress: targetWallet.walletAddress,
           planCode: planCode || null,
           status: DepositStatus.PENDING_PAYMENT,
           cryptoAmount: requestedDecimal,
-          cryptoCurrency: 'USDT',
+          cryptoCurrency: targetWallet.symbol,
           expiresAt,
         },
       });
@@ -2492,13 +2831,22 @@ router.post(
     const qr = await buildDepositQrPayload(
       deposit.receivingAddress,
       deposit.requestedAmount.toFixed(2),
+      deposit.token,
+      deposit.network,
+      targetWallet.paymentInstructions,
     );
 
     return sendSuccess(
       res,
       {
         ...formatDepositRecord(deposit),
-        paymentInstructions: qr,
+        paymentMethod: targetWallet,
+        paymentInstructions: {
+          ...qr,
+          walletName: targetWallet.name,
+          network: targetWallet.network,
+          networkInstructions: targetWallet.paymentInstructions,
+        },
       },
       201,
     );
@@ -3930,6 +4278,212 @@ router.patch(
     });
 
     return sendSuccess(res, { uid: updated.publicUid, role: updated.role });
+  }),
+);
+
+// =============================================================================
+// ADMIN: MULTIPLE WALLET MANAGEMENT & MARKET DATA CONFIGURATION
+// =============================================================================
+router.get(
+  '/admin/wallets',
+  requireAuth,
+  requireAdmin,
+  asyncHandler(async (_req, res) => {
+    const wallets = await getPlatformWallets();
+    const depositCounts = await prisma.deposit.groupBy({
+      by: ['receivingAddress'],
+      _count: { id: true },
+      _sum: { requestedAmount: true },
+    });
+    const statsMap: Record<string, { count: number; totalVolume: string }> = {};
+    for (const d of depositCounts) {
+      if (d.receivingAddress) {
+        statsMap[d.receivingAddress] = {
+          count: d._count.id,
+          totalVolume: d._sum.requestedAmount ? d._sum.requestedAmount.toFixed(2) : '0.00',
+        };
+      }
+    }
+    const enriched = wallets.map((w) => ({
+      ...w,
+      depositCount: statsMap[w.walletAddress]?.count || 0,
+      totalVolume: statsMap[w.walletAddress]?.totalVolume || '0.00',
+    }));
+    return sendSuccess(res, enriched);
+  }),
+);
+
+router.post(
+  '/admin/wallets',
+  requireAuth,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const meta = getRequestMeta(req);
+    const {
+      name,
+      symbol,
+      network,
+      walletAddress,
+      paymentInstructions,
+      minDeposit,
+      maxDeposit,
+      isActive,
+    } = req.body || {};
+    if (!name || !symbol || !network || !walletAddress) {
+      return sendError(
+        res,
+        'MISSING_REQUIRED_FIELDS',
+        'Name, symbol, network, and wallet address are required.',
+        400,
+      );
+    }
+    const cleanAddress = String(walletAddress).trim();
+    const wallets = await getPlatformWallets();
+    const newWallet: PlatformWalletConfig = {
+      id: `wallet-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      name: String(name).trim(),
+      symbol: String(symbol).trim().toUpperCase(),
+      network: String(network).trim().toUpperCase(),
+      walletAddress: cleanAddress,
+      paymentInstructions: String(
+        paymentInstructions || `Send ${symbol} on the ${network} network to this address.`,
+      ).trim(),
+      minDeposit: Number(minDeposit) > 0 ? Number(minDeposit) : 10,
+      maxDeposit: Number(maxDeposit) > 0 ? Number(maxDeposit) : 100000,
+      isActive: isActive !== false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    wallets.push(newWallet);
+    await savePlatformWallets(wallets, req.userId);
+    await recordAudit({
+      adminId: req.userId,
+      actorRole: req.user.role,
+      action: 'ADD_PLATFORM_WALLET',
+      targetType: 'PLATFORM_WALLET',
+      targetId: newWallet.id,
+      newValue: newWallet,
+      ...meta,
+    });
+    return sendSuccess(res, newWallet, 201);
+  }),
+);
+
+router.put(
+  '/admin/wallets/:id',
+  requireAuth,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const meta = getRequestMeta(req);
+    const walletId = String(req.params.id);
+    const wallets = await getPlatformWallets();
+    const idx = wallets.findIndex((w) => w.id === walletId);
+    if (idx === -1) {
+      return sendError(res, 'WALLET_NOT_FOUND', 'Specified platform wallet does not exist.', 404);
+    }
+    const prev = { ...wallets[idx] };
+    const updates = req.body || {};
+    wallets[idx] = {
+      ...prev,
+      name: updates.name !== undefined ? String(updates.name).trim() : prev.name,
+      symbol:
+        updates.symbol !== undefined ? String(updates.symbol).trim().toUpperCase() : prev.symbol,
+      network:
+        updates.network !== undefined ? String(updates.network).trim().toUpperCase() : prev.network,
+      walletAddress:
+        updates.walletAddress !== undefined
+          ? String(updates.walletAddress).trim()
+          : prev.walletAddress,
+      paymentInstructions:
+        updates.paymentInstructions !== undefined
+          ? String(updates.paymentInstructions).trim()
+          : prev.paymentInstructions,
+      minDeposit: updates.minDeposit !== undefined ? Number(updates.minDeposit) : prev.minDeposit,
+      maxDeposit: updates.maxDeposit !== undefined ? Number(updates.maxDeposit) : prev.maxDeposit,
+      isActive: updates.isActive !== undefined ? Boolean(updates.isActive) : prev.isActive,
+      updatedAt: new Date().toISOString(),
+    };
+    await savePlatformWallets(wallets, req.userId);
+    await recordAudit({
+      adminId: req.userId,
+      actorRole: req.user.role,
+      action: 'UPDATE_PLATFORM_WALLET',
+      targetType: 'PLATFORM_WALLET',
+      targetId: walletId,
+      oldValue: prev,
+      newValue: wallets[idx],
+      ...meta,
+    });
+    return sendSuccess(res, wallets[idx]);
+  }),
+);
+
+router.delete(
+  '/admin/wallets/:id',
+  requireAuth,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const meta = getRequestMeta(req);
+    const walletId = String(req.params.id);
+    const wallets = await getPlatformWallets();
+    const idx = wallets.findIndex((w) => w.id === walletId);
+    if (idx === -1) {
+      return sendError(res, 'WALLET_NOT_FOUND', 'Specified platform wallet does not exist.', 404);
+    }
+    const removed = wallets.splice(idx, 1)[0];
+    await savePlatformWallets(wallets, req.userId);
+    await recordAudit({
+      adminId: req.userId,
+      actorRole: req.user.role,
+      action: 'REMOVE_PLATFORM_WALLET',
+      targetType: 'PLATFORM_WALLET',
+      targetId: walletId,
+      oldValue: removed,
+      ...meta,
+    });
+    return sendSuccess(res, { removed: true, id: walletId });
+  }),
+);
+
+router.get(
+  '/admin/market-data',
+  requireAuth,
+  requireAdmin,
+  asyncHandler(async (_req, res) => {
+    const config = await getMarketDataConfig();
+    return sendSuccess(res, config);
+  }),
+);
+
+router.put(
+  '/admin/market-data',
+  requireAuth,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const meta = getRequestMeta(req);
+    const { symbols, wsBaseUrl } = req.body || {};
+    if (!Array.isArray(symbols)) {
+      return sendError(
+        res,
+        'INVALID_MARKET_SYMBOLS',
+        'Symbols must be an array of MarketSymbolConfig.',
+        400,
+      );
+    }
+    const prev = await getMarketDataConfig();
+    await saveMarketDataConfig(symbols, wsBaseUrl, req.userId);
+    await recordAudit({
+      adminId: req.userId,
+      actorRole: req.user.role,
+      action: 'UPDATE_MARKET_DATA_CONFIG',
+      targetType: 'MARKET_DATA',
+      targetId: 'MARKET_DATA_SYMBOLS',
+      oldValue: prev,
+      newValue: { symbols, wsBaseUrl },
+      ...meta,
+    });
+    const updated = await getMarketDataConfig();
+    return sendSuccess(res, updated);
   }),
 );
 

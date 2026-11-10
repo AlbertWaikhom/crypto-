@@ -1,0 +1,192 @@
+/* Wallet Management Styles - Sovereign Gold & Deep Navy */
+
+.container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.headerTitle {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .headerTitle {
+    font-size: 1.65rem;
+  }
+}
+
+.headerDesc {
+  margin-top: 0.25rem;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  line-height: 1.45;
+}
+
+@media (min-width: 640px) {
+  .headerDesc {
+    font-size: 0.88rem;
+  }
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+.statCard {
+  border-radius: 1rem;
+  padding: 1rem;
+  background: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+}
+
+.statLabel {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  margin-bottom: 0.25rem;
+}
+
+.statValue {
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: #ffffff;
+}
+
+.card {
+  min-width: 0;
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  background-color: var(--nv-surface);
+  border: 1px solid var(--nv-border);
+  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.4);
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .card {
+    padding: 1.5rem;
+  }
+}
+
+.input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--nv-border);
+  background-color: var(--nv-input-bg);
+  color: var(--nv-text);
+  padding: 0.72rem 0.95rem;
+  font-size: 0.86rem;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.input:focus {
+  border-color: var(--nv-gold);
+  box-shadow: 0 0 0 2px rgba(245, 184, 46, 0.2);
+}
+
+.label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: var(--nv-text-muted);
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 1.25rem;
+  background: #0b1120;
+  border: 1px solid rgba(245, 184, 46, 0.35);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
+  padding: 1.5rem;
+}
+
+.networkBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  border: 1px solid;
+}
+
+.badgeTRC20 {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.badgeBEP20 {
+  background: rgba(245, 184, 46, 0.15);
+  color: #f5b82e;
+  border-color: rgba(245, 184, 46, 0.35);
+}
+
+.badgeERC20 {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.badgeBTC {
+  background: rgba(249, 115, 22, 0.15);
+  color: #fb923c;
+  border-color: rgba(249, 115, 22, 0.35);
+}
+
+.badgeETH {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.35);
+}

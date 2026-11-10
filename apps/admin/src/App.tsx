@@ -22,6 +22,7 @@ import AuditLogsPage from './app/(console)/audit-logs/auditlogs';
 import BlockchainTransactionsPage from './app/(console)/blockchain-transactions/blockchaintransactions';
 import AdminSettingsPage from './app/(console)/settings/adminsettings';
 import AdminInterestPage from './app/(console)/interest/admininterest';
+import AdminWalletsPage from './app/(console)/wallets/adminwallets';
 
 function ConsoleLayout({ children }: { children: React.ReactNode }) {
   return <AdminShell>{children}</AdminShell>;
@@ -131,6 +132,14 @@ export default function App() {
         element={
           <ConsoleLayout>
             <AdminSettingsPage />
+          </ConsoleLayout>
+        }
+      />
+      <Route
+        path="/wallets"
+        element={
+          <ConsoleLayout>
+            <AdminWalletsPage />
           </ConsoleLayout>
         }
       />
