@@ -45,6 +45,7 @@ enum LedgerTransactionType {
   ADJUSTMENT
   FEE
   REFUND
+  COMMISSION
 }
 
 enum LedgerDirection {
@@ -109,10 +110,22 @@ model User {
   lockedUntil         DateTime?  @map("locked_until")
   twoFactorEnabled    Boolean    @default(false) @map("two_factor_enabled")
   twoFactorSecretEnc  String?    @map("two_factor_secret_enc") @db.VarChar(255)
+  referralCode        String?    @unique @map("referral_code") @db.VarChar(32)
+  referredById        String?    @map("referred_by_id") @db.Char(36)
+  tutorialEnabled     Boolean    @default(true) @map("tutorial_enabled")
+  tutorialCompleted   Boolean    @default(false) @map("tutorial_completed")
+  tutorialCompletedAt DateTime?  @map("tutorial_completed_at")
+  // Registered payout wallet (Wallet ID) — mandatory before any withdrawal request
+  payoutWalletAddress   String?   @map("payout_wallet_address") @db.VarChar(64)
+  payoutWalletNetwork   String    @default("BNB_SMART_CHAIN") @map("payout_wallet_network") @db.VarChar(32)
+  payoutWalletUpdatedAt DateTime? @map("payout_wallet_updated_at")
+  payoutWalletLockUntil DateTime? @map("payout_wallet_lock_until")
   lastLoginAt         DateTime?  @map("last_login_at")
   createdAt           DateTime   @default(now()) @map("created_at")
   updatedAt           DateTime   @updatedAt @map("updated_at")
 
+  referrer            User?      @relation("UserReferrals", fields: [referredById], references: [id], onDelete: SetNull)
+  referrals           User[]     @relation("UserReferrals")
   sessions            UserSession[]
   authTokens          AuthToken[]
   complianceProfile   ComplianceProfile?
@@ -125,9 +138,12 @@ model User {
   withdrawals         Withdrawal[]         @relation("UserWithdrawals")
   processedWithdrawals Withdrawal[]        @relation("AdminWithdrawals")
   ledgerEntries       LedgerEntry[]
+  referralCommissionsEarned ReferralCommission[] @relation("ReferrerCommissions")
+  referralCommissionsGenerated ReferralCommission[] @relation("InvestorCommissions")
   notifications       Notification[]
   auditLogs           AuditLog[]
 
+  @@index([referredById])
   @@index([role, status])
   @@index([createdAt])
   @@map("users")
@@ -225,6 +241,7 @@ model LedgerEntry {
   user            User                  @relation(fields: [userId], references: [id], onDelete: Restrict)
   wallet          Wallet                @relation(fields: [walletId], references: [id], onDelete: Restrict)
   interestRecord  InterestRecord?
+  referralCommission ReferralCommission?
 
   @@index([userId, createdAt])
   @@index([referenceType, referenceId])
@@ -370,6 +387,7 @@ model Investment {
   deposit         Deposit                  @relation(fields: [depositId], references: [id], onDelete: Restrict)
   plan            InvestmentPlan?          @relation(fields: [planId], references: [id], onDelete: SetNull)
   interestRecords InterestRecord[]
+  referralCommissions ReferralCommission[]
 
   @@index([userId, status])
   @@index([maturityDate])
@@ -504,5 +522,33 @@ model IdempotencyRecord {
 
   @@index([expiresAt])
   @@map("idempotency_records")
+}
+
+model ReferralCommission {
+  id               String       @id @default(uuid()) @db.Char(36)
+  commissionUid    String       @unique @map("commission_uid") @db.VarChar(40)
+  referrerId       String       @map("referrer_id") @db.Char(36)
+  investorId       String       @map("investor_id") @db.Char(36)
+  investmentId     String       @map("investment_id") @db.Char(36)
+  level            Int          @db.TinyInt
+  ratePercent      Decimal      @map("rate_percent") @db.Decimal(6, 4)
+  investmentAmount Decimal      @map("investment_amount") @db.Decimal(24, 8)
+  commissionAmount Decimal      @map("commission_amount") @db.Decimal(24, 8)
+  asset            String       @default("USDT") @db.VarChar(16)
+  status           String       @default("CREDITED") @db.VarChar(24)
+  ledgerEntryId    String?      @unique @map("ledger_entry_id") @db.Char(36)
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  referrer         User         @relation("ReferrerCommissions", fields: [referrerId], references: [id], onDelete: Restrict)
+  investor         User         @relation("InvestorCommissions", fields: [investorId], references: [id], onDelete: Restrict)
+  investment       Investment   @relation(fields: [investmentId], references: [id], onDelete: Restrict)
+  ledgerEntry      LedgerEntry? @relation(fields: [ledgerEntryId], references: [id], onDelete: SetNull)
+
+  @@index([referrerId, level])
+  @@index([investorId])
+  @@index([investmentId])
+  @@index([createdAt])
+  @@map("referral_commissions")
 }
 

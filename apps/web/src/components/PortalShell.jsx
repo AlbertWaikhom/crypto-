@@ -17,6 +17,7 @@ import {
   Sparkles,
   TrendingUp,
   UserCheck,
+  Share2,
   X,
 } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
@@ -25,30 +26,36 @@ import { Button, cn, DecryptedText, MobileDock } from '@navrix/ui';
 import { useUiStore } from '../store/ui-store';
 import { apiRequest } from '../lib/api';
 import { PortalHeader } from './PortalHeader';
+import { InteractiveTutorialTour } from './InteractiveTutorialTour';
 import styles from './portal-shell.module.css';
+
 const NAV_GROUPS = [
   {
     heading: 'Portfolio',
     items: [
-      { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
-      { href: '/investments', label: 'Vault Plans', icon: TrendingUp },
-      { href: '/interest-history', label: 'Yield Credits', icon: Coins },
+      { href: '/dashboard', label: 'Overview', icon: LayoutDashboard, tourId: 'nav-dashboard' },
+      { href: '/investments', label: 'Vault Plans', icon: TrendingUp, tourId: 'nav-investments' },
+      { href: '/interest-history', label: 'Yield Credits', icon: Coins, tourId: 'nav-yield' },
     ],
   },
   {
     heading: 'Treasury',
     items: [
-      { href: '/deposit', label: 'Deposit USDT', icon: ArrowDownToLine },
-      { href: '/withdraw', label: 'Withdraw USDT', icon: ArrowUpFromLine },
-      { href: '/transactions', label: 'Audit Ledger', icon: FileSpreadsheet },
+      { href: '/deposit', label: 'Deposit USDT', icon: ArrowDownToLine, tourId: 'nav-deposit' },
+      { href: '/withdraw', label: 'Withdraw USDT', icon: ArrowUpFromLine, tourId: 'nav-withdraw' },
+      { href: '/transactions', label: 'Audit Ledger', icon: FileSpreadsheet, tourId: 'nav-ledger' },
     ],
+  },
+  {
+    heading: 'Growth & Rewards',
+    items: [{ href: '/referrals', label: 'Refer & Earn', icon: Share2, tourId: 'nav-referrals' }],
   },
   {
     heading: 'Governance',
     items: [
-      { href: '/notifications', label: 'Notifications', icon: Bell },
-      { href: '/profile', label: 'Profile & KYC', icon: UserCheck },
-      { href: '/security', label: 'Security', icon: ShieldCheck },
+      { href: '/notifications', label: 'Notifications', icon: Bell, tourId: 'nav-notifications' },
+      { href: '/profile', label: 'Profile & Settings', icon: UserCheck, tourId: 'nav-profile' },
+      { href: '/security', label: 'Security', icon: ShieldCheck, tourId: 'nav-security' },
     ],
   },
 ];
@@ -217,6 +224,7 @@ export function PortalShell({ children }) {
                       href={item.href}
                       prefetch={true}
                       onClick={() => setMobileNavOpen(false)}
+                      data-tour={item.tourId}
                       className={cn(styles.navItem, active && styles.navItemActive)}
                     >
                       <Icon className="h-[15px] w-[15px] shrink-0" />
@@ -278,6 +286,9 @@ export function PortalShell({ children }) {
       <div className={styles.mobileDockWrap}>
         <MobileDock items={dockItems} dockId="nv-portal-dock" />
       </div>
+
+      {/* Interactive Step-by-Step Onboarding & Review Tour */}
+      <InteractiveTutorialTour />
     </div>
   );
 }

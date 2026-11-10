@@ -147,61 +147,63 @@ export default function CustomerDashboardPage() {
   return (
     <div className={styles.dashboardGrid}>
       {/* Row 1: Compact Single-Line Executive Vault Bar */}
-      <StarBorder color="#F5B82E" speed="8s">
-        <AuroraBackground variant="gold" intensity="vivid" className={styles.heroStrip}>
-          <div className={styles.heroLeft}>
-            <div className={styles.heroMetaRow}>
-              <span className={styles.vaultTag}>
-                <ShinyText text="BEP-20 VAULT" />
-              </span>
-              <span className={styles.uidChip}>
-                <DecryptedText text={user?.uid || 'USR-000000'} />
-              </span>
-              <span className={styles.verifiedTag}>
-                <ShieldCheck className="h-3 w-3 text-emerald-400" />
-                Total Balance
-              </span>
+      <div data-tour="vault-balances">
+        <StarBorder color="#F5B82E" speed="8s">
+          <AuroraBackground variant="gold" intensity="vivid" className={styles.heroStrip}>
+            <div className={styles.heroLeft}>
+              <div className={styles.heroMetaRow}>
+                <span className={styles.vaultTag}>
+                  <ShinyText text="BEP-20 VAULT" />
+                </span>
+                <span className={styles.uidChip}>
+                  <DecryptedText text={user?.uid || 'USR-000000'} />
+                </span>
+                <span className={styles.verifiedTag}>
+                  <ShieldCheck className="h-3 w-3 text-emerald-400" />
+                  Total Balance
+                </span>
+              </div>
+
+              <div className={styles.heroBalanceLine}>
+                <span className={styles.totalAmount}>
+                  {walletLoading ? (
+                    <span className="opacity-50">0.00</span>
+                  ) : (
+                    <GradientText variant="gold">
+                      <CountUp value={totalNum} decimals={2} />
+                    </GradientText>
+                  )}
+                  <span className={styles.totalUnit}>USDT</span>
+                </span>
+
+                <span className={styles.yieldPill}>
+                  <Coins className="h-3 w-3" />
+                  +<CountUp value={interestNum} decimals={2} /> USDT Yield
+                </span>
+              </div>
             </div>
 
-            <div className={styles.heroBalanceLine}>
-              <span className={styles.totalAmount}>
-                {walletLoading ? (
-                  <span className="opacity-50">0.00</span>
-                ) : (
-                  <GradientText variant="gold">
-                    <CountUp value={totalNum} decimals={2} />
-                  </GradientText>
-                )}
-                <span className={styles.totalUnit}>USDT</span>
-              </span>
-
-              <span className={styles.yieldPill}>
-                <Coins className="h-3 w-3" />
-                +<CountUp value={interestNum} decimals={2} /> USDT Yield
-              </span>
+            <div className={styles.actionPills}>
+              <Link href="/deposit" className={styles.pillPrimary}>
+                <ArrowDownToLine className="h-3.5 w-3.5" />
+                <span>Deposit QR</span>
+              </Link>
+              <Link href="/withdraw" className={styles.pillSecondary}>
+                <ArrowUpFromLine className="h-3.5 w-3.5 text-sky-400" />
+                <span>Withdraw</span>
+              </Link>
+              <Link href="/investments" className={styles.pillSecondary}>
+                <TrendingUp className="h-3.5 w-3.5 text-amber-400" />
+                <span>Vaults ({investments.length})</span>
+              </Link>
+              <Link href="/transactions" className={styles.pillSecondary}>
+                <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Ledger</span>
+              </Link>
             </div>
-          </div>
-
-          <div className={styles.actionPills}>
-            <Link href="/deposit" className={styles.pillPrimary}>
-              <ArrowDownToLine className="h-3.5 w-3.5" />
-              <span>Deposit QR</span>
-            </Link>
-            <Link href="/withdraw" className={styles.pillSecondary}>
-              <ArrowUpFromLine className="h-3.5 w-3.5 text-sky-400" />
-              <span>Withdraw</span>
-            </Link>
-            <Link href="/investments" className={styles.pillSecondary}>
-              <TrendingUp className="h-3.5 w-3.5 text-amber-400" />
-              <span>Vaults ({investments.length})</span>
-            </Link>
-            <Link href="/transactions" className={styles.pillSecondary}>
-              <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-400" />
-              <span>Ledger</span>
-            </Link>
-          </div>
-        </AuroraBackground>
-      </StarBorder>
+          </AuroraBackground>
+        </StarBorder>
+      </div>
 
       {/* Row 2: Compact 6-Column Metric Ribbon */}
       <section className={styles.kpiRibbon} aria-label="Financial Summary">

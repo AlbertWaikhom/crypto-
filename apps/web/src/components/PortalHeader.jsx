@@ -2,9 +2,10 @@
 import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowDownToLine, Bell, Menu, Moon, Sun } from 'lucide-react';
+import { ArrowDownToLine, Bell, HelpCircle, Menu, Moon, Sun } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
 import { Button } from '@navrix/ui';
+import { startTutorialTour } from './InteractiveTutorialTour';
 import styles from './portal-header.module.css';
 function resolvePortalTitle(pathname) {
   if (pathname.startsWith('/deposit')) {
@@ -70,6 +71,16 @@ export function PortalHeader({ pathname, theme, unreadCount, onToggleTheme, onOp
             <span className={styles.badge}>{unreadCount > 9 ? '9+' : unreadCount}</span>
           ) : null}
         </Link>
+
+        <button
+          type="button"
+          onClick={() => startTutorialTour(0)}
+          className={styles.iconBtn}
+          aria-label="Start Interactive Tutorial Tour"
+          title="Start Interactive Tutorial Tour"
+        >
+          <HelpCircle className="h-3.5 w-3.5 text-amber-400" />
+        </button>
 
         <button
           type="button"

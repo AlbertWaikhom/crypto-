@@ -45,8 +45,15 @@ export async function apiRequest(path, options = {}, retryOn401 = true, retryCou
     headers.set('Content-Type', 'application/json');
   }
 
-  if (store.accessToken && !headers.has('Authorization')) {
-    headers.set('Authorization', `Bearer ${store.accessToken}`);
+  const token =
+    store.accessToken ||
+    (typeof window !== 'undefined'
+      ? sessionStorage.getItem('navrix_access_token') ||
+        sessionStorage.getItem('navrix_admin_token')
+      : null);
+
+  if (token && !headers.has('Authorization')) {
+    headers.set('Authorization', `Bearer ${token}`);
   }
 
   let res;

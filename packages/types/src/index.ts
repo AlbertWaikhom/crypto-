@@ -13,11 +13,7 @@ export const ROLE_RANK: Record<UserRole, number> = {
 };
 
 export function isAdminRole(role?: string | null): boolean {
-  return (
-    role === UserRole.ADMIN ||
-    role === UserRole.SUPER_ADMIN ||
-    role === UserRole.MASTER_ADMIN
-  );
+  return role === UserRole.ADMIN || role === UserRole.SUPER_ADMIN || role === UserRole.MASTER_ADMIN;
 }
 
 export function isMasterAdminRole(role?: string | null): boolean {
@@ -82,10 +78,7 @@ export const DEPOSIT_STATE_TRANSITIONS: Record<DepositStatus, DepositStatus[]> =
   [DepositStatus.CANCELLED]: [],
 };
 
-export function canTransitionDepositStatus(
-  from: DepositStatus,
-  to: DepositStatus,
-): boolean {
+export function canTransitionDepositStatus(from: DepositStatus, to: DepositStatus): boolean {
   return DEPOSIT_STATE_TRANSITIONS[from]?.includes(to) ?? false;
 }
 
@@ -97,6 +90,7 @@ export enum LedgerTransactionType {
   ADJUSTMENT = 'ADJUSTMENT',
   FEE = 'FEE',
   REFUND = 'REFUND',
+  COMMISSION = 'COMMISSION',
 }
 
 export enum InvestmentStatus {
@@ -126,20 +120,14 @@ export enum WithdrawalStatus {
 }
 
 export const WITHDRAWAL_STATE_TRANSITIONS: Record<WithdrawalStatus, WithdrawalStatus[]> = {
-  [WithdrawalStatus.PENDING_REVIEW]: [
-    WithdrawalStatus.APPROVED,
-    WithdrawalStatus.REJECTED,
-  ],
+  [WithdrawalStatus.PENDING_REVIEW]: [WithdrawalStatus.APPROVED, WithdrawalStatus.REJECTED],
   [WithdrawalStatus.APPROVED]: [
     WithdrawalStatus.PROCESSING,
     WithdrawalStatus.COMPLETED,
     WithdrawalStatus.REJECTED,
     WithdrawalStatus.FAILED,
   ],
-  [WithdrawalStatus.PROCESSING]: [
-    WithdrawalStatus.COMPLETED,
-    WithdrawalStatus.FAILED,
-  ],
+  [WithdrawalStatus.PROCESSING]: [WithdrawalStatus.COMPLETED, WithdrawalStatus.FAILED],
   [WithdrawalStatus.COMPLETED]: [],
   [WithdrawalStatus.REJECTED]: [],
   [WithdrawalStatus.FAILED]: [],
@@ -170,6 +158,8 @@ export enum AuditAction {
   BALANCE_ADJUSTMENT = 'BALANCE_ADJUSTMENT',
   SYSTEM_SETTING_CHANGED = 'SYSTEM_SETTING_CHANGED',
   EMERGENCY_PAUSE_TOGGLED = 'EMERGENCY_PAUSE_TOGGLED',
+  REFERRAL_COMMISSION_DISTRIBUTED = 'REFERRAL_COMMISSION_DISTRIBUTED',
+  PAYOUT_WALLET_UPDATED = 'PAYOUT_WALLET_UPDATED',
 }
 
 export enum NotificationEventType {
@@ -183,6 +173,8 @@ export enum NotificationEventType {
   WITHDRAWAL_APPROVED = 'WITHDRAWAL_APPROVED',
   WITHDRAWAL_COMPLETED = 'WITHDRAWAL_COMPLETED',
   WITHDRAWAL_REJECTED = 'WITHDRAWAL_REJECTED',
+  REFERRAL_COMMISSION_RECEIVED = 'REFERRAL_COMMISSION_RECEIVED',
+  PAYOUT_WALLET_UPDATED = 'PAYOUT_WALLET_UPDATED',
 }
 
 export enum KycStatus {
@@ -226,6 +218,9 @@ export interface PublicUserDto {
   emailVerified: boolean;
   avatarUrl: string | null;
   twoFactorEnabled: boolean;
+  tutorialEnabled?: boolean;
+  tutorialCompleted?: boolean;
+  tutorialCompletedAt?: string | null;
   createdAt: string;
 }
 
@@ -258,3 +253,103 @@ export interface BlockchainVerificationSummary {
   failureReason?: string;
 }
 
+export const REFERRAL_TIER_RATES: Record<number, number> = {
+  1: 0.08, // Level 1 (Direct Referral): 8%
+  2: 0.04, // Level 2: 4%
+  3: 0.02, // Level 3: 2%
+  4: 0.02, // Level 4: 2%
+  5: 0.02, // Level 5: 2%
+  6: 0.01, // Level 6: 1%
+  7: 0.01, // Level 7: 1%
+  8: 0.01, // Level 8: 1%
+  9: 0.01, // Level 9: 1%
+  10: 0.01, // Level 10: 1%
+};
+
+export interface ReferralHierarchyNode {
+  userId: string;
+  publicUid: string;
+  name: string;
+  emailMasked: string;
+  level: number;
+  joinedAt: string;
+  status: string;
+  totalInvested: string;
+  activeInvestmentsCount: number;
+  totalCommissionGeneratedForYou: string;
+  children?: ReferralHierarchyNode[];
+}
+
+export interface ReferralLevelBreakdown {
+  level: number;
+  ratePercent: number;
+  rateLabel: string;
+  referralsCount: number;
+  totalInvestment: string;
+  commissionEarned: string;
+}
+
+export interface ReferralCommissionItem {
+  id: string;
+  commissionUid: string;
+  level: number;
+  ratePercent: string;
+  investmentAmount: string;
+  commissionAmount: string;
+  asset: string;
+  status: string;
+  createdAt: string;
+  investorUid: string;
+  investorName: string;
+  investmentUid: string;
+}
+
+export interface UserReferralOverview {
+  referralCode: string;
+  referralLink: string;
+  totalReferrals: number;
+  directReferrals: number;
+  networkReferrals: number;
+  activeLevelsCount: number;
+  totalEarnedUsdt: string;
+  totalNetworkVolumeUsdt: string;
+  breakdown: ReferralLevelBreakdown[];
+  hierarchy: ReferralHierarchyNode[];
+  recentCommissions: ReferralCommissionItem[];
+}
+
+export interface AdminReferralChainUser {
+  userId: string;
+  publicUid: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  referralCode: string;
+  referredByUid: string | null;
+  referredByName: string | null;
+  directReferralsCount: number;
+  totalDownlineCount: number;
+  totalInvested: string;
+  totalCommissionsEarned: string;
+  totalCommissionsGenerated: string;
+  createdAt: string;
+}
+
+export interface AdminReferralAuditItem {
+  id: string;
+  commissionUid: string;
+  referrerUid: string;
+  referrerName: string;
+  investorUid: string;
+  investorName: string;
+  investmentUid: string;
+  level: number;
+  ratePercent: string;
+  investmentAmount: string;
+  commissionAmount: string;
+  asset: string;
+  status: string;
+  createdAt: string;
+  ledgerUid?: string | null;
+}

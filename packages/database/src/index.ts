@@ -29,7 +29,7 @@ export type PrismaTransactionClient = Prisma.TransactionClient;
  */
 export async function nextReadableUid(
   tx: PrismaTransactionClient | PrismaClient,
-  entityCode: 'USR' | 'DEP' | 'INV' | 'WDR' | 'LED' | 'INT',
+  entityCode: 'USR' | 'DEP' | 'INV' | 'WDR' | 'LED' | 'INT' | 'COM' | 'REF',
   includeDate = true,
   now: Date = new Date(),
 ): Promise<string> {
@@ -48,4 +48,3 @@ export async function nextReadableUid(
   const padded = String(seq.lastValue).padStart(6, '0');
   return `${prefix}-${padded}`;
 }
-

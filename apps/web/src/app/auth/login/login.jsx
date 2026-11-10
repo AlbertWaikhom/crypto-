@@ -400,7 +400,7 @@ export default function LoginPage() {
               Enter your registered email and we will send a 6-digit verification code.
             </p>
 
-            <div className={`${styles.fieldGroup} mt-6`}>
+            <div className={`${styles.fieldGroup} mt-2.5 sm:mt-4`}>
               <div className={styles.fieldLabelRow}>
                 <label htmlFor="nv-otp-email" className={styles.fieldLabel}>
                   Email address
@@ -471,7 +471,7 @@ export default function LoginPage() {
             <h1 className={styles.headingTitle}>Sign in</h1>
             <p className={styles.headingSub}>Use your {BRAND_CONFIG.name} account to continue.</p>
 
-            <div className={`${styles.fieldGroup} mt-6`}>
+            <div className={`${styles.fieldGroup} mt-2.5 sm:mt-4`}>
               <div className={styles.fieldLabelRow}>
                 <label htmlFor="nv-login-email" className={styles.fieldLabel}>
                   Email address

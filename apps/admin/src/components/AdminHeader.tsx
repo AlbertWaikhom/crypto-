@@ -3,9 +3,10 @@
 import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Crown, Menu, Moon, Sun } from 'lucide-react';
+import { Crown, HelpCircle, Menu, Moon, Sun } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
 import { Button } from '@navrix/ui';
+import { startTutorialTour } from './InteractiveTutorialTour';
 import styles from './admin-header.module.css';
 
 export interface AdminHeaderProps {
@@ -17,37 +18,44 @@ export interface AdminHeaderProps {
 }
 
 function resolveAdminTitle(pathname: string): { title: string; subtitle: string } {
-  if (pathname.startsWith('/master')) {
-    return { title: 'Master Sovereign Command', subtitle: 'Double-Entry Solvency & Circuit Breakers' };
+  const clean = pathname.replace(/^\/admin/, '') || '/dashboard';
+  if (clean.startsWith('/master')) {
+    return {
+      title: 'Master Sovereign Command',
+      subtitle: 'Double-Entry Solvency & Circuit Breakers',
+    };
   }
-  if (pathname.startsWith('/deposits')) {
+  if (clean.startsWith('/deposits')) {
     return { title: 'Deposits Verification Queue', subtitle: 'On-Chain BEP-20 Receipt Inspection' };
   }
-  if (pathname.startsWith('/withdrawals')) {
+  if (clean.startsWith('/withdrawals')) {
     return { title: 'Withdrawals Settlement Queue', subtitle: 'Outbound Payout Processing' };
   }
-  if (pathname.startsWith('/investments')) {
+  if (clean.startsWith('/investments')) {
     return { title: 'Investment Vaults Registry', subtitle: 'Active Customer Allocations' };
   }
-  if (pathname.startsWith('/interest')) {
+  if (clean.startsWith('/interest')) {
     return { title: 'Interest Distribution Engine', subtitle: 'Idempotent Yield Accrual Runner' };
   }
-  if (pathname.startsWith('/users')) {
+  if (clean.startsWith('/users')) {
     return { title: 'Customer Accounts', subtitle: 'Investor Directory & Account Status' };
   }
-  if (pathname.startsWith('/ledger')) {
-    return { title: 'Immutable Double-Entry Ledger', subtitle: 'Platform-Wide Append-Only Journal' };
+  if (clean.startsWith('/ledger')) {
+    return {
+      title: 'Immutable Double-Entry Ledger',
+      subtitle: 'Platform-Wide Append-Only Journal',
+    };
   }
-  if (pathname.startsWith('/blockchain-transactions')) {
+  if (clean.startsWith('/blockchain-transactions')) {
     return { title: 'Blockchain Transactions', subtitle: 'Verified BSC ERC-20 Transfer Logs' };
   }
-  if (pathname.startsWith('/audit-logs')) {
+  if (clean.startsWith('/audit-logs')) {
     return { title: 'Executive Audit Trail', subtitle: 'Tamper-Evident Administrative Events' };
   }
-  if (pathname.startsWith('/admin-users')) {
+  if (clean.startsWith('/admin-users')) {
     return { title: 'Admin RBAC Governance', subtitle: 'Operator Role & Privilege Control' };
   }
-  if (pathname.startsWith('/settings')) {
+  if (clean.startsWith('/settings')) {
     return { title: 'Platform System Settings', subtitle: 'Runtime Thresholds & Vault Parameters' };
   }
   return { title: 'Operations Command Deck', subtitle: 'Live MySQL Treasury & 24h SLA Telemetry' };
@@ -74,13 +82,8 @@ export function AdminHeader({
           <Menu className="h-4 w-4" />
         </button>
 
-        <Link href="/dashboard" className={styles.mobileLogo}>
-          <Image
-            src="/brand/logo-mark.png"
-            alt={BRAND_CONFIG.name}
-            width={24}
-            height={24}
-          />
+        <Link href="/admin/dashboard" className={styles.mobileLogo}>
+          <Image src="/brand/logo-mark.png" alt={BRAND_CONFIG.name} width={24} height={24} />
         </Link>
 
         <div className={styles.titleBlock}>
@@ -98,6 +101,16 @@ export function AdminHeader({
 
         <button
           type="button"
+          onClick={() => startTutorialTour(0)}
+          className={styles.iconBtn}
+          aria-label="Start Interactive Operator Tour"
+          title="Start Interactive Operator Tour"
+        >
+          <HelpCircle className="h-3.5 w-3.5 text-amber-400" />
+        </button>
+
+        <button
+          type="button"
           onClick={onToggleTheme}
           className={styles.iconBtn}
           aria-label="Toggle theme"
@@ -110,7 +123,7 @@ export function AdminHeader({
         </button>
 
         {isMaster ? (
-          <Link href="/master" className={styles.masterCtaWrap}>
+          <Link href="/admin/master" className={styles.masterCtaWrap}>
             <Button variant="gold" size="sm" className={styles.compactCta}>
               <Crown className="h-3.5 w-3.5" />
               Master
@@ -121,4 +134,3 @@ export function AdminHeader({
     </header>
   );
 }
-

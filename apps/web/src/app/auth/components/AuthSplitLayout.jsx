@@ -60,7 +60,7 @@ export function AuthSplitLayout({
   mode = 'split', // 'split' | 'solo'
   children,
   footer = null,
-  matchedAccount = null, // Optional authentication-8 live DB email recognition object
+  matchedAccount = null, // Optional live DB email recognition object
 }) {
   const [slideIdx, setSlideIdx] = React.useState(0);
   const slide = SHOWCASE_SLIDES[slideIdx] || SHOWCASE_SLIDES[0];
@@ -71,6 +71,9 @@ export function AuthSplitLayout({
 
   return (
     <div className={styles.pageShell}>
+      {/* Ambient Logo Planetary Orbit Ring */}
+      <div className={styles.orbitRingGlow} aria-hidden="true" />
+
       {/* Top minimal utility navigation */}
       <div className={styles.topUtilityBar}>
         <Link href="/" className={styles.homeBackLink}>
@@ -89,7 +92,7 @@ export function AuthSplitLayout({
           <div className={styles.soloCardWrap}>{children}</div>
         ) : (
           <div className={styles.splitFrame}>
-            {/* Left Authentication Column (authentication-3) */}
+            {/* Left Authentication Column */}
             <div className={styles.leftPane}>
               <Link href="/" className={styles.brandTopRow}>
                 <div className={styles.brandMonogram}>
@@ -98,9 +101,11 @@ export function AuthSplitLayout({
                     alt={BRAND_CONFIG.name}
                     width={22}
                     height={22}
+                    style={{ width: '22px', height: '22px', objectFit: 'contain' }}
                   />
                 </div>
                 <span className={styles.brandLabel}>{BRAND_CONFIG.name}</span>
+                <span className={styles.brandTierTag}>INSTITUTIONAL</span>
               </Link>
 
               <div className={styles.formContainer}>{children}</div>
@@ -108,7 +113,7 @@ export function AuthSplitLayout({
               <div className={styles.footerPrompt}>{footer}</div>
             </div>
 
-            {/* Right Showcase / Matched Account Security Posture Column (authentication-3 & authentication-8) */}
+            {/* Right Showcase / Matched Account Security Column (Desktop Only) */}
             <aside className={styles.rightPane} aria-label="Platform telemetry and security">
               {matchedAccount && matchedAccount.exists ? (
                 <>
@@ -120,13 +125,13 @@ export function AuthSplitLayout({
                     </span>
                   </div>
 
-                  <div className="my-auto py-4">
+                  <div className="my-auto py-3">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10 text-amber-300">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-amber-400/40 bg-amber-400/15 text-amber-300 shadow-sm">
                         <Building2 className="h-5 w-5" />
                       </div>
                       <div>
-                        <div className="text-base font-bold text-white">
+                        <div className="text-sm font-bold text-white">
                           {matchedAccount.isAdmin
                             ? 'NAVRIX Sovereign Governance'
                             : `${matchedAccount.accountName || 'Investor'}'s USDT Vault`}
@@ -135,23 +140,23 @@ export function AuthSplitLayout({
                       </div>
                     </div>
 
-                    <div className="mt-5 rounded-2xl border border-slate-700/50 bg-slate-950/55 p-4">
-                      <div className="grid grid-cols-2 gap-4">
+                    <div className="mt-3.5 rounded-xl border border-amber-500/20 bg-slate-950/65 p-3.5">
+                      <div className="grid grid-cols-2 gap-3">
                         <div>
                           <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                            <Users className="h-3.5 w-3.5" />
+                            <Users className="h-3.5 w-3.5 text-amber-400" />
                             <span>Account tier</span>
                           </div>
-                          <div className="mt-1 text-sm font-bold text-white">
+                          <div className="mt-1 text-xs font-bold text-white">
                             {matchedAccount.isAdmin ? 'Administrative RBAC' : 'Institutional Vault'}
                           </div>
                         </div>
                         <div>
                           <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                            <KeyRound className="h-3.5 w-3.5" />
+                            <KeyRound className="h-3.5 w-3.5 text-amber-400" />
                             <span>Auth methods</span>
                           </div>
-                          <div className="mt-1 text-sm font-bold text-white">
+                          <div className="mt-1 text-xs font-bold text-white">
                             {matchedAccount.hasGoogle && matchedAccount.hasPassword
                               ? 'Password + Google'
                               : matchedAccount.hasGoogle
@@ -160,53 +165,54 @@ export function AuthSplitLayout({
                           </div>
                         </div>
                       </div>
-                      <div className="mt-4 border-t border-slate-800/80 pt-3">
+                      <div className="mt-3 border-t border-slate-800/80 pt-2.5">
                         <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                          <Clock className="h-3.5 w-3.5" />
+                          <Clock className="h-3.5 w-3.5 text-amber-400" />
                           <span>Session policy</span>
                         </div>
-                        <div className="mt-1 text-sm font-semibold text-slate-200">
+                        <div className="mt-0.5 text-xs font-semibold text-slate-200">
                           HttpOnly refresh rotation, revocable per device
                         </div>
                       </div>
                     </div>
 
-                    <div className="mt-4 divide-y divide-slate-800/70 rounded-2xl border border-slate-700/50 bg-slate-950/45 text-xs text-slate-300">
-                      <div className="flex items-center gap-2.5 px-4 py-2.5">
-                        <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-400" />
+                    <div className="mt-3 divide-y divide-slate-800/70 rounded-xl border border-slate-800/70 bg-slate-950/50 text-xs text-slate-300">
+                      <div className="flex items-center gap-2.5 px-3 py-2">
+                        <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
                         <span>
                           {matchedAccount.emailVerified
                             ? 'Email ownership verified in MySQL registry'
                             : '6-digit OTP verification required on next sign-in'}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2.5 px-4 py-2.5">
-                        <ShieldCheck className="h-4 w-4 shrink-0 text-amber-400" />
+                      <div className="flex items-center gap-2.5 px-3 py-2">
+                        <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-amber-400" />
                         <span>Double-entry USDT ledger protection active</span>
                       </div>
-                      <div className="flex items-center gap-2.5 px-4 py-2.5">
-                        <ShieldCheck className="h-4 w-4 shrink-0 text-sky-400" />
+                      <div className="flex items-center gap-2.5 px-3 py-2">
+                        <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-sky-400" />
                         <span>Sign-in logged with timestamp, IP &amp; device posture</span>
                       </div>
                     </div>
                   </div>
 
                   <div className="text-[11px] text-slate-500">
-                    Real-time lookup from <code className="text-slate-300">users</code> table
+                    Real-time lookup from <code className="text-amber-400/90 font-mono">users</code>{' '}
+                    table
                   </div>
                 </>
               ) : (
                 <>
                   <div className={styles.rightEyebrow}>{slide.eyebrow}</div>
 
-                  <div className="my-auto py-4">
+                  <div className="my-auto py-3">
                     <p className={styles.quoteText}>&ldquo;{slide.quote}&rdquo;</p>
 
                     <div className={styles.authorRow}>
                       <div className={styles.authorAvatar}>{slide.initials}</div>
                       <div>
-                        <div className="text-sm font-semibold text-white">{slide.author}</div>
-                        <div className="text-xs text-slate-400">{slide.role}</div>
+                        <div className="text-xs font-bold text-white">{slide.author}</div>
+                        <div className="text-[11px] text-slate-400">{slide.role}</div>
                       </div>
                     </div>
 
@@ -241,7 +247,7 @@ export function AuthSplitLayout({
                         aria-label="Previous highlight"
                         className={styles.arrowBtn}
                       >
-                        <ArrowLeft className="h-4 w-4" />
+                        <ArrowLeft className="h-3.5 w-3.5" />
                       </button>
                       <button
                         type="button"
@@ -249,7 +255,7 @@ export function AuthSplitLayout({
                         aria-label="Next highlight"
                         className={styles.arrowBtn}
                       >
-                        <ArrowRight className="h-4 w-4" />
+                        <ArrowRight className="h-3.5 w-3.5" />
                       </button>
                     </div>
                   </div>

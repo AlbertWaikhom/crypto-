@@ -101,105 +101,27 @@ function loadGoogleIdentityScript() {
  * - When GOOGLE_CLIENT_ID is not yet configured -> Opens an interactive Browser Google
  *   Account Chooser modal so users can pick any saved browser Google account or add any Gmail!
  */
-export function useGoogleAccountAuth({ onSuccess, toast }) {
-  const [config, setConfig] = React.useState({
-    loaded: false,
-    googleClientId: null,
-    googleOAuthMode: 'CHOOSER',
-  });
+export function useGoogleAccountAuth({ onSuccess, toast } = {}) {
   const [chooserOpen, setChooserOpen] = React.useState(false);
   const [isBusy, setIsBusy] = React.useState(false);
 
-  React.useEffect(() => {
-    let mounted = true;
-    apiRequest('/auth/config', { method: 'GET' }, false)
-      .then((data) => {
-        if (mounted && data) {
-          setConfig({
-            loaded: true,
-            googleClientId: data.googleClientId || null,
-            googleOAuthMode: data.googleOAuthMode || 'CHOOSER',
-          });
-        }
-      })
-      .catch(() => {
-        if (mounted) setConfig((c) => ({ ...c, loaded: true }));
-      });
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  const triggerGoogleLogin = React.useCallback(async () => {
-    if (config.googleOAuthMode === 'LIVE' && config.googleClientId) {
-      setIsBusy(true);
-      const ok = await loadGoogleIdentityScript();
-      if (!ok || !window.google?.accounts?.oauth2) {
-        setIsBusy(false);
-        setChooserOpen(true);
-        return;
+  const triggerGoogleLogin = React.useCallback((referralCodeParam) => {
+    setIsBusy(true);
+    try {
+      const targetUrl = new URL('/api/v1/auth/google', window.location.origin);
+      const queryParams = new URLSearchParams(window.location.search);
+      const ref =
+        typeof referralCodeParam === 'string'
+          ? referralCodeParam
+          : queryParams.get('ref') || queryParams.get('referralCode') || '';
+      if (ref) {
+        targetUrl.searchParams.set('ref', ref);
       }
-
-      try {
-        const tokenClient = window.google.accounts.oauth2.initTokenClient({
-          client_id: config.googleClientId,
-          scope: 'openid email profile',
-          prompt: 'select_account',
-          callback: async (tokenResponse) => {
-            if (tokenResponse?.error || !tokenResponse?.access_token) {
-              setIsBusy(false);
-              if (tokenResponse?.error !== 'popup_closed_by_user') {
-                toast?.error(
-                  'Google Sign-In Cancelled',
-                  tokenResponse?.error_description ||
-                    'Could not complete Google account selection.',
-                );
-              }
-              return;
-            }
-
-            try {
-              const authRes = await apiRequest(
-                '/auth/google',
-                {
-                  method: 'POST',
-                  body: JSON.stringify({
-                    googleAccessToken: tokenResponse.access_token,
-                  }),
-                },
-                false,
-              );
-              saveGoogleAccountToBrowser({
-                email: authRes.user.email,
-                name: authRes.user.name,
-              });
-              onSuccess(authRes);
-            } catch (err) {
-              toast?.error(
-                'Google Authentication Failed',
-                err instanceof ClientApiError ? err.message : 'Unable to sign in with Google.',
-                { code: err instanceof ClientApiError ? err.code : null },
-              );
-            } finally {
-              setIsBusy(false);
-            }
-          },
-          error_callback: () => {
-            setIsBusy(false);
-          },
-        });
-
-        tokenClient.requestAccessToken({ prompt: 'select_account' });
-      } catch {
-        setIsBusy(false);
-        setChooserOpen(true);
-      }
-      return;
+      window.location.href = targetUrl.toString();
+    } catch {
+      window.location.href = '/api/v1/auth/google';
     }
-
-    // Open interactive Browser Account Chooser modal
-    setChooserOpen(true);
-  }, [config.googleClientId, config.googleOAuthMode, onSuccess, toast]);
+  }, []);
 
   return {
     triggerGoogleLogin,

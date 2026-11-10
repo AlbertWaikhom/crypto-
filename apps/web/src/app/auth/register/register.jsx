@@ -28,6 +28,13 @@ export default function RegisterPage() {
   const [email, setEmail] = React.useState(searchParams.get('email') || '');
   const [password, setPassword] = React.useState('');
   const [country, setCountry] = React.useState('');
+  const [referralCode, setReferralCode] = React.useState(
+    searchParams.get('ref') || searchParams.get('referralCode') || '',
+  );
+  const [referrerStatus, setReferrerStatus] = React.useState({
+    state: 'idle', // 'idle' | 'checking' | 'valid' | 'invalid'
+    data: null,
+  });
   const [acceptTerms, setAcceptTerms] = React.useState(true);
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -114,6 +121,39 @@ export default function RegisterPage() {
     };
   }, [email]);
 
+  // Real-time Referral Code check against `users` table
+  React.useEffect(() => {
+    const cleanRef = referralCode.trim();
+    if (!cleanRef) {
+      setReferrerStatus({ state: 'idle', data: null });
+      return undefined;
+    }
+    let active = true;
+    setReferrerStatus({ state: 'checking', data: null });
+    const timer = setTimeout(async () => {
+      try {
+        const res = await apiRequest(
+          `/auth/check-referral/${encodeURIComponent(cleanRef)}`,
+          {},
+          false,
+        );
+        if (!active) return;
+        if (res?.valid) {
+          setReferrerStatus({ state: 'valid', data: res });
+        } else {
+          setReferrerStatus({ state: 'invalid', data: res });
+        }
+      } catch {
+        if (active) setReferrerStatus({ state: 'idle', data: null });
+      }
+    }, 350);
+
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [referralCode]);
+
   const { rules, score, color } = evaluatePasswordStrength(password);
   const meetsPasswordPolicy =
     password.length >= 8 &&
@@ -177,6 +217,7 @@ export default function RegisterPage() {
             email: cleanEmail,
             password,
             country: country.trim() || undefined,
+            referralCode: referralCode.trim() || undefined,
             acceptTerms: true,
           }),
         },
@@ -324,7 +365,7 @@ export default function RegisterPage() {
             Open your verified BEP-20 USDT vault in under a minute.
           </p>
 
-          <div className={`${styles.fieldGroup} mt-5`}>
+          <div className={`${styles.fieldGroup} mt-2 sm:mt-3`}>
             <div className={styles.fieldLabelRow}>
               <label htmlFor="nv-reg-name" className={styles.fieldLabel}>
                 Full name
@@ -378,7 +419,7 @@ export default function RegisterPage() {
             />
 
             {emailStatus.state === 'exists' ? (
-              <div className="mt-2 rounded-xl border border-amber-400/45 bg-amber-400/10 p-2.5 text-xs text-amber-100">
+              <div className="mt-1.5 rounded-xl border border-amber-400/45 bg-amber-400/10 p-2 text-xs text-amber-100">
                 <div className="flex items-center gap-1.5 font-bold text-amber-300">
                   <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
                   <span>Email already exists in our database</span>
@@ -408,7 +449,7 @@ export default function RegisterPage() {
               </label>
               <span className="text-[11px] text-slate-400">Country (optional)</span>
             </div>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1.45fr_0.85fr]">
+            <div className="grid grid-cols-[1.3fr_0.9fr] gap-2">
               <div className={styles.inputWrap}>
                 <input
                   id="nv-reg-password"
@@ -428,7 +469,11 @@ export default function RegisterPage() {
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   className={styles.eyeToggleBtn}
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showPassword ? (
+                    <EyeOff className="h-3.5 w-3.5" />
+                  ) : (
+                    <Eye className="h-3.5 w-3.5" />
+                  )}
                 </button>
               </div>
 
@@ -469,20 +514,46 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <label className="mb-3.5 flex cursor-pointer items-start gap-2.5 text-xs text-slate-300">
+          <div className={styles.fieldGroup}>
+            <div className={styles.fieldLabelRow}>
+              <label htmlFor="nv-reg-ref" className={styles.fieldLabel}>
+                Referral Code (Optional)
+              </label>
+              {referrerStatus.state === 'valid' ? (
+                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400">
+                  <CheckCircle2 className="h-3 w-3" />
+                  Referred by {referrerStatus.data?.referrerName}
+                </span>
+              ) : referrerStatus.state === 'invalid' ? (
+                <span className="text-[11px] text-rose-400">Invalid code</span>
+              ) : referrerStatus.state === 'checking' ? (
+                <span className="text-[11px] text-slate-400">Verifying...</span>
+              ) : null}
+            </div>
+            <input
+              id="nv-reg-ref"
+              type="text"
+              value={referralCode}
+              onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+              placeholder="e.g. NVX000003"
+              className={`${styles.textInput} font-mono`}
+            />
+          </div>
+
+          <label className="my-2 flex cursor-pointer items-start gap-2 text-xs text-slate-300">
             <input
               type="checkbox"
               checked={acceptTerms}
               onChange={(e) => setAcceptTerms(e.target.checked)}
-              className="mt-0.5 h-4 w-4 rounded border-slate-600 bg-slate-900 accent-white"
+              className="mt-0.5 h-3.5 w-3.5 rounded border-amber-400/50 bg-slate-900 accent-amber-400"
             />
             <span>
               I agree to the{' '}
-              <Link href="/terms-conditions" className="font-semibold text-white underline">
+              <Link href="/terms-conditions" className="font-semibold text-amber-300 underline">
                 Terms
               </Link>{' '}
               &amp;{' '}
-              <Link href="/risk-disclosure" className="font-semibold text-white underline">
+              <Link href="/risk-disclosure" className="font-semibold text-amber-300 underline">
                 Risk Disclosure
               </Link>
               .
@@ -515,7 +586,7 @@ export default function RegisterPage() {
           <button
             type="button"
             disabled={isGoogleBusy}
-            onClick={triggerGoogleLogin}
+            onClick={() => triggerGoogleLogin(referralCode)}
             className={`${styles.socialBtn} w-full`}
           >
             {isGoogleBusy ? (

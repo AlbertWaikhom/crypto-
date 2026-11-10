@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams } from 'react-router-dom';
 
 // Public Pages
 import HomePage from './app/landingpage/landingpage';
@@ -13,6 +13,8 @@ import RiskDisclosurePage from './app/risk-disclosure/risk-disclosure';
 import LoginPage from './app/auth/login/login';
 import RegisterPage from './app/auth/register/register';
 import ForgotPasswordPage from './app/auth/forgot-password/forgot-password';
+import AuthCallbackPage from './app/auth/callback/callback';
+import GoogleSelectAccountPage from './app/auth/google/select-account/select-account';
 
 // Customer Portal Shell & Pages
 import { PortalShell } from './components/PortalShell';
@@ -27,6 +29,7 @@ import TransactionsPage from './app/(portal)/transactions/transactions';
 import NotificationsPage from './app/(portal)/notifications/notifications';
 import ProfilePage from './app/(portal)/profile/profile';
 import SecurityPage from './app/(portal)/security/security';
+import ReferralsPage from './app/(portal)/referrals/referrals';
 
 // Unified Admin & Master Command Console (Merged onto Port 3000)
 import { AdminShell } from './admin/components/AdminShell';
@@ -36,6 +39,7 @@ import AdminDepositsPage from './admin/app/(console)/deposits/admindeposits';
 import AdminDepositReviewPage from './admin/app/(console)/deposits/[id]/admindepositreview';
 import AdminWithdrawalsPage from './admin/app/(console)/withdrawals/adminwithdrawals';
 import AdminUsersPage from './admin/app/(console)/users/adminuserslist';
+import AdminReferralsPage from './admin/app/(console)/referrals/adminreferrals';
 import AdminInvestmentsPage from './admin/app/(console)/investments/admininvestments';
 import AdminLedgerPage from './admin/app/(console)/ledger/adminledger';
 import AdminUsersManagementPage from './admin/app/(console)/admin-users/adminusers';
@@ -52,6 +56,11 @@ function AdminConsoleLayout({ children }) {
   return <AdminShell>{children}</AdminShell>;
 }
 
+function RefRedirect() {
+  const { code } = useParams();
+  return <Navigate to={`/register?ref=${code || ''}`} replace />;
+}
+
 export default function App() {
   return (
     <Routes>
@@ -66,10 +75,14 @@ export default function App() {
       {/* Unified Auth Suite */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/ref/:code" element={<RefRedirect />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/auth/login" element={<LoginPage />} />
       <Route path="/auth/register" element={<RegisterPage />} />
       <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/auth/callback" element={<AuthCallbackPage />} />
+      <Route path="/auth/google/callback" element={<AuthCallbackPage />} />
+      <Route path="/auth/google/select-account" element={<GoogleSelectAccountPage />} />
 
       {/* Customer Portal Pages */}
       <Route
@@ -160,6 +173,14 @@ export default function App() {
           </PortalLayout>
         }
       />
+      <Route
+        path="/referrals"
+        element={
+          <PortalLayout>
+            <ReferralsPage />
+          </PortalLayout>
+        }
+      />
 
       {/* Unified Admin & Master Command Console (/admin/*) */}
       <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
@@ -209,6 +230,14 @@ export default function App() {
         element={
           <AdminConsoleLayout>
             <AdminUsersPage />
+          </AdminConsoleLayout>
+        }
+      />
+      <Route
+        path="/admin/referrals"
+        element={
+          <AdminConsoleLayout>
+            <AdminReferralsPage />
           </AdminConsoleLayout>
         }
       />

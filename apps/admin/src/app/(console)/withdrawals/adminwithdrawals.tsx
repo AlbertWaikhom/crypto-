@@ -21,7 +21,13 @@ interface WithdrawalRow {
   createdAt: string;
   reviewedAt: string | null;
   completedAt: string | null;
-  user: { publicUid: string; name: string; email: string };
+  user: {
+    publicUid: string;
+    name: string;
+    email: string;
+    payoutWalletAddress?: string | null;
+    payoutWalletUpdatedAt?: string | null;
+  };
   admin?: { publicUid: string; name: string } | null;
 }
 
@@ -120,8 +126,8 @@ export default function AdminWithdrawalsPage() {
     <div>
       <div className={styles.toolbar}>
         <div>
-          <h1 className="text-2xl font-extrabold">Withdrawal Settlement Queue</h1>
-          <p className="mt-0.5 text-sm opacity-70">
+          <h1 className="text-xl sm:text-2xl font-extrabold">Withdrawal Settlement Queue</h1>
+          <p className="mt-0.5 text-xs sm:text-sm opacity-70">
             Review locked BEP-20 payout requests, unlock rejected funds, or record outbound BNB
             Smart Chain settlement hashes
           </p>
@@ -223,17 +229,34 @@ export default function AdminWithdrawalsPage() {
               Cancel
             </Button>
           </div>
-          <div className="mb-3 rounded-lg border border-slate-700/60 bg-slate-900/40 p-3 text-xs space-y-1">
+          <div className="mb-3 rounded-lg border border-slate-700/60 bg-slate-900/40 p-3 text-xs space-y-1.5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="opacity-70">Destination BEP-20 Wallet:</span>
-              <div className="flex items-center gap-2">
-                <span className="font-mono font-bold text-emerald-400">
+              <div className="flex flex-wrap items-center gap-2 min-w-0">
+                <span className="font-mono font-bold text-emerald-400 break-all">
                   {completeTarget.destinationAddress}
                 </span>
                 <CopyButton value={completeTarget.destinationAddress} />
               </div>
             </div>
-            <div className="opacity-70">
+            {completeTarget.user.payoutWalletAddress && (
+              <div className="flex items-center gap-1.5 text-[11px]">
+                {completeTarget.user.payoutWalletAddress.toLowerCase() ===
+                completeTarget.destinationAddress.toLowerCase() ? (
+                  <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    Verified: Matches investor&apos;s registered Wallet ID in profile settings.
+                  </span>
+                ) : (
+                  <span className="text-rose-400 font-semibold flex items-center gap-1">
+                    <XCircle className="h-3.5 w-3.5" />
+                    Warning: Differs from registered Wallet ID (
+                    {completeTarget.user.payoutWalletAddress}).
+                  </span>
+                )}
+              </div>
+            )}
+            <div className="opacity-70 pt-1">
               Platform never stores private keys. Execute payout externally from treasury
               multisig/hardware wallet, then paste the 66-char BSC transaction hash below.
             </div>
@@ -271,7 +294,7 @@ export default function AdminWithdrawalsPage() {
             description="Customer BEP-20 USDT withdrawal requests will appear here."
           />
         ) : (
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[740px] text-left text-sm">
             <thead>
               <tr className="border-b border-slate-700/60 text-xs uppercase opacity-65">
                 <th className="py-3 pr-4">Withdrawal ID</th>
@@ -302,9 +325,28 @@ export default function AdminWithdrawalsPage() {
                   </td>
                   <td className="py-3.5 pr-4 font-mono text-xs">
                     <div className="flex items-center gap-1.5">
-                      <span>{shortenHex(w.destinationAddress, 8, 6)}</span>
+                      <span className="font-bold text-amber-300">
+                        {shortenHex(w.destinationAddress, 8, 6)}
+                      </span>
                       <CopyButton value={w.destinationAddress} />
                     </div>
+                    {w.user.payoutWalletAddress ? (
+                      w.user.payoutWalletAddress.toLowerCase() ===
+                      w.destinationAddress.toLowerCase() ? (
+                        <div className="text-[10px] text-emerald-400 font-sans flex items-center gap-1 mt-0.5">
+                          <CheckCircle2 className="h-3 w-3" />
+                          <span>Verified Wallet ID</span>
+                        </div>
+                      ) : (
+                        <div className="text-[10px] text-rose-400 font-sans flex items-center gap-1 mt-0.5">
+                          <span>⚠ Mismatched address</span>
+                        </div>
+                      )
+                    ) : (
+                      <div className="text-[10px] text-slate-500 font-sans italic mt-0.5">
+                        No Wallet Registered
+                      </div>
+                    )}
                   </td>
                   <td className="py-3.5 pr-4 font-mono text-xs">
                     {w.transactionHash ? (

@@ -16,6 +16,7 @@ import {
   Menu,
   ScrollText,
   Settings,
+  Share2,
   ShieldAlert,
   TrendingUp,
   Users,
@@ -23,20 +24,14 @@ import {
 } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
 import { isAdminRole, isMasterAdminRole } from '@navrix/types';
-import {
-  Button,
-  cn,
-  DecryptedText,
-  MobileDock,
-  type MobileDockItem,
-} from '@navrix/ui';
+import { Button, cn, DecryptedText, MobileDock, type MobileDockItem } from '@navrix/ui';
 import { useAdminStore } from '../store/admin-store';
 import { adminApi } from '../lib/api';
 import { AdminHeader } from './AdminHeader';
+import { InteractiveTutorialTour } from './InteractiveTutorialTour';
 import styles from './admin-shell.module.css';
 
-const UNIFIED_LOGIN_URL =
-  (process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000') + '/login?portal=admin';
+const UNIFIED_LOGIN_URL = '/login';
 
 interface AdminNavGroup {
   heading: string;
@@ -45,6 +40,7 @@ interface AdminNavGroup {
     label: string;
     icon: React.ComponentType<{ className?: string }>;
     masterOnly: boolean;
+    tourId?: string;
   }>;
 }
 
@@ -52,38 +48,81 @@ const ADMIN_GROUPS: AdminNavGroup[] = [
   {
     heading: 'Command',
     items: [
-      { href: '/dashboard', label: 'Ops Deck', icon: LayoutDashboard, masterOnly: false },
-      { href: '/master', label: 'Master Command', icon: Crown, masterOnly: true },
+      {
+        href: '/admin/dashboard',
+        label: 'Ops Deck',
+        icon: LayoutDashboard,
+        masterOnly: false,
+        tourId: 'admin-command-deck',
+      },
+      { href: '/admin/master', label: 'Master Command', icon: Crown, masterOnly: true },
     ],
   },
   {
     heading: 'Treasury Ops',
     items: [
-      { href: '/deposits', label: 'Deposits Queue', icon: ArrowDownToLine, masterOnly: false },
-      { href: '/withdrawals', label: 'Withdrawals', icon: ArrowUpFromLine, masterOnly: false },
-      { href: '/investments', label: 'Investments', icon: TrendingUp, masterOnly: false },
-      { href: '/interest', label: 'Interest Engine', icon: Coins, masterOnly: false },
+      {
+        href: '/admin/deposits',
+        label: 'Deposits Queue',
+        icon: ArrowDownToLine,
+        masterOnly: false,
+        tourId: 'admin-deposits',
+      },
+      {
+        href: '/admin/withdrawals',
+        label: 'Withdrawals',
+        icon: ArrowUpFromLine,
+        masterOnly: false,
+        tourId: 'admin-withdrawals',
+      },
+      {
+        href: '/admin/investments',
+        label: 'Investments',
+        icon: TrendingUp,
+        masterOnly: false,
+        tourId: 'admin-investments',
+      },
+      { href: '/admin/interest', label: 'Interest Engine', icon: Coins, masterOnly: false },
     ],
   },
   {
     heading: 'Ledger & Audit',
     items: [
-      { href: '/users', label: 'Customers', icon: Users, masterOnly: false },
-      { href: '/ledger', label: 'Double-Entry Ledger', icon: FileSpreadsheet, masterOnly: false },
+      { href: '/admin/users', label: 'Customers', icon: Users, masterOnly: false },
       {
-        href: '/blockchain-transactions',
+        href: '/admin/referrals',
+        label: 'Referral Chain',
+        icon: Share2,
+        masterOnly: false,
+        tourId: 'admin-referrals',
+      },
+      {
+        href: '/admin/ledger',
+        label: 'Double-Entry Ledger',
+        icon: FileSpreadsheet,
+        masterOnly: false,
+        tourId: 'admin-ledger',
+      },
+      {
+        href: '/admin/blockchain-transactions',
         label: 'On-Chain Verifier',
         icon: Blocks,
         masterOnly: false,
       },
-      { href: '/audit-logs', label: 'Audit Trail', icon: ScrollText, masterOnly: false },
+      { href: '/admin/audit-logs', label: 'Audit Trail', icon: ScrollText, masterOnly: false },
     ],
   },
   {
     heading: 'Governance',
     items: [
-      { href: '/admin-users', label: 'Admin RBAC', icon: ShieldAlert, masterOnly: true },
-      { href: '/settings', label: 'System Params', icon: Settings, masterOnly: true },
+      { href: '/admin/admin-users', label: 'Admin RBAC', icon: ShieldAlert, masterOnly: true },
+      {
+        href: '/admin/settings',
+        label: 'System Params',
+        icon: Settings,
+        masterOnly: true,
+        tourId: 'admin-settings',
+      },
     ],
   },
 ];
@@ -100,14 +139,19 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     mobileOpen,
     setMobileOpen,
     clearAdminSession,
+    hydrate,
   } = useAdminStore();
+
+  React.useEffect(() => {
+    hydrate();
+  }, [hydrate]);
 
   React.useEffect(() => {
     if (hydrated && (!accessToken || !user || !isAdminRole(user.role))) {
       clearAdminSession();
-      window.location.replace(UNIFIED_LOGIN_URL);
+      router.replace(UNIFIED_LOGIN_URL);
     }
-  }, [hydrated, accessToken, user, clearAdminSession]);
+  }, [hydrated, accessToken, user, clearAdminSession, router]);
 
   React.useEffect(() => {
     if (!mobileOpen) return;
@@ -126,7 +170,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       // ignore
     }
     clearAdminSession();
-    window.location.replace(UNIFIED_LOGIN_URL);
+    router.replace(UNIFIED_LOGIN_URL);
   };
 
   if (!hydrated || !accessToken || !user) {
@@ -138,18 +182,17 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   }
 
   const isMaster = isMasterAdminRole(user.role);
-  const isRouteActive = (href: string) =>
-    pathname === href || pathname.startsWith(`${href}/`);
+  const isRouteActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   const dockItems: MobileDockItem[] = [
     {
       id: 'ops',
       label: 'Ops Deck',
       icon: <LayoutDashboard className="h-[18px] w-[18px]" />,
-      active: isRouteActive('/dashboard'),
+      active: isRouteActive('/admin/dashboard'),
       onSelect: () => {
         setMobileOpen(false);
-        router.push('/dashboard');
+        router.push('/admin/dashboard');
       },
     },
     isMaster
@@ -157,40 +200,40 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           id: 'master',
           label: 'Master',
           icon: <Crown className="h-[18px] w-[18px]" />,
-          active: isRouteActive('/master'),
+          active: isRouteActive('/admin/master'),
           onSelect: () => {
             setMobileOpen(false);
-            router.push('/master');
+            router.push('/admin/master');
           },
         }
       : {
           id: 'users',
           label: 'Users',
           icon: <Users className="h-[18px] w-[18px]" />,
-          active: isRouteActive('/users'),
+          active: isRouteActive('/admin/users'),
           onSelect: () => {
             setMobileOpen(false);
-            router.push('/users');
+            router.push('/admin/users');
           },
         },
     {
       id: 'deposits',
       label: 'Deposits',
       icon: <ArrowDownToLine className="h-[18px] w-[18px]" />,
-      active: isRouteActive('/deposits'),
+      active: isRouteActive('/admin/deposits'),
       onSelect: () => {
         setMobileOpen(false);
-        router.push('/deposits');
+        router.push('/admin/deposits');
       },
     },
     {
       id: 'withdrawals',
       label: 'Payouts',
       icon: <ArrowUpFromLine className="h-[18px] w-[18px]" />,
-      active: isRouteActive('/withdrawals'),
+      active: isRouteActive('/admin/withdrawals'),
       onSelect: () => {
         setMobileOpen(false);
-        router.push('/withdrawals');
+        router.push('/admin/withdrawals');
       },
     },
     {
@@ -199,13 +242,13 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       icon: <Menu className="h-[18px] w-[18px]" />,
       active:
         mobileOpen ||
-        isRouteActive('/investments') ||
-        isRouteActive('/interest') ||
-        isRouteActive('/ledger') ||
-        isRouteActive('/blockchain-transactions') ||
-        isRouteActive('/audit-logs') ||
-        isRouteActive('/admin-users') ||
-        isRouteActive('/settings'),
+        isRouteActive('/admin/investments') ||
+        isRouteActive('/admin/interest') ||
+        isRouteActive('/admin/ledger') ||
+        isRouteActive('/admin/blockchain-transactions') ||
+        isRouteActive('/admin/audit-logs') ||
+        isRouteActive('/admin/admin-users') ||
+        isRouteActive('/admin/settings'),
       onSelect: () => setMobileOpen(!mobileOpen),
     },
   ];
@@ -213,11 +256,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   return (
     <div className={styles.shell}>
       {mobileOpen ? (
-        <div
-          className={styles.scrim}
-          onClick={() => setMobileOpen(false)}
-          aria-hidden="true"
-        />
+        <div className={styles.scrim} onClick={() => setMobileOpen(false)} aria-hidden="true" />
       ) : null}
 
       {/* Visually Separated Fixed Admin Sidebar Panel */}
@@ -227,7 +266,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       >
         <div className={styles.brandHeader}>
           <Link
-            href="/dashboard"
+            href="/admin/dashboard"
             onClick={() => setMobileOpen(false)}
             className={styles.brandRow}
           >
@@ -259,9 +298,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
         <div className={styles.navScrollArea}>
           {ADMIN_GROUPS.map((group) => {
-            const visibleItems = group.items.filter(
-              (i) => !i.masterOnly || isMaster,
-            );
+            const visibleItems = group.items.filter((i) => !i.masterOnly || isMaster);
             if (visibleItems.length === 0) return null;
             return (
               <div key={group.heading} className={styles.navGroup}>
@@ -275,10 +312,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                         key={item.href}
                         href={item.href}
                         onClick={() => setMobileOpen(false)}
-                        className={cn(
-                          styles.navLink,
-                          active && styles.navLinkActive,
-                        )}
+                        data-tour={item.tourId}
+                        className={cn(styles.navLink, active && styles.navLinkActive)}
                       >
                         <Icon className="h-[15px] w-[15px] shrink-0" />
                         <span className="truncate">{item.label}</span>
@@ -334,6 +369,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       <div className={styles.mobileDockWrap}>
         <MobileDock items={dockItems} dockId="nv-admin-dock" />
       </div>
+
+      {/* Interactive Step-by-Step Operator & Review Tour */}
+      <InteractiveTutorialTour />
     </div>
   );
 }

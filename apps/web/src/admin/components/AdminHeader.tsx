@@ -3,9 +3,10 @@
 import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Crown, Menu, Moon, Sun } from 'lucide-react';
+import { Crown, HelpCircle, Menu, Moon, Sun } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
 import { Button } from '@navrix/ui';
+import { startTutorialTour } from '../../components/InteractiveTutorialTour';
 import styles from './admin-header.module.css';
 
 export interface AdminHeaderProps {
@@ -97,6 +98,16 @@ export function AdminHeader({
           <span className={styles.rbacFull}>RBAC · MySQL Audit Live</span>
           <span className={styles.rbacShort}>Audit Live</span>
         </span>
+
+        <button
+          type="button"
+          onClick={() => startTutorialTour(0)}
+          className={styles.iconBtn}
+          aria-label="Start Interactive Operator Tour"
+          title="Start Interactive Operator Tour"
+        >
+          <HelpCircle className="h-3.5 w-3.5 text-amber-400" />
+        </button>
 
         <button
           type="button"

@@ -44,6 +44,16 @@ import {
 } from '@navrix/types';
 import { createBlockchainSuite } from '@navrix/blockchain';
 import { bscTxHashSchema, evmAddressSchema, passwordPolicySchema } from '@navrix/validation';
+import {
+  generateUniqueReferralCode,
+  distributeMultiLevelReferralCommission,
+  getUserReferralOverview,
+  getAdminReferralOverview,
+  getAdminReferralUsers,
+  getAdminReferralAuditCommissions,
+  getAdminReferralTree,
+  adminAssignReferrer,
+} from './referrals/referral.service';
 
 // Safe BigInt JSON serialization for block numbers
 (BigInt.prototype as unknown as { toJSON?: () => string }).toJSON = function () {
@@ -180,6 +190,8 @@ function toPublicUser(user: {
   emailVerified: boolean;
   avatarUrl: string | null;
   twoFactorEnabled: boolean;
+  tutorialEnabled?: boolean;
+  tutorialCompleted?: boolean;
   createdAt: Date | string;
 }) {
   return {
@@ -192,6 +204,8 @@ function toPublicUser(user: {
     emailVerified: user.emailVerified,
     avatarUrl: user.avatarUrl,
     twoFactorEnabled: user.twoFactorEnabled,
+    tutorialEnabled: (user as any).tutorialEnabled ?? true,
+    tutorialCompleted: (user as any).tutorialCompleted ?? false,
     createdAt: user.createdAt instanceof Date ? user.createdAt.toISOString() : user.createdAt,
   };
 }
@@ -219,18 +233,20 @@ async function sendOtpEmail(params: {
   to: string;
   name: string;
   otp: string;
-  purpose: 'VERIFY_EMAIL' | 'RESET_PASSWORD' | 'LOGIN_OTP';
+  purpose: 'VERIFY_EMAIL' | 'RESET_PASSWORD' | 'LOGIN_OTP' | 'PAYOUT_WALLET';
   expiresMinutes: number;
 }): Promise<{ deliveredVia: 'SMTP' | 'DEV_PREVIEW' }> {
   const subjectMap = {
     VERIFY_EMAIL: `${params.otp} is your ${BRAND_CONFIG.name} verification code`,
     RESET_PASSWORD: `${params.otp} is your ${BRAND_CONFIG.name} password reset code`,
     LOGIN_OTP: `${params.otp} is your ${BRAND_CONFIG.name} sign-in code`,
+    PAYOUT_WALLET: `${params.otp} is your ${BRAND_CONFIG.name} withdrawal wallet confirmation code`,
   };
   const titleMap = {
     VERIFY_EMAIL: 'Verify your NAVRIX account',
     RESET_PASSWORD: 'Reset your NAVRIX password',
     LOGIN_OTP: 'Your one-time sign-in code',
+    PAYOUT_WALLET: 'Confirm your withdrawal wallet change',
   };
 
   if (isSmtpConfigured()) {
@@ -281,8 +297,8 @@ async function createAndSendUserOtp(params: {
   userId: string;
   email: string;
   name: string;
-  tokenType: 'EMAIL_VERIFY_OTP' | 'PASSWORD_RESET_OTP' | 'LOGIN_OTP';
-  purpose: 'VERIFY_EMAIL' | 'RESET_PASSWORD' | 'LOGIN_OTP';
+  tokenType: 'EMAIL_VERIFY_OTP' | 'PASSWORD_RESET_OTP' | 'LOGIN_OTP' | 'PAYOUT_WALLET_OTP';
+  purpose: 'VERIFY_EMAIL' | 'RESET_PASSWORD' | 'LOGIN_OTP' | 'PAYOUT_WALLET';
   expiresMinutes: number;
 }) {
   const otp = generateSixDigitOtp();
@@ -801,6 +817,45 @@ router.post(
   }),
 );
 
+// Real-time Referral Code Verification for Registration Preview
+router.get(
+  '/auth/check-referral/:code',
+  asyncHandler(async (req, res) => {
+    const rawCode = String(req.params.code || '').trim();
+    if (!rawCode) {
+      return sendSuccess(res, { valid: false, message: 'No referral code provided.' });
+    }
+
+    const referrer = await prisma.user.findFirst({
+      where: {
+        OR: [{ referralCode: rawCode }, { publicUid: rawCode }],
+      },
+      select: {
+        publicUid: true,
+        name: true,
+        referralCode: true,
+        status: true,
+      },
+    });
+
+    if (!referrer || referrer.status !== UserStatus.ACTIVE) {
+      return sendSuccess(res, { valid: false, message: 'Invalid or inactive referral code.' });
+    }
+
+    const firstName = referrer.name.split(' ')[0] || 'Affiliate';
+    const lastInitial = referrer.name.split(' ')[1]?.[0]
+      ? ` ${referrer.name.split(' ')[1][0]}.`
+      : '';
+
+    return sendSuccess(res, {
+      valid: true,
+      referralCode: referrer.referralCode,
+      referrerUid: referrer.publicUid,
+      referrerName: `${firstName}${lastInitial}`,
+    });
+  }),
+);
+
 // Login with email & password — specific error codes & unverified OTP fallback
 router.post(
   '/auth/login',
@@ -1038,7 +1093,16 @@ router.post(
 router.post(
   '/auth/register',
   asyncHandler(async (req, res) => {
-    const { name, email: rawEmail, password, phone, country, acceptTerms } = req.body || {};
+    const {
+      name,
+      email: rawEmail,
+      password,
+      phone,
+      country,
+      acceptTerms,
+      referralCode,
+      ref,
+    } = req.body || {};
 
     if (!acceptTerms) {
       return sendError(
@@ -1082,11 +1146,27 @@ router.post(
       );
     }
 
+    // Resolve optional referrer
+    const rawRefCode = String(referralCode || ref || '').trim();
+    let referredById: string | null = null;
+    if (rawRefCode) {
+      const refUser = await prisma.user.findFirst({
+        where: {
+          OR: [{ referralCode: rawRefCode }, { publicUid: rawRefCode }],
+        },
+        select: { id: true, status: true },
+      });
+      if (refUser && refUser.status === UserStatus.ACTIVE) {
+        referredById = refUser.id;
+      }
+    }
+
     const passwordHash = await bcrypt.hash(password, 12);
     const now = new Date();
 
     const createdUser = await prisma.$transaction(async (tx) => {
       const publicUid = await nextReadableUid(tx, 'USR', false);
+      const userReferralCode = await generateUniqueReferralCode(tx, publicUid);
       return tx.user.create({
         data: {
           publicUid,
@@ -1094,6 +1174,8 @@ router.post(
           email,
           phone: phone ? String(phone).trim() || null : null,
           passwordHash,
+          referralCode: userReferralCode,
+          referredById,
           role: UserRole.USER,
           status: UserStatus.ACTIVE,
           emailVerified: false,
@@ -1527,6 +1609,310 @@ router.post(
   }),
 );
 
+// Google OAuth 2.0 Redirect Initiation (Directs user to Google authentication)
+router.get(
+  '/auth/google',
+  asyncHandler(async (req, res) => {
+    const rawCid = process.env.GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
+    const isRealGoogleCid =
+      rawCid.endsWith('.apps.googleusercontent.com') &&
+      !rawCid.includes('your-') &&
+      !rawCid.includes('placeholder');
+
+    const ref = typeof req.query.ref === 'string' ? req.query.ref.trim() : '';
+    const portal = typeof req.query.portal === 'string' ? req.query.portal.trim() : '';
+    const stateObj = {
+      nonce: crypto.randomBytes(16).toString('hex'),
+      ref: ref || undefined,
+      portal: portal || undefined,
+    };
+    const state = Buffer.from(JSON.stringify(stateObj)).toString('base64url');
+
+    const host = req.get('host') || 'localhost:3000';
+    const protocol =
+      req.protocol === 'https' || req.get('x-forwarded-proto') === 'https' ? 'https' : 'http';
+    const baseUrl = `${protocol}://${host}`;
+    const redirectUri = `${baseUrl}/api/v1/auth/google/callback`;
+
+    if (isRealGoogleCid) {
+      // Direct browser redirect to Google's official OAuth authorization endpoint
+      const googleAuthUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+      googleAuthUrl.searchParams.set('client_id', rawCid);
+      googleAuthUrl.searchParams.set('redirect_uri', redirectUri);
+      googleAuthUrl.searchParams.set('response_type', 'code');
+      googleAuthUrl.searchParams.set('scope', 'openid email profile');
+      googleAuthUrl.searchParams.set('access_type', 'offline');
+      googleAuthUrl.searchParams.set('prompt', 'select_account');
+      googleAuthUrl.searchParams.set('state', state);
+
+      return res.redirect(googleAuthUrl.toString());
+    }
+
+    // When GOOGLE_CLIENT_ID is not configured, redirect to Google Account Selection page
+    const selectAccountUrl = new URL(`${baseUrl}/auth/google/select-account`);
+    selectAccountUrl.searchParams.set('state', state);
+    selectAccountUrl.searchParams.set('redirect_uri', redirectUri);
+    return res.redirect(selectAccountUrl.toString());
+  }),
+);
+
+// Google OAuth 2.0 Callback (Handles return from Google, provisions/retrieves account & issues session)
+router.get(
+  '/auth/google/callback',
+  asyncHandler(async (req, res) => {
+    const {
+      code,
+      state: rawState,
+      error: googleError,
+      mock_email,
+      mock_name,
+      mock_avatar,
+    } = req.query;
+
+    const host = req.get('host') || 'localhost:3000';
+    const protocol =
+      req.protocol === 'https' || req.get('x-forwarded-proto') === 'https' ? 'https' : 'http';
+    const baseUrl = `${protocol}://${host}`;
+
+    let refCode = '';
+    let portal = '';
+    if (typeof rawState === 'string' && rawState) {
+      try {
+        const decoded = JSON.parse(Buffer.from(rawState, 'base64url').toString('utf8'));
+        refCode = decoded.ref || '';
+        portal = decoded.portal || '';
+      } catch {
+        // ignore
+      }
+    }
+
+    if (googleError) {
+      return res.redirect(
+        `${baseUrl}/login?error=${encodeURIComponent(String(googleError))}&reason=google_cancelled`,
+      );
+    }
+
+    let googleSub = '';
+    let email = '';
+    let name = '';
+    let avatarUrl: string | null = null;
+
+    const rawCid = process.env.GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
+    const rawSecret = process.env.GOOGLE_CLIENT_SECRET || '';
+    const redirectUri = `${baseUrl}/api/v1/auth/google/callback`;
+
+    if (code && typeof code === 'string' && rawCid && rawSecret) {
+      // Exchange authorization code for tokens with Google
+      const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          code,
+          client_id: rawCid,
+          client_secret: rawSecret,
+          redirect_uri: redirectUri,
+          grant_type: 'authorization_code',
+        }),
+      });
+
+      if (!tokenRes.ok) {
+        const errText = await tokenRes.text();
+        console.error('Google token exchange error:', errText);
+        return res.redirect(
+          `${baseUrl}/login?error=Google authentication token exchange failed&reason=oauth_error`,
+        );
+      }
+
+      const tokenData = (await tokenRes.json()) as { access_token?: string };
+      if (!tokenData.access_token) {
+        return res.redirect(
+          `${baseUrl}/login?error=Invalid response from Google&reason=oauth_error`,
+        );
+      }
+
+      // Fetch user profile from Google UserInfo
+      const infoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${tokenData.access_token}` },
+      });
+      if (!infoRes.ok) {
+        return res.redirect(
+          `${baseUrl}/login?error=Failed to retrieve Google profile&reason=oauth_error`,
+        );
+      }
+      const profile = (await infoRes.json()) as {
+        sub?: string;
+        email?: string;
+        name?: string;
+        picture?: string;
+      };
+
+      if (!profile.email || !profile.sub) {
+        return res.redirect(
+          `${baseUrl}/login?error=Google account has no verified email address&reason=oauth_error`,
+        );
+      }
+
+      googleSub = profile.sub;
+      email = profile.email.trim().toLowerCase();
+      name = profile.name || email.split('@')[0] || 'Google User';
+      avatarUrl = profile.picture || null;
+    } else if (mock_email && typeof mock_email === 'string') {
+      // Account selected on Google authentication page
+      email = mock_email.trim().toLowerCase();
+      name = typeof mock_name === 'string' && mock_name ? mock_name.trim() : email.split('@')[0]!;
+      avatarUrl = typeof mock_avatar === 'string' && mock_avatar ? mock_avatar : null;
+      googleSub = `google_${hashToken(email).slice(0, 24)}`;
+    } else {
+      return res.redirect(
+        `${baseUrl}/login?error=No authentication credentials received&reason=missing_code`,
+      );
+    }
+
+    // Lookup or create user in MySQL
+    let user = await prisma.user.findFirst({
+      where: {
+        OR: [{ googleId: googleSub }, { email }],
+      },
+    });
+
+    let isNewUser = false;
+    const now = new Date();
+
+    if (!user) {
+      isNewUser = true;
+      user = await prisma.$transaction(async (tx) => {
+        const publicUid = await nextReadableUid(tx, 'USR', false);
+        const userReferralCode = await generateUniqueReferralCode(tx, publicUid);
+
+        let referrerId: string | null = null;
+        if (refCode) {
+          const referrer = await tx.user.findFirst({
+            where: {
+              OR: [{ referralCode: refCode }, { publicUid: refCode }],
+            },
+            select: { id: true },
+          });
+          if (referrer) {
+            referrerId = referrer.id;
+          }
+        }
+
+        const created = await tx.user.create({
+          data: {
+            publicUid,
+            name,
+            email,
+            referralCode: userReferralCode,
+            referredById: referrerId,
+            googleId: googleSub,
+            avatarUrl,
+            role: portal === 'admin' ? UserRole.ADMIN : UserRole.USER,
+            status: UserStatus.ACTIVE,
+            emailVerified: true,
+            emailVerifiedAt: now,
+            lastLoginAt: now,
+            wallets: {
+              create: {
+                asset: 'USDT',
+                availableBalance: new Prisma.Decimal(0),
+                lockedBalance: new Prisma.Decimal(0),
+                investedBalance: new Prisma.Decimal(0),
+                pendingWithdrawal: new Prisma.Decimal(0),
+              },
+            },
+            complianceProfile: {
+              create: {
+                termsAcceptedAt: now,
+                privacyAcceptedAt: now,
+                riskDisclosureAcceptedAt: now,
+              },
+            },
+          },
+        });
+
+        await notifyUser(
+          {
+            userId: created.id,
+            eventType: 'GOOGLE_ACCOUNT_CREATED',
+            title: 'Welcome to NAVRIX via Google',
+            message: `Your Google account (${created.email}) is linked and your sovereign USDT vault (${created.publicUid}) is ready.`,
+          },
+          tx,
+        );
+
+        return created;
+      });
+    } else {
+      if (user.status === UserStatus.SUSPENDED) {
+        return res.redirect(
+          `${baseUrl}/login?error=Your account has been suspended&reason=account_suspended`,
+        );
+      }
+
+      // Ensure USDT wallet exists
+      const existingWallet = await prisma.wallet.findUnique({
+        where: { userId_asset: { userId: user.id, asset: 'USDT' } },
+      });
+      if (!existingWallet) {
+        await prisma.wallet.create({
+          data: {
+            userId: user.id,
+            asset: 'USDT',
+            availableBalance: new Prisma.Decimal(0),
+            lockedBalance: new Prisma.Decimal(0),
+            investedBalance: new Prisma.Decimal(0),
+            pendingWithdrawal: new Prisma.Decimal(0),
+          },
+        });
+      }
+
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          googleId: user.googleId || googleSub,
+          emailVerified: true,
+          emailVerifiedAt: user.emailVerifiedAt || now,
+          avatarUrl: avatarUrl || user.avatarUrl,
+          failedLoginCount: 0,
+          lockedUntil: null,
+          lastLoginAt: now,
+        },
+      });
+    }
+
+    const meta = getRequestMeta(req);
+    if (isAdminRole(user.role)) {
+      await recordAudit({
+        adminId: user.id,
+        actorRole: user.role,
+        action: AuditAction.ADMIN_LOGIN,
+        targetType: 'USER',
+        targetId: user.publicUid,
+        newValue: { method: 'GOOGLE_OAUTH_REDIRECT' },
+        ipAddress: meta.ipAddress,
+        userAgent: meta.userAgent,
+        requestId: meta.requestId,
+      });
+    }
+
+    const tokens = await issueSessionAndSetCookie(res, user, meta);
+
+    const targetDashboard = isAdminRole(user.role)
+      ? isMasterAdminRole(user.role)
+        ? '/admin/master'
+        : '/admin/dashboard'
+      : '/dashboard';
+
+    const callbackRedirectUrl = new URL(`${baseUrl}/auth/callback`);
+    callbackRedirectUrl.searchParams.set('token', tokens.accessToken);
+    callbackRedirectUrl.searchParams.set('role', user.role);
+    callbackRedirectUrl.searchParams.set('isNew', isNewUser ? '1' : '0');
+    callbackRedirectUrl.searchParams.set('target', targetDashboard);
+
+    return res.redirect(callbackRedirectUrl.toString());
+  }),
+);
+
 // Google OAuth 2.0 Sign-In / Sign-Up (Supports Live Google Access Token, Live ID Token, & Browser Account Chooser)
 router.post(
   '/auth/google',
@@ -1640,11 +2026,13 @@ router.post(
       isNewUser = true;
       user = await prisma.$transaction(async (tx) => {
         const publicUid = await nextReadableUid(tx, 'USR', false);
+        const userReferralCode = await generateUniqueReferralCode(tx, publicUid);
         const created = await tx.user.create({
           data: {
             publicUid,
             name,
             email,
+            referralCode: userReferralCode,
             googleId: googleSub,
             avatarUrl,
             role: UserRole.USER,
@@ -2475,13 +2863,41 @@ router.post(
     }
 
     const amount = Number(req.body?.amount);
-    const addrCheck = evmAddressSchema.safeParse(req.body?.destinationAddress);
+
+    // Destination is ALWAYS the user's registered payout wallet (Wallet ID) — never a
+    // client-supplied address — so a hijacked session cannot redirect funds per-request.
+    const payoutOwner = await prisma.user.findUniqueOrThrow({
+      where: { id: req.userId! },
+      select: {
+        payoutWalletAddress: true,
+        payoutWalletNetwork: true,
+        payoutWalletLockUntil: true,
+      },
+    });
+    if (!payoutOwner.payoutWalletAddress) {
+      return sendError(
+        res,
+        'PAYOUT_WALLET_REQUIRED',
+        'Add your withdrawal Wallet ID in Profile Settings before requesting a withdrawal.',
+        400,
+      );
+    }
+    const addrCheck = evmAddressSchema.safeParse(payoutOwner.payoutWalletAddress);
     if (!addrCheck.success) {
       return sendError(
         res,
-        'INVALID_WALLET_ADDRESS',
-        addrCheck.error.issues[0]?.message || 'Enter a valid BEP-20 destination wallet address.',
+        'PAYOUT_WALLET_INVALID',
+        'Your saved Wallet ID is no longer valid. Please update it in Profile Settings.',
         400,
+      );
+    }
+    if (payoutOwner.payoutWalletLockUntil && payoutOwner.payoutWalletLockUntil > new Date()) {
+      return sendError(
+        res,
+        'PAYOUT_WALLET_SECURITY_HOLD',
+        `Your Wallet ID was recently changed. For your security, withdrawals are on hold until ${payoutOwner.payoutWalletLockUntil.toISOString()}.`,
+        423,
+        { lockUntil: payoutOwner.payoutWalletLockUntil.toISOString() },
       );
     }
 
@@ -2529,7 +2945,7 @@ router.post(
           feeAmount: new Prisma.Decimal(0),
           netAmount: amountDecimal,
           asset: 'USDT',
-          network: 'BNB_SMART_CHAIN',
+          network: payoutOwner.payoutWalletNetwork || 'BNB_SMART_CHAIN',
           destinationAddress: addrCheck.data,
           status: WithdrawalStatus.PENDING_REVIEW,
         },
@@ -2590,6 +3006,19 @@ async function buildMePayload(userId: string) {
     emailVerified: user.emailVerified,
     avatarUrl: user.avatarUrl,
     twoFactorEnabled: user.twoFactorEnabled,
+    tutorialEnabled: user.tutorialEnabled,
+    tutorialCompleted: user.tutorialCompleted,
+    tutorialCompletedAt: user.tutorialCompletedAt ? user.tutorialCompletedAt.toISOString() : null,
+    hasPassword: Boolean(user.passwordHash),
+    payoutWallet: {
+      address: user.payoutWalletAddress,
+      network: user.payoutWalletNetwork,
+      updatedAt: user.payoutWalletUpdatedAt ? user.payoutWalletUpdatedAt.toISOString() : null,
+      lockUntil:
+        user.payoutWalletLockUntil && user.payoutWalletLockUntil > new Date()
+          ? user.payoutWalletLockUntil.toISOString()
+          : null,
+    },
     lastLoginAt: user.lastLoginAt,
     createdAt: user.createdAt,
     compliance: user.complianceProfile
@@ -2628,6 +3057,220 @@ router.patch(
       },
     });
     return sendSuccess(res, await buildMePayload(req.userId!));
+  }),
+);
+
+// Update or Reset Tutorial Mode (Persistent per user/admin)
+router.patch(
+  '/users/me/tutorial',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const { tutorialEnabled, tutorialCompleted, reset } = req.body || {};
+    const now = new Date();
+
+    const updateData: Prisma.UserUpdateInput = {};
+
+    if (reset === true) {
+      updateData.tutorialCompleted = false;
+      updateData.tutorialCompletedAt = null;
+      updateData.tutorialEnabled = true;
+    } else {
+      if (tutorialEnabled !== undefined) {
+        updateData.tutorialEnabled = Boolean(tutorialEnabled);
+      }
+      if (tutorialCompleted !== undefined) {
+        updateData.tutorialCompleted = Boolean(tutorialCompleted);
+        updateData.tutorialCompletedAt = tutorialCompleted ? now : null;
+      }
+    }
+
+    await prisma.user.update({
+      where: { id: req.userId },
+      data: updateData,
+    });
+
+    return sendSuccess(res, await buildMePayload(req.userId!));
+  }),
+);
+
+// =============================================================================
+// PAYOUT WALLET (WALLET ID) — mandatory destination for every withdrawal
+// =============================================================================
+const PAYOUT_WALLET_CHANGE_LOCK_HOURS = Math.max(
+  0,
+  Number(process.env.PAYOUT_WALLET_CHANGE_LOCK_HOURS ?? 0),
+);
+
+// Step 1 (optional): email a 6-digit confirmation code (used when the account has no
+// password, e.g. Google sign-in accounts, or when the user prefers email verification)
+router.post(
+  '/users/me/payout-wallet/otp',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: req.userId! } });
+    const dispatch = await createAndSendUserOtp({
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+      tokenType: 'PAYOUT_WALLET_OTP',
+      purpose: 'PAYOUT_WALLET',
+      expiresMinutes: 10,
+    });
+    return sendSuccess(res, {
+      otpSent: true,
+      maskedEmail: maskEmail(user.email),
+      expiresInSeconds: 600,
+      otpPreview: dispatch.otpPreview,
+    });
+  }),
+);
+
+// Step 2: save / update the Wallet ID after password or email-OTP re-verification
+router.put(
+  '/users/me/payout-wallet',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const { address, confirmAddress, password, otp } = req.body || {};
+
+    const addrCheck = evmAddressSchema.safeParse(String(address || '').trim());
+    if (!addrCheck.success) {
+      return sendError(
+        res,
+        'INVALID_WALLET_ADDRESS',
+        addrCheck.error.issues[0]?.message ||
+          'Enter a valid BEP-20 wallet address (0x followed by 40 hex characters).',
+        400,
+      );
+    }
+    const newAddress = addrCheck.data;
+
+    if (
+      confirmAddress !== undefined &&
+      String(confirmAddress).trim().toLowerCase() !== newAddress.toLowerCase()
+    ) {
+      return sendError(res, 'WALLET_CONFIRMATION_MISMATCH', 'Wallet IDs do not match.', 400);
+    }
+
+    if (/^0x0{40}$/i.test(newAddress)) {
+      return sendError(
+        res,
+        'INVALID_WALLET_ADDRESS',
+        'The zero address cannot receive funds.',
+        400,
+      );
+    }
+
+    const runtime = await getRuntimeSettings();
+    const blockedAddresses = [runtime.receivingWalletAddress, runtime.usdtContractAddress]
+      .filter(Boolean)
+      .map((a) => String(a).toLowerCase());
+    if (blockedAddresses.includes(newAddress.toLowerCase())) {
+      return sendError(
+        res,
+        'INVALID_WALLET_ADDRESS',
+        'This address belongs to the platform and cannot be used as your personal Wallet ID.',
+        400,
+      );
+    }
+
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: req.userId! } });
+
+    if (user.payoutWalletAddress?.toLowerCase() === newAddress.toLowerCase()) {
+      return sendError(
+        res,
+        'WALLET_UNCHANGED',
+        'This Wallet ID is already saved on your account.',
+        400,
+      );
+    }
+
+    // Re-verification: current password OR a fresh 6-digit email code
+    let verifiedVia: 'PASSWORD' | 'EMAIL_OTP' | null = null;
+    const otpDigits = String(otp || '').replace(/\D/g, '');
+    if (otpDigits.length === 6) {
+      const tokenHash = hashOtpForUser(user.id, 'PAYOUT_WALLET_OTP', otpDigits);
+      const token = await prisma.authToken.findUnique({ where: { tokenHash } });
+      if (!token || token.userId !== user.id || token.usedAt || token.expiresAt < new Date()) {
+        return sendError(
+          res,
+          'INVALID_OR_EXPIRED_OTP',
+          'Invalid or expired 6-digit code. Request a new code and try again.',
+          400,
+        );
+      }
+      await prisma.authToken.update({ where: { id: token.id }, data: { usedAt: new Date() } });
+      verifiedVia = 'EMAIL_OTP';
+    } else if (password) {
+      if (!user.passwordHash || !(await bcrypt.compare(String(password), user.passwordHash))) {
+        return sendError(res, 'PASSWORD_MISMATCH', 'Current password is incorrect.', 401);
+      }
+      verifiedVia = 'PASSWORD';
+    }
+    if (!verifiedVia) {
+      return sendError(
+        res,
+        'REVERIFICATION_REQUIRED',
+        user.passwordHash
+          ? 'Confirm this change with your current password or a 6-digit email code.'
+          : 'Confirm this change with the 6-digit code sent to your email.',
+        401,
+      );
+    }
+
+    const now = new Date();
+    const isChange = Boolean(user.payoutWalletAddress);
+    const lockUntil =
+      isChange && PAYOUT_WALLET_CHANGE_LOCK_HOURS > 0
+        ? new Date(now.getTime() + PAYOUT_WALLET_CHANGE_LOCK_HOURS * 3_600_000)
+        : null;
+    const meta = getRequestMeta(req);
+
+    await prisma.$transaction(async (tx) => {
+      await tx.user.update({
+        where: { id: user.id },
+        data: {
+          payoutWalletAddress: newAddress,
+          payoutWalletNetwork: 'BNB_SMART_CHAIN',
+          payoutWalletUpdatedAt: now,
+          payoutWalletLockUntil: lockUntil,
+        },
+      });
+
+      await recordAudit(
+        {
+          adminId: null,
+          actorRole: user.role,
+          action: AuditAction.PAYOUT_WALLET_UPDATED,
+          targetType: 'USER',
+          targetId: user.publicUid,
+          oldValue: { payoutWalletAddress: user.payoutWalletAddress },
+          newValue: { payoutWalletAddress: newAddress, verifiedVia, lockUntil },
+          ipAddress: meta.ipAddress,
+          userAgent: meta.userAgent,
+          requestId: meta.requestId,
+        },
+        tx,
+      );
+
+      await notifyUser(
+        {
+          userId: user.id,
+          eventType: NotificationEventType.PAYOUT_WALLET_UPDATED,
+          title: isChange ? 'Withdrawal Wallet ID Changed' : 'Withdrawal Wallet ID Saved',
+          message: isChange
+            ? `Your withdrawal Wallet ID was changed to ${newAddress.slice(0, 8)}…${newAddress.slice(-6)}.${
+                lockUntil
+                  ? ` Withdrawals are on a security hold until ${lockUntil.toUTCString()}.`
+                  : ''
+              } If this was not you, contact support immediately.`
+            : `Your withdrawal Wallet ID ${newAddress.slice(0, 8)}…${newAddress.slice(-6)} is now registered.`,
+          metadata: { verifiedVia, lockUntil: lockUntil?.toISOString() ?? null },
+        },
+        tx,
+      );
+    });
+
+    return sendSuccess(res, await buildMePayload(user.id));
   }),
 );
 
@@ -2713,6 +3356,105 @@ router.post(
       data: { isRead: true, readAt: new Date() },
     });
     return sendSuccess(res, { marked: true });
+  }),
+);
+
+// =============================================================================
+// 9. MULTI-LEVEL REFERRALS & EARN SYSTEM (/referrals)
+// =============================================================================
+router.get(
+  '/referrals/overview',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const origin = `${req.protocol}://${req.get('host') || 'localhost:3000'}`;
+    const overview = await getUserReferralOverview(req.userId!, origin);
+    return sendSuccess(res, overview);
+  }),
+);
+
+// =============================================================================
+// ADMIN: REFERRAL CHAIN MANAGEMENT (/admin/referrals)
+// =============================================================================
+router.get(
+  '/admin/referrals/overview',
+  requireAuth,
+  requireAdmin,
+  asyncHandler(async (_req, res) => {
+    const overview = await getAdminReferralOverview();
+    return sendSuccess(res, overview);
+  }),
+);
+
+router.get(
+  '/admin/referrals/users',
+  requireAuth,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const search = req.query.search ? String(req.query.search) : undefined;
+    const levelFilter = req.query.level ? Number(req.query.level) : undefined;
+    const limit = Math.min(100, Math.max(1, Number(req.query.limit || 50)));
+    const offset = Math.max(0, Number(req.query.offset || 0));
+
+    const result = await getAdminReferralUsers({ search, levelFilter, limit, offset });
+    return sendSuccess(res, result);
+  }),
+);
+
+router.get(
+  '/admin/referrals/tree',
+  requireAuth,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const rootUserId = req.query.rootUserId ? String(req.query.rootUserId) : undefined;
+    const maxDepth = Math.min(10, Math.max(1, Number(req.query.maxDepth || 10)));
+    const result = await getAdminReferralTree(rootUserId, maxDepth);
+    return sendSuccess(res, result);
+  }),
+);
+
+router.get(
+  '/admin/referrals/commissions',
+  requireAuth,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const search = req.query.search ? String(req.query.search) : undefined;
+    const level = req.query.level ? Number(req.query.level) : undefined;
+    const limit = Math.min(100, Math.max(1, Number(req.query.limit || 50)));
+    const offset = Math.max(0, Number(req.query.offset || 0));
+
+    const result = await getAdminReferralAuditCommissions({ search, level, limit, offset });
+    return sendSuccess(res, result);
+  }),
+);
+
+router.post(
+  '/admin/referrals/assign-referrer',
+  requireAuth,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const { targetUserId, referrerCodeOrUid } = req.body || {};
+    if (!targetUserId || !referrerCodeOrUid) {
+      return sendError(
+        res,
+        'MISSING_PARAMS',
+        'targetUserId and referrerCodeOrUid are required.',
+        400,
+      );
+    }
+
+    const meta = getRequestMeta(req);
+    try {
+      const result = await adminAssignReferrer({
+        targetUserId: String(targetUserId),
+        referrerCodeOrUid: String(referrerCodeOrUid),
+        adminId: req.userId!,
+        actorRole: req.user.role,
+        meta,
+      });
+      return sendSuccess(res, result);
+    } catch (err: any) {
+      return sendError(res, 'ASSIGN_FAILED', err.message || 'Failed to assign referrer.', 400);
+    }
   }),
 );
 
@@ -2854,7 +3596,7 @@ router.get(
         usdtBalance: '0.00',
         bnbBalance: '0.0000',
         blockNumber: 0,
-        mode: getBlockchainMode(),
+        mode: runtime.blockchainMode,
       })),
       prisma.user.groupBy({ by: ['role'], _count: { _all: true } }),
       prisma.userSession.count({
@@ -2966,6 +3708,9 @@ router.get(
         twoFactorEnabled: true,
         lastLoginAt: true,
         createdAt: true,
+        payoutWalletAddress: true,
+        payoutWalletNetwork: true,
+        payoutWalletUpdatedAt: true,
         wallets: {
           select: {
             asset: true,
@@ -2977,6 +3722,76 @@ router.get(
       },
     });
     return sendSuccess(res, users);
+  }),
+);
+
+// Admin: full user details (profile, balances, registered Wallet ID, referrer, recent withdrawals)
+router.get(
+  '/admin/users/:uid',
+  requireAuth,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const uid = String(req.params.uid);
+    const user = await prisma.user.findFirst({
+      where: { OR: [{ publicUid: uid }, { email: uid.toLowerCase() }] },
+      select: {
+        publicUid: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        status: true,
+        emailVerified: true,
+        twoFactorEnabled: true,
+        googleId: true,
+        referralCode: true,
+        lastLoginAt: true,
+        createdAt: true,
+        payoutWalletAddress: true,
+        payoutWalletNetwork: true,
+        payoutWalletUpdatedAt: true,
+        payoutWalletLockUntil: true,
+        referrer: { select: { publicUid: true, name: true, email: true } },
+        complianceProfile: { select: { kycStatus: true, country: true } },
+        wallets: {
+          select: {
+            asset: true,
+            availableBalance: true,
+            lockedBalance: true,
+            investedBalance: true,
+            pendingWithdrawal: true,
+          },
+        },
+        withdrawals: {
+          orderBy: { createdAt: 'desc' },
+          take: 10,
+          select: {
+            withdrawalUid: true,
+            amount: true,
+            netAmount: true,
+            destinationAddress: true,
+            status: true,
+            transactionHash: true,
+            createdAt: true,
+          },
+        },
+        _count: {
+          select: { referrals: true, investments: true, deposits: true, withdrawals: true },
+        },
+      },
+    });
+    if (!user) {
+      return sendError(res, 'USER_NOT_FOUND', 'User not found.', 404);
+    }
+    const { googleId, ...rest } = user;
+    return sendSuccess(res, {
+      ...rest,
+      hasGoogle: Boolean(googleId),
+      payoutWalletLockUntil:
+        user.payoutWalletLockUntil && user.payoutWalletLockUntil > new Date()
+          ? user.payoutWalletLockUntil
+          : null,
+    });
   }),
 );
 
@@ -3392,6 +4207,17 @@ router.post(
         },
       });
 
+      // Multi-Level Referral & Earn System (Automatic distribution up to 10 Levels)
+      // Level 1: 8%, Level 2: 4%, Level 3-5: 2%, Level 6-10: 1%
+      await distributeMultiLevelReferralCommission(tx, {
+        investmentId: investment.id,
+        investmentUid: investment.investmentUid,
+        investorUserId: dep.userId,
+        principalAmount: authoritativeAmount,
+        adminUserId: req.userId,
+        meta,
+      });
+
       await recordAudit(
         {
           adminId: req.userId,
@@ -3721,7 +4547,15 @@ router.get(
       where: status ? { status: status as WithdrawalStatus } : undefined,
       orderBy: { createdAt: 'desc' },
       include: {
-        user: { select: { publicUid: true, name: true, email: true } },
+        user: {
+          select: {
+            publicUid: true,
+            name: true,
+            email: true,
+            payoutWalletAddress: true,
+            payoutWalletUpdatedAt: true,
+          },
+        },
         admin: { select: { publicUid: true, name: true } },
       },
     });
@@ -4127,6 +4961,17 @@ router.put(
     return sendSuccess(res, updated);
   }),
 );
+
+// Convenience redirects for root OAuth endpoints
+app.get('/auth/google', (req, res) => {
+  const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+  res.redirect(`/api/v1/auth/google${query}`);
+});
+
+app.get('/auth/google/callback', (req, res) => {
+  const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+  res.redirect(`/api/v1/auth/google/callback${query}`);
+});
 
 app.use('/api/v1', router);
 

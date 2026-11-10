@@ -16,6 +16,7 @@ import {
   Menu,
   ScrollText,
   Settings,
+  Share2,
   ShieldAlert,
   TrendingUp,
   Users,
@@ -27,6 +28,7 @@ import { Button, cn, DecryptedText, MobileDock, type MobileDockItem } from '@nav
 import { useAdminStore } from '../store/admin-store';
 import { adminApi } from '../lib/api';
 import { AdminHeader } from './AdminHeader';
+import { InteractiveTutorialTour } from '../../components/InteractiveTutorialTour';
 import styles from './admin-shell.module.css';
 
 const UNIFIED_LOGIN_URL = '/login';
@@ -38,6 +40,7 @@ interface AdminNavGroup {
     label: string;
     icon: React.ComponentType<{ className?: string }>;
     masterOnly: boolean;
+    tourId?: string;
   }>;
 }
 
@@ -45,7 +48,13 @@ const ADMIN_GROUPS: AdminNavGroup[] = [
   {
     heading: 'Command',
     items: [
-      { href: '/admin/dashboard', label: 'Ops Deck', icon: LayoutDashboard, masterOnly: false },
+      {
+        href: '/admin/dashboard',
+        label: 'Ops Deck',
+        icon: LayoutDashboard,
+        masterOnly: false,
+        tourId: 'admin-command-deck',
+      },
       { href: '/admin/master', label: 'Master Command', icon: Crown, masterOnly: true },
     ],
   },
@@ -57,14 +66,22 @@ const ADMIN_GROUPS: AdminNavGroup[] = [
         label: 'Deposits Queue',
         icon: ArrowDownToLine,
         masterOnly: false,
+        tourId: 'admin-deposits',
       },
       {
         href: '/admin/withdrawals',
         label: 'Withdrawals',
         icon: ArrowUpFromLine,
         masterOnly: false,
+        tourId: 'admin-withdrawals',
       },
-      { href: '/admin/investments', label: 'Investments', icon: TrendingUp, masterOnly: false },
+      {
+        href: '/admin/investments',
+        label: 'Investments',
+        icon: TrendingUp,
+        masterOnly: false,
+        tourId: 'admin-investments',
+      },
       { href: '/admin/interest', label: 'Interest Engine', icon: Coins, masterOnly: false },
     ],
   },
@@ -73,10 +90,18 @@ const ADMIN_GROUPS: AdminNavGroup[] = [
     items: [
       { href: '/admin/users', label: 'Customers', icon: Users, masterOnly: false },
       {
+        href: '/admin/referrals',
+        label: 'Referral Chain',
+        icon: Share2,
+        masterOnly: false,
+        tourId: 'admin-referrals',
+      },
+      {
         href: '/admin/ledger',
         label: 'Double-Entry Ledger',
         icon: FileSpreadsheet,
         masterOnly: false,
+        tourId: 'admin-ledger',
       },
       {
         href: '/admin/blockchain-transactions',
@@ -91,7 +116,13 @@ const ADMIN_GROUPS: AdminNavGroup[] = [
     heading: 'Governance',
     items: [
       { href: '/admin/admin-users', label: 'Admin RBAC', icon: ShieldAlert, masterOnly: true },
-      { href: '/admin/settings', label: 'System Params', icon: Settings, masterOnly: true },
+      {
+        href: '/admin/settings',
+        label: 'System Params',
+        icon: Settings,
+        masterOnly: true,
+        tourId: 'admin-settings',
+      },
     ],
   },
 ];
@@ -281,6 +312,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                         key={item.href}
                         href={item.href}
                         onClick={() => setMobileOpen(false)}
+                        data-tour={item.tourId}
                         className={cn(styles.navLink, active && styles.navLinkActive)}
                       >
                         <Icon className="h-[15px] w-[15px] shrink-0" />
@@ -337,6 +369,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       <div className={styles.mobileDockWrap}>
         <MobileDock items={dockItems} dockId="nv-admin-dock" />
       </div>
+
+      {/* Interactive Step-by-Step Operator & Review Tour */}
+      <InteractiveTutorialTour />
     </div>
   );
 }

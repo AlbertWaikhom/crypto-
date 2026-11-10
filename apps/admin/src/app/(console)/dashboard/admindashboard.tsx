@@ -189,68 +189,70 @@ export default function AdminDashboardPage() {
   return (
     <div className={styles.deckGrid}>
       {/* Row 1: Compact Single-Line Operations Bar */}
-      <StarBorder color="#F5B82E" speed="8s">
-        <AuroraBackground variant="emerald" intensity="vivid" className={styles.heroStrip}>
-          <div className={styles.heroLeft}>
-            <div className={styles.metaRow}>
-              <span className={styles.opsTag}>
-                <ShinyText text="TREASURY OPS DECK" />
-              </span>
-              <span className={overdueReviews > 0 ? styles.slaAlert : styles.slaHealthy}>
-                {overdueReviews > 0 ? (
-                  <>
-                    <AlertTriangle className="h-3 w-3" />
-                    {overdueReviews} Over 24h SLA
-                  </>
-                ) : (
-                  <>
-                    <ShieldCheck className="h-3 w-3" />
-                    24h SLA Healthy
-                  </>
-                )}
-              </span>
+      <div data-tour="admin-command-deck">
+        <StarBorder color="#F5B82E" speed="8s">
+          <AuroraBackground variant="emerald" intensity="vivid" className={styles.heroStrip}>
+            <div className={styles.heroLeft}>
+              <div className={styles.metaRow}>
+                <span className={styles.opsTag}>
+                  <ShinyText text="TREASURY OPS DECK" />
+                </span>
+                <span className={overdueReviews > 0 ? styles.slaAlert : styles.slaHealthy}>
+                  {overdueReviews > 0 ? (
+                    <>
+                      <AlertTriangle className="h-3 w-3" />
+                      {overdueReviews} Over 24h SLA
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="h-3 w-3" />
+                      24h SLA Healthy
+                    </>
+                  )}
+                </span>
+              </div>
+
+              <div className={styles.flowLine}>
+                <span className={styles.flowNumber}>
+                  {isLoading ? (
+                    <span className="opacity-50">0.00</span>
+                  ) : (
+                    <GradientText variant="sovereign">
+                      <CountUp value={netRetained} decimals={2} />
+                    </GradientText>
+                  )}
+                  <span className={styles.flowUnit}>USDT Net Retained Flow</span>
+                </span>
+              </div>
             </div>
 
-            <div className={styles.flowLine}>
-              <span className={styles.flowNumber}>
-                {isLoading ? (
-                  <span className="opacity-50">0.00</span>
-                ) : (
-                  <GradientText variant="sovereign">
-                    <CountUp value={netRetained} decimals={2} />
-                  </GradientText>
-                )}
-                <span className={styles.flowUnit}>USDT Net Retained Flow</span>
-              </span>
+            <div className={styles.quickBar}>
+              <button type="button" onClick={() => refetch()} className={styles.syncPill}>
+                <RefreshCw
+                  className={`h-3.5 w-3.5 ${isFetching ? 'animate-spin text-amber-400' : ''}`}
+                />
+                <span>Sync</span>
+              </button>
+              <Link href="/admin/deposits" className={styles.pillPrimary}>
+                <ArrowDownToLine className="h-3.5 w-3.5" />
+                <span>Deposits ({pendingDeposits})</span>
+              </Link>
+              <Link href="/admin/withdrawals" className={styles.pillSecondary}>
+                <ArrowUpFromLine className="h-3.5 w-3.5 text-sky-400" />
+                <span>Payouts ({pendingWithdrawals})</span>
+              </Link>
+              <Link href="/admin/interest" className={styles.pillSecondary}>
+                <Coins className="h-3.5 w-3.5 text-emerald-400" />
+                <span>Interest</span>
+              </Link>
+              <Link href="/admin/ledger" className={styles.pillSecondary}>
+                <FileSpreadsheet className="h-3.5 w-3.5 text-amber-400" />
+                <span>Ledger</span>
+              </Link>
             </div>
-          </div>
-
-          <div className={styles.quickBar}>
-            <button type="button" onClick={() => refetch()} className={styles.syncPill}>
-              <RefreshCw
-                className={`h-3.5 w-3.5 ${isFetching ? 'animate-spin text-amber-400' : ''}`}
-              />
-              <span>Sync</span>
-            </button>
-            <Link href="/deposits" className={styles.pillPrimary}>
-              <ArrowDownToLine className="h-3.5 w-3.5" />
-              <span>Deposits ({pendingDeposits})</span>
-            </Link>
-            <Link href="/withdrawals" className={styles.pillSecondary}>
-              <ArrowUpFromLine className="h-3.5 w-3.5 text-sky-400" />
-              <span>Payouts ({pendingWithdrawals})</span>
-            </Link>
-            <Link href="/interest" className={styles.pillSecondary}>
-              <Coins className="h-3.5 w-3.5 text-emerald-400" />
-              <span>Interest</span>
-            </Link>
-            <Link href="/ledger" className={styles.pillSecondary}>
-              <FileSpreadsheet className="h-3.5 w-3.5 text-amber-400" />
-              <span>Ledger</span>
-            </Link>
-          </div>
-        </AuroraBackground>
-      </StarBorder>
+          </AuroraBackground>
+        </StarBorder>
+      </div>
 
       {/* Row 2: Compact 4x2 Telemetry Ribbon */}
       <section className={styles.kpiGrid}>
@@ -288,7 +290,7 @@ export default function AdminDashboardPage() {
               <h2 className={styles.cardTitle}>Capital Flow Volume</h2>
               <p className={styles.cardSub}>Settled MySQL totals (USDT)</p>
             </div>
-            <Link href="/ledger" className={styles.textLink}>
+            <Link href="/admin/ledger" className={styles.textLink}>
               Ledger
               <ArrowUpRight className="h-3 w-3" />
             </Link>
@@ -354,25 +356,25 @@ export default function AdminDashboardPage() {
               {
                 label: 'Deposit Reviews',
                 count: pendingDeposits,
-                href: '/deposits',
+                href: '/admin/deposits',
                 color: '#f5b82e',
               },
               {
                 label: 'Withdrawal Payouts',
                 count: pendingWithdrawals,
-                href: '/withdrawals',
+                href: '/admin/withdrawals',
                 color: '#38bdf8',
               },
               {
                 label: 'Approved Deposits',
                 count: approvedDeposits,
-                href: '/deposits',
+                href: '/admin/deposits',
                 color: '#10b981',
               },
               {
                 label: 'Overdue >24h SLA',
                 count: overdueReviews,
-                href: '/deposits',
+                href: '/admin/deposits',
                 color: overdueReviews > 0 ? '#f43f5e' : '#10b981',
               },
             ].map((row) => (
@@ -401,7 +403,7 @@ export default function AdminDashboardPage() {
               layoutGroupId="nv-compact-admin-tabs"
             />
             <Link
-              href={queueTab === 'deposits' ? '/deposits' : '/withdrawals'}
+              href={queueTab === 'deposits' ? '/admin/deposits' : '/admin/withdrawals'}
               className={styles.textLink}
             >
               Open Queue
@@ -417,7 +419,7 @@ export default function AdminDashboardPage() {
                 recentDeposits.map((d) => (
                   <Link
                     key={d.depositUid}
-                    href={`/deposits/${d.depositUid}`}
+                    href={`/admin/deposits/${d.depositUid}`}
                     className={styles.queueRow}
                   >
                     <div className="min-w-0">
@@ -437,7 +439,7 @@ export default function AdminDashboardPage() {
               <p className={styles.emptyText}>No withdrawal requests in queue.</p>
             ) : (
               recentWithdrawals.map((w) => (
-                <Link key={w.withdrawalUid} href="/withdrawals" className={styles.queueRow}>
+                <Link key={w.withdrawalUid} href="/admin/withdrawals" className={styles.queueRow}>
                   <div className="min-w-0">
                     <div className={styles.rowUid}>{w.withdrawalUid}</div>
                     <div className={styles.rowUser}>
