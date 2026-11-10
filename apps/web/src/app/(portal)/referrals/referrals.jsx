@@ -64,7 +64,7 @@ export default function ReferralsPage() {
     queryFn: () => apiRequest('/referrals/overview'),
   });
 
-  const referralData = data?.data;
+  const referralData = data?.data || data;
 
   // Initialize all nodes as expanded by default on first load
   React.useEffect(() => {
