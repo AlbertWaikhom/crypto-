@@ -30,6 +30,13 @@ export default function AuthCallbackPage() {
     const token = searchParams.get('token');
     const isNew = searchParams.get('isNew') === '1';
 
+    // If Google redirected directly with authorization code, forward to exchange endpoint
+    const code = searchParams.get('code');
+    if (code) {
+      window.location.href = `/api/v1/auth/google/callback${window.location.search}`;
+      return;
+    }
+
     if (!token) {
       setErrorMsg('No authentication token received.');
       const t = setTimeout(() => router.replace('/login'), 2000);

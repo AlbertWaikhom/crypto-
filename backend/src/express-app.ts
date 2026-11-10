@@ -1619,20 +1619,22 @@ router.get(
       !rawCid.includes('your-') &&
       !rawCid.includes('placeholder');
 
-    const ref = typeof req.query.ref === 'string' ? req.query.ref.trim() : '';
-    const portal = typeof req.query.portal === 'string' ? req.query.portal.trim() : '';
-    const stateObj = {
-      nonce: crypto.randomBytes(16).toString('hex'),
-      ref: ref || undefined,
-      portal: portal || undefined,
-    };
-    const state = Buffer.from(JSON.stringify(stateObj)).toString('base64url');
-
     const host = req.get('host') || 'localhost:3000';
     const protocol =
       req.protocol === 'https' || req.get('x-forwarded-proto') === 'https' ? 'https' : 'http';
     const baseUrl = `${protocol}://${host}`;
-    const redirectUri = `${baseUrl}/api/v1/auth/google/callback`;
+    const redirectUri = process.env.GOOGLE_CALLBACK_URL || `${baseUrl}/api/v1/auth/google/callback`;
+
+    const ref = typeof req.query.ref === 'string' ? req.query.ref.trim() : '';
+    const portal = typeof req.query.portal === 'string' ? req.query.portal.trim() : '';
+
+    const stateObj = {
+      nonce: crypto.randomBytes(16).toString('hex'),
+      ref: ref || undefined,
+      portal: portal || undefined,
+      redirectUri,
+    };
+    const state = Buffer.from(JSON.stringify(stateObj)).toString('base64url');
 
     if (isRealGoogleCid) {
       // Direct browser redirect to Google's official OAuth authorization endpoint
@@ -1676,11 +1678,15 @@ router.get(
 
     let refCode = '';
     let portal = '';
+    let redirectUri = process.env.GOOGLE_CALLBACK_URL || `${baseUrl}/api/v1/auth/google/callback`;
     if (typeof rawState === 'string' && rawState) {
       try {
         const decoded = JSON.parse(Buffer.from(rawState, 'base64url').toString('utf8'));
         refCode = decoded.ref || '';
         portal = decoded.portal || '';
+        if (decoded.redirectUri) {
+          redirectUri = decoded.redirectUri;
+        }
       } catch {
         // ignore
       }
@@ -1699,7 +1705,6 @@ router.get(
 
     const rawCid = process.env.GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
     const rawSecret = process.env.GOOGLE_CLIENT_SECRET || '';
-    const redirectUri = `${baseUrl}/api/v1/auth/google/callback`;
 
     if (code && typeof code === 'string' && rawCid && rawSecret) {
       // Exchange authorization code for tokens with Google
@@ -1718,8 +1723,15 @@ router.get(
       if (!tokenRes.ok) {
         const errText = await tokenRes.text();
         console.error('Google token exchange error:', errText);
+        let detail = 'oauth_error';
+        try {
+          const parsed = JSON.parse(errText);
+          detail = parsed.error_description || parsed.error || errText;
+        } catch {
+          detail = errText;
+        }
         return res.redirect(
-          `${baseUrl}/login?error=Google authentication token exchange failed&reason=oauth_error`,
+          `${baseUrl}/login?error=${encodeURIComponent('Google authentication failed: ' + detail)}&reason=oauth_error`,
         );
       }
 
@@ -4971,6 +4983,14 @@ app.get('/auth/google', (req, res) => {
 app.get('/auth/google/callback', (req, res) => {
   const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
   res.redirect(`/api/v1/auth/google/callback${query}`);
+});
+
+app.get('/auth/callback', (req, res, next) => {
+  if (req.query.code || req.query.error) {
+    const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+    return res.redirect(`/api/v1/auth/google/callback${query}`);
+  }
+  next();
 });
 
 app.use('/api/v1', router);
