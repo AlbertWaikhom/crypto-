@@ -288,7 +288,11 @@ export function PortalShell({ children }) {
         />
 
         <main className={styles.contentScrollArea}>
-          <div className={styles.contentInner}>{children}</div>
+          <div className={styles.contentInner}>
+            {children}
+            {/* Native Mobile Dock Safe-Area Clearance Spacer across all customer views */}
+            <div className={styles.mobileDockClearance} aria-hidden="true" />
+          </div>
         </main>
       </div>
 

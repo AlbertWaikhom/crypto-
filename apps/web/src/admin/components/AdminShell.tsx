@@ -378,7 +378,11 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         />
 
         <main className={styles.contentScrollArea}>
-          <div className={styles.contentInner}>{children}</div>
+          <div className={styles.contentInner}>
+            {children}
+            {/* Native Mobile Dock Safe-Area Clearance Spacer across all admin views */}
+            <div className={styles.mobileDockClearance} aria-hidden="true" />
+          </div>
         </main>
       </div>
 
