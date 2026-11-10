@@ -26,7 +26,11 @@
     "db:push": "pnpm --filter @navrix/database db:push",
     "db:seed": "pnpm --filter @navrix/database db:seed",
     "db:setup": "pnpm --filter @navrix/database db:setup",
-    "prepare": "husky || true"
+    "prepare": "husky || true",
+    "share": "cloudflared tunnel --url http://localhost:3000",
+    "share:cf": "cloudflared tunnel --url http://localhost:3000",
+    "share:lt": "lt --port 3000",
+    "share:ngrok": "ngrok http 3000"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
