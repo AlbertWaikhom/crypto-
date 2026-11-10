@@ -11,12 +11,10 @@ import {
   LayoutDashboard,
   Lock,
   Menu,
-  Moon,
   Scale,
   ShieldAlert,
   ShieldCheck,
   Sparkles,
-  Sun,
   X,
 } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
@@ -28,7 +26,7 @@ import styles from './site-header.module.css';
 
 export function SiteHeader({ mode = 'sticky', compactAuth = false }) {
   const pathname = usePathname();
-  const { theme, toggleTheme, accessToken, user } = useUiStore();
+  const { accessToken, user } = useUiStore();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [openMenu, setOpenMenu] = React.useState(null); // 'ecosystem' | 'governance' | null
   const [isScrolled, setIsScrolled] = React.useState(false);
@@ -348,17 +346,6 @@ export function SiteHeader({ mode = 'sticky', compactAuth = false }) {
 
             {/* Right Action Cluster */}
             <div className={styles.rightCluster}>
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className={styles.iconThemeBtn}
-                title={`Switch to ${mounted && theme === 'light' ? 'Dark' : 'Light'} Mode`}
-                aria-label="Toggle Theme"
-                suppressHydrationWarning
-              >
-                {mounted && theme === 'light' ? <Moon size={15} /> : <Sun size={15} />}
-              </button>
-
               {mounted && accessToken ? (
                 <Link href={workspaceHref}>
                   <Button size="sm" className={styles.ctaPrimaryBtn}>

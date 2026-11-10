@@ -141,7 +141,6 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const {
     theme,
-    toggleTheme,
     accessToken,
     user,
     hydrated,
@@ -371,9 +370,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       <div className={styles.workspacePanel}>
         <AdminHeader
           pathname={pathname}
-          theme={theme}
           isMaster={isMaster}
-          onToggleTheme={toggleTheme}
           onOpenMobileMenu={() => setMobileOpen(true)}
         />
 

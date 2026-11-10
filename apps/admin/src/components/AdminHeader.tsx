@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Crown, HelpCircle, Menu, Moon, Sun } from 'lucide-react';
+import { Crown, HelpCircle, Menu } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
 import { Button } from '@navrix/ui';
 import { startTutorialTour } from './InteractiveTutorialTour';
@@ -11,9 +11,7 @@ import styles from './admin-header.module.css';
 
 export interface AdminHeaderProps {
   pathname: string;
-  theme: 'dark' | 'light';
   isMaster: boolean;
-  onToggleTheme: () => void;
   onOpenMobileMenu: () => void;
 }
 
@@ -67,13 +65,7 @@ function resolveAdminTitle(pathname: string): { title: string; subtitle: string 
   return { title: 'Operations Command Deck', subtitle: 'Live MySQL Treasury & 24h SLA Telemetry' };
 }
 
-export function AdminHeader({
-  pathname,
-  theme,
-  isMaster,
-  onToggleTheme,
-  onOpenMobileMenu,
-}: AdminHeaderProps) {
+export function AdminHeader({ pathname, isMaster, onOpenMobileMenu }: AdminHeaderProps) {
   const meta = resolveAdminTitle(pathname);
 
   return (
@@ -113,19 +105,6 @@ export function AdminHeader({
           title="Start Interactive Operator Tour"
         >
           <HelpCircle className="h-3.5 w-3.5 text-amber-400" />
-        </button>
-
-        <button
-          type="button"
-          onClick={onToggleTheme}
-          className={styles.iconBtn}
-          aria-label="Toggle theme"
-        >
-          {theme === 'dark' ? (
-            <Sun className="h-3.5 w-3.5 text-amber-400" />
-          ) : (
-            <Moon className="h-3.5 w-3.5 text-slate-700" />
-          )}
         </button>
 
         {isMaster ? (

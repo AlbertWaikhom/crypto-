@@ -37,7 +37,7 @@ import styles from './interactive-tutorial-tour.module.css';
 // 1. Role-Based Tutorial Step Definitions
 // ---------------------------------------------------------------------------
 
-export const USER_TUTORIAL_STEPS = [
+const USER_TUTORIAL_STEPS = [
   {
     id: 'vault-balances',
     title: 'Portfolio Overview & Vault Balances',
@@ -117,7 +117,7 @@ export const USER_TUTORIAL_STEPS = [
   },
 ];
 
-export const ADMIN_TUTORIAL_STEPS = [
+const ADMIN_TUTORIAL_STEPS = [
   {
     id: 'admin-command-deck',
     title: 'Operations Command Deck',

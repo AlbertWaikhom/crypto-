@@ -41,8 +41,8 @@ export const useUiStore = create((set, get) => ({
   },
   hydrate: () => {
     if (typeof window === 'undefined') return;
-    const savedTheme = localStorage.getItem('navrix_theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.removeItem('navrix_theme');
     const savedToken = sessionStorage.getItem('navrix_access_token');
     const savedUserRaw = sessionStorage.getItem('navrix_user');
     let parsedUser = null;
@@ -54,7 +54,7 @@ export const useUiStore = create((set, get) => ({
       }
     }
     set({
-      theme: savedTheme,
+      theme: 'dark',
       accessToken: savedToken,
       user: parsedUser,
       hydrated: true,

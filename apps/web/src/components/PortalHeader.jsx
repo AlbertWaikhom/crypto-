@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowDownToLine, Bell, HelpCircle, Menu, Moon, Sun } from 'lucide-react';
+import { ArrowDownToLine, Bell, HelpCircle, Menu } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
 import { Button } from '@navrix/ui';
 import { startTutorialTour } from './InteractiveTutorialTour';
@@ -37,7 +37,7 @@ function resolvePortalTitle(pathname) {
   }
   return { title: 'Portfolio Command', subtitle: 'Real-Time Double-Entry USDT Vault' };
 }
-export function PortalHeader({ pathname, theme, unreadCount, onToggleTheme, onOpenMobileNav }) {
+export function PortalHeader({ pathname, unreadCount, onOpenMobileNav }) {
   const meta = resolvePortalTitle(pathname);
   return (
     <header className={styles.header}>
@@ -83,19 +83,6 @@ export function PortalHeader({ pathname, theme, unreadCount, onToggleTheme, onOp
           title="Start Interactive Tutorial Tour"
         >
           <HelpCircle className="h-3.5 w-3.5 text-amber-400" />
-        </button>
-
-        <button
-          type="button"
-          onClick={onToggleTheme}
-          className={styles.iconBtn}
-          aria-label="Toggle theme"
-        >
-          {theme === 'dark' ? (
-            <Sun className="h-3.5 w-3.5 text-amber-400" />
-          ) : (
-            <Moon className="h-3.5 w-3.5 text-slate-700" />
-          )}
         </button>
 
         <Link href="/deposit" className={styles.ctaWrap}>

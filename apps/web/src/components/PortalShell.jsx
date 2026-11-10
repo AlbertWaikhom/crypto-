@@ -64,16 +64,8 @@ const NAV_GROUPS = [
 export function PortalShell({ children }) {
   const pathname = usePathname();
   const router = useRouter();
-  const {
-    theme,
-    toggleTheme,
-    user,
-    accessToken,
-    hydrated,
-    mobileNavOpen,
-    setMobileNavOpen,
-    clearSession,
-  } = useUiStore();
+  const { user, accessToken, hydrated, mobileNavOpen, setMobileNavOpen, clearSession } =
+    useUiStore();
   React.useEffect(() => {
     if (!hydrated) return;
     if (!accessToken || !user) {
@@ -281,9 +273,7 @@ export function PortalShell({ children }) {
       <div className={styles.workspacePanel}>
         <PortalHeader
           pathname={pathname}
-          theme={theme}
           unreadCount={unreadCount}
-          onToggleTheme={toggleTheme}
           onOpenMobileNav={() => setMobileNavOpen(true)}
         />
 

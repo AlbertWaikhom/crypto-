@@ -586,29 +586,6 @@
   flex-shrink: 0;
 }
 
-.iconThemeBtn {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--nv-border);
-  background: rgba(15, 23, 42, 0.45);
-  color: var(--nv-text-muted);
-  cursor: pointer;
-  transition: all 0.18s ease;
-}
-
-[data-theme='light'] .iconThemeBtn {
-  background: rgba(241, 245, 249, 0.9);
-}
-
-.iconThemeBtn:hover {
-  color: var(--nv-gold);
-  border-color: rgba(245, 184, 46, 0.42);
-}
-
 .authGroup {
   display: flex;
   align-items: center;

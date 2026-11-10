@@ -77,12 +77,10 @@ export const useAdminStore = create<AdminUiState>((set, get) => ({
 
   hydrate: () => {
     if (typeof window === 'undefined') return;
-    const savedTheme =
-      (localStorage.getItem('navrix_theme') as ThemeMode) ||
-      (localStorage.getItem('navrix_admin_theme') as ThemeMode) ||
-      'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    set({ theme: savedTheme });
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.removeItem('navrix_theme');
+    localStorage.removeItem('navrix_admin_theme');
+    set({ theme: 'dark' });
 
     const uiState = useUiStore.getState();
     if (uiState.accessToken && uiState.user && isAdminRole(uiState.user.role)) {

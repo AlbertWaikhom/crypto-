@@ -3,8 +3,7 @@ import { ApiResponse, isAdminRole, PublicUserDto } from '@navrix/types';
 
 export type ThemeMode = 'dark' | 'light';
 
-const ADMIN_API_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const ADMIN_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
 interface AdminUiState {
   theme: ThemeMode;
@@ -62,10 +61,9 @@ export const useAdminStore = create<AdminUiState>((set, get) => ({
 
   hydrate: () => {
     if (typeof window === 'undefined') return;
-    const savedTheme =
-      (localStorage.getItem('navrix_admin_theme') as ThemeMode) || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    set({ theme: savedTheme });
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.removeItem('navrix_admin_theme');
+    set({ theme: 'dark' });
 
     const token = sessionStorage.getItem('navrix_admin_token');
     const rawUser = sessionStorage.getItem('navrix_admin_user');
