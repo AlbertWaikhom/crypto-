@@ -1943,11 +1943,7 @@ router.get(
     };
     const state = Buffer.from(JSON.stringify(stateObj)).toString('base64url');
 
-    // Real Google OAuth redirect is only safe on localhost (matching Google Console Authorized URIs)
-    // or when force_live is explicitly requested.
-    // On shared tunnels or preview hosts, redirect to Google Account Selection page so remote clients can
-    // immediately authenticate with their Google account without "This site can't be reached" errors!
-    if (isRealGoogleCid && (isLocalhost || forceLive)) {
+    if (isRealGoogleCid) {
       // Direct browser redirect to Google's official OAuth authorization endpoint
       const googleAuthUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
       googleAuthUrl.searchParams.set('client_id', rawCid);
