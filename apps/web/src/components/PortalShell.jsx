@@ -64,8 +64,15 @@ const NAV_GROUPS = [
 export function PortalShell({ children }) {
   const pathname = usePathname();
   const router = useRouter();
+  const contentScrollAreaRef = React.useRef(null);
   const { user, accessToken, hydrated, mobileNavOpen, setMobileNavOpen, clearSession } =
     useUiStore();
+
+  React.useEffect(() => {
+    if (contentScrollAreaRef.current) {
+      contentScrollAreaRef.current.scrollTop = 0;
+    }
+  }, [pathname]);
   React.useEffect(() => {
     if (!hydrated) return;
     if (!accessToken || !user) {
@@ -277,7 +284,7 @@ export function PortalShell({ children }) {
           onOpenMobileNav={() => setMobileNavOpen(true)}
         />
 
-        <main className={styles.contentScrollArea}>
+        <main ref={contentScrollAreaRef} className={styles.contentScrollArea}>
           <div className={styles.contentInner}>
             {children}
             {/* Native Mobile Dock Safe-Area Clearance Spacer across all customer views */}

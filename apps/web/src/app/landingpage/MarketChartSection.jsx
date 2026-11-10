@@ -7,6 +7,7 @@ import {
   formatCurrencyPrice,
   useLandingMarketStore,
   useMarketOverviewData,
+  useLiveMarketWebSocket,
 } from './market-data';
 import './market-chart.css';
 
@@ -37,6 +38,8 @@ export function MarketChartSection() {
     setSelectedCategory,
     setSelectedTimeframe,
   } = useLandingMarketStore();
+
+  const { wsConnected, livePrices } = useLiveMarketWebSocket();
 
   const { data } = useMarketOverviewData(selectedSymbol, selectedTimeframe);
   const activeAsset = data?.asset || MARKET_ASSETS[0];
@@ -333,11 +336,9 @@ export function MarketChartSection() {
                 <span className="lp-market-feed-pill">
                   <span className="lp-market-feed-dot" />
                   <span>
-                    {activeAsset.symbol === 'BND'
-                      ? 'BND Coin Sovereign Feed · Interactive Chart'
-                      : activeAsset.category === 'stock'
-                        ? 'Stock Market Live Benchmark · Interactive Chart'
-                        : 'Institutional Crypto Feed · Interactive Chart'}
+                    {wsConnected
+                      ? 'Live Binance WebSocket · Real-Time Stream'
+                      : 'Live Market Feed · Interactive Chart'}
                   </span>
                 </span>
 
@@ -370,32 +371,43 @@ export function MarketChartSection() {
             className="lp-market-quick-strip"
             aria-label="Featured Stock Market and BND Coin Benchmarks"
           >
-            {quickStripAssets.map((item) => (
-              <button
-                key={item.symbol}
-                type="button"
-                onClick={() => {
-                  setSelectedCategory('all');
-                  setSelectedSymbol(item.symbol);
-                }}
-                className={`lp-market-quick-item ${
-                  selectedSymbol === item.symbol ? 'is-active' : ''
-                }`}
-              >
-                <div>
-                  <span className="lp-market-quick-sym">
-                    {item.symbol === 'BND' ? 'BND Coin (BND)' : `${item.name}`}
-                  </span>
-                  <span className="lp-market-quick-sub">
-                    {item.symbol === 'BND' ? 'Native Ecosystem Coin' : 'Stock Market Benchmark'}
-                  </span>
-                </div>
-                <div>
-                  <span className="lp-market-quick-val">{formatCurrencyPrice(item.price)}</span>
-                  <span className="lp-market-quick-chg">+{item.change24h.toFixed(2)}%</span>
-                </div>
-              </button>
-            ))}
+            {quickStripAssets.map((item) => {
+              const live = livePrices[item.symbol] || item;
+              const livePrice = live.price || item.price;
+              const liveChange =
+                typeof live.change24h === 'number' ? live.change24h : item.change24h;
+              const isUp = liveChange >= 0;
+
+              return (
+                <button
+                  key={item.symbol}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory('all');
+                    setSelectedSymbol(item.symbol);
+                  }}
+                  className={`lp-market-quick-item ${
+                    selectedSymbol === item.symbol ? 'is-active' : ''
+                  }`}
+                >
+                  <div>
+                    <span className="lp-market-quick-sym">
+                      {item.symbol === 'BND' ? 'BND Coin (BND)' : `${item.name}`}
+                    </span>
+                    <span className="lp-market-quick-sub">
+                      {item.symbol === 'BND' ? 'Native Ecosystem Coin' : 'Stock Market Benchmark'}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="lp-market-quick-val">{formatCurrencyPrice(livePrice)}</span>
+                    <span className={`lp-market-quick-chg ${isUp ? 'is-positive' : 'is-negative'}`}>
+                      {isUp ? '+' : ''}
+                      {liveChange.toFixed(2)}%
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </AnimatedContent>

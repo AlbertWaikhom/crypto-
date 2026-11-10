@@ -6,8 +6,85 @@
 .lp-hero-section {
   position: relative;
   overflow: hidden;
-  padding: 52px 0 64px;
+  padding: clamp(24px, 4vh, 48px) 0;
   border-bottom: 1px solid rgba(245, 184, 46, 0.12);
+  box-sizing: border-box;
+}
+
+@media (min-width: 961px) {
+  .lp-hero-section {
+    min-height: calc(100dvh - 114px);
+    max-height: calc(100dvh - 114px);
+    display: flex;
+    align-items: center;
+    padding: clamp(8px, 1.6vh, 20px) 0;
+  }
+
+  .lp-hero-inner {
+    align-items: center;
+    gap: clamp(20px, 3vw, 44px);
+    width: 100%;
+  }
+
+  .lp-hero-badge {
+    margin-bottom: clamp(8px, 1.4vh, 16px);
+    padding: 5px 12px;
+    font-size: 11.5px;
+  }
+
+  .lp-hero-title {
+    font-size: clamp(1.85rem, 3.2vw, 2.95rem);
+    line-height: 1.08;
+    margin: 0 0 clamp(8px, 1.4vh, 14px);
+  }
+
+  .lp-hero-subtitle {
+    font-size: clamp(0.88rem, 1.05vw, 1rem);
+    line-height: 1.48;
+    margin: 0 0 clamp(10px, 1.8vh, 18px);
+  }
+
+  .lp-hero-cta-row {
+    margin-bottom: clamp(10px, 1.6vh, 16px);
+    gap: 10px;
+  }
+
+  .lp-btn-gold,
+  .lp-btn-secondary {
+    padding: clamp(9px, 1.2vh, 12px) clamp(16px, 1.6vw, 22px);
+    font-size: clamp(13px, 0.9vw, 14px);
+  }
+
+  .lp-hero-trust-row {
+    gap: clamp(12px, 1.5vw, 18px);
+  }
+
+  .lp-hero-trust-item {
+    font-size: clamp(11px, 0.85vw, 12px);
+  }
+
+  .lp-hero-stage {
+    min-height: 0;
+    max-height: calc(100dvh - 140px);
+  }
+
+  .lp-portfolio-phone {
+    max-width: clamp(290px, 23vw, 345px);
+    padding: clamp(12px, 1.6vh, 18px) clamp(12px, 1.4vw, 16px);
+    border-radius: 24px;
+  }
+
+  .lp-phone-spark-wrap {
+    height: clamp(48px, 6vh, 64px);
+  }
+
+  .lp-phone-assets-list {
+    gap: clamp(3px, 0.6vh, 6px);
+  }
+
+  .lp-phone-asset-row {
+    padding: clamp(4px, 0.6vh, 7px) clamp(6px, 0.8vw, 9px);
+  }
 }
 
 .lp-hero-inner {
@@ -541,7 +618,7 @@
 @media (max-width: 1024px) {
   .lp-hero-inner {
     grid-template-columns: 1fr;
-    gap: 42px;
+    gap: 28px;
     text-align: center;
   }
 
@@ -565,80 +642,151 @@
 
 @media (max-width: 640px) {
   .lp-hero-section {
-    padding: 24px 0 40px;
+    padding: clamp(12px, 2vh, 20px) 0 clamp(16px, 2.5vh, 24px);
   }
 
   .lp-hero-inner {
-    padding: 0 14px;
-    gap: 26px;
+    padding: 0 12px;
+    gap: 16px;
   }
 
   .lp-hero-badge {
-    font-size: 11px;
-    padding: 5px 11px;
-    margin-bottom: 14px;
+    font-size: 10.5px;
+    padding: 4px 10px;
+    margin-bottom: 8px;
     max-width: 100%;
     text-align: center;
   }
 
   .lp-hero-title {
-    font-size: clamp(1.65rem, 6.8vw, 2.25rem);
-    line-height: 1.15;
-    margin-bottom: 14px;
+    font-size: clamp(1.45rem, 6.2vw, 1.95rem);
+    line-height: 1.12;
+    margin-bottom: 8px;
   }
 
   .lp-hero-subtitle {
-    font-size: 0.92rem;
-    line-height: 1.55;
-    margin-bottom: 22px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .lp-hero-cta-row {
     width: 100%;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 22px;
+    flex-direction: row;
+    gap: 8px;
+    margin-bottom: 12px;
   }
 
   .lp-btn-gold,
   .lp-btn-secondary {
-    width: 100%;
-    padding: 12px 18px;
-    font-size: 14px;
+    flex: 1;
+    width: auto;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .lp-hero-trust-row {
+    display: none;
   }
 
   .lp-hero-stage {
-    min-height: 380px;
+    min-height: 0;
+    max-height: clamp(230px, 34vh, 280px);
     max-width: 100%;
     overflow: hidden;
   }
 
   .lp-portfolio-phone {
-    max-width: min(320px, 100%);
-    padding: 18px 14px 16px;
-    border-radius: 24px;
+    max-width: min(300px, 100%);
+    padding: 12px 12px 10px;
+    border-radius: 20px;
+  }
+
+  .lp-phone-notch {
+    margin-bottom: 8px;
+    height: 4px;
+    width: 50px;
+  }
+
+  .lp-phone-header {
+    margin-bottom: 6px;
+  }
+
+  .lp-phone-balance-label {
+    font-size: 10px;
   }
 
   .lp-phone-balance-value {
-    font-size: 24px;
+    font-size: 20px;
+    line-height: 1.1;
   }
 
-  .lp-coin-bnd {
-    width: 52px;
-    height: 52px;
-    top: -10px;
-    left: 2px;
+  .lp-phone-balance-delta {
+    font-size: 10.5px;
   }
 
-  .lp-coin-bnd-title {
+  .lp-phone-spark-wrap {
+    height: 42px;
+    margin: 4px 0 6px;
+  }
+
+  .lp-phone-tf-row {
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .lp-phone-tf-btn {
+    padding: 2px 7px;
+    font-size: 10px;
+  }
+
+  /* Show top 2 featured assets on small mobile so hero cleanly fits 1 screen */
+  .lp-phone-assets-list {
+    gap: 4px;
+  }
+
+  .lp-phone-assets-list .lp-phone-asset-row:nth-child(n + 3) {
+    display: none;
+  }
+
+  .lp-phone-asset-row {
+    padding: 4px 6px;
+  }
+
+  .lp-phone-asset-icon {
+    width: 26px;
+    height: 26px;
+    font-size: 10px;
+  }
+
+  .lp-phone-asset-symbol {
     font-size: 11px;
   }
 
+  .lp-phone-asset-price {
+    font-size: 11px;
+  }
+
+  .lp-coin-bnd {
+    width: 44px;
+    height: 44px;
+    top: -8px;
+    left: 4px;
+  }
+
+  .lp-coin-bnd-title {
+    font-size: 9.5px;
+  }
+
   .lp-coin-spx {
-    width: 46px;
-    height: 46px;
-    top: -6px;
-    right: 2px;
+    width: 40px;
+    height: 40px;
+    top: -4px;
+    right: 4px;
   }
 
   .lp-coin-btc,

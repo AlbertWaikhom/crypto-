@@ -1,11 +1,17 @@
 import React from 'react';
 import { LogoLoop, usePrefersReducedMotion } from './reactbits-primitives';
-import { MARKET_ASSETS, formatCurrencyPrice, useLandingMarketStore } from './market-data';
+import {
+  MARKET_ASSETS,
+  formatCurrencyPrice,
+  useLandingMarketStore,
+  useLiveMarketWebSocket,
+} from './market-data';
 import './market-ticker.css';
 
 export function MarketTicker() {
   const reducedMotion = usePrefersReducedMotion();
   const { selectedSymbol, setSelectedSymbol, setSelectedCategory } = useLandingMarketStore();
+  const { wsConnected, livePrices } = useLiveMarketWebSocket();
 
   const handleTickerClick = (symbol) => {
     setSelectedCategory('all');
@@ -22,6 +28,7 @@ export function MarketTicker() {
         <div className="lp-ticker-live-badge">
           <span className="lp-ticker-live-dot" />
           <span>Market Live</span>
+          <span className="lp-ticker-ws-tag">{wsConnected ? 'WS LIVE' : 'STREAM'}</span>
         </div>
 
         <LogoLoop
@@ -30,6 +37,12 @@ export function MarketTicker() {
           pauseOnHover
           renderItem={(asset) => {
             const isSelected = selectedSymbol === asset.symbol;
+            const live = livePrices[asset.symbol] || asset;
+            const activePrice = live.price || asset.price;
+            const activeChange =
+              typeof live.change24h === 'number' ? live.change24h : asset.change24h;
+            const isUp = activeChange >= 0;
+
             const marketClass =
               asset.symbol === 'BND'
                 ? 'is-bnd'
@@ -57,14 +70,27 @@ export function MarketTicker() {
 
                 <span className="lp-ticker-chip-symbol">{asset.symbol}</span>
                 <span className={`lp-ticker-chip-market ${marketClass}`}>{marketTag}</span>
-                <span className="lp-ticker-chip-price">{formatCurrencyPrice(asset.price)}</span>
-                <span className="lp-ticker-chip-delta">+{asset.change24h.toFixed(2)}%</span>
+                <span
+                  className={`lp-ticker-chip-price ${
+                    live.direction === 'up'
+                      ? 'price-tick-up'
+                      : live.direction === 'down'
+                        ? 'price-tick-down'
+                        : ''
+                  }`}
+                >
+                  {formatCurrencyPrice(activePrice)}
+                </span>
+                <span className={`lp-ticker-chip-delta ${isUp ? 'is-positive' : 'is-negative'}`}>
+                  {isUp ? '+' : ''}
+                  {activeChange.toFixed(2)}%
+                </span>
 
                 <svg viewBox="0 0 40 16" className="lp-ticker-mini-spark" aria-hidden="true">
                   <path
                     d="M 1 13 L 9 10 L 16 12 L 24 6 L 31 8 L 39 2"
                     fill="none"
-                    stroke={asset.symbol === 'BND' ? '#F5B82E' : '#34D399'}
+                    stroke={asset.symbol === 'BND' ? '#F5B82E' : isUp ? '#34D399' : '#F87171'}
                     strokeWidth="1.8"
                     strokeLinecap="round"
                     strokeLinejoin="round"
