@@ -1,0 +1,213 @@
+/* Sign Out Confirmation Modal - Sovereign Gold & Deep Navy */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(3, 7, 18, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modalCard {
+  position: relative;
+  width: 100%;
+  max-width: 410px;
+  background: #090e1a;
+  background: linear-gradient(180deg, #0e172a 0%, #070b14 100%);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  box-shadow:
+    0 24px 64px -12px rgba(0, 0, 0, 0.85),
+    0 0 32px -8px rgba(244, 63, 94, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  border-radius: 1.35rem;
+  padding: 1.5rem;
+  animation: modalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.iconHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.iconBadge {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 1rem;
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  color: #fb7185;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px -4px rgba(244, 63, 94, 0.3);
+}
+
+.closeXBtn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  padding: 0.35rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeXBtn:hover {
+  color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.12);
+}
+
+.title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.4rem;
+}
+
+.description {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  line-height: 1.55;
+  margin-bottom: 1.15rem;
+}
+
+.userBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  margin-bottom: 1.35rem;
+  font-size: 0.75rem;
+  color: #cbd5e1;
+}
+
+.userAvatar {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: rgba(245, 184, 46, 0.15);
+  border: 1px solid rgba(245, 184, 46, 0.3);
+  color: #fcd34d;
+  font-weight: 800;
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.userText {
+  min-width: 0;
+  flex: 1;
+}
+
+.userName {
+  font-weight: 700;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userEmail {
+  font-size: 0.68rem;
+  color: #64748b;
+  font-family: var(--nv-font-sf);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Action Buttons (Exit & Deny) */
+.actionsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.denyBtn {
+  padding: 0.7rem 1rem;
+  border-radius: 0.85rem;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #cbd5e1;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.denyBtn:hover {
+  background: rgba(30, 41, 59, 0.9);
+  color: #ffffff;
+  border-color: rgba(148, 163, 184, 0.4);
+}
+
+.exitBtn {
+  padding: 0.7rem 1rem;
+  border-radius: 0.85rem;
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+  border: 1px solid rgba(244, 63, 94, 0.6);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  box-shadow: 0 4px 16px rgba(225, 29, 72, 0.35);
+}
+
+.exitBtn:hover {
+  background: linear-gradient(135deg, #fb7185 0%, #f43f5e 100%);
+  box-shadow: 0 6px 20px rgba(225, 29, 72, 0.5);
+  transform: translateY(-1px);
+}
+
+.exitBtn:disabled,
+.denyBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}

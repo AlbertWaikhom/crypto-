@@ -28,6 +28,7 @@ import { useUiStore } from '../store/ui-store';
 import { apiRequest } from '../lib/api';
 import { PortalHeader } from './PortalHeader';
 import { InteractiveTutorialTour } from './InteractiveTutorialTour';
+import { SignOutConfirmModal } from './SignOutConfirmModal';
 import styles from './portal-shell.module.css';
 
 const NAV_GROUPS = [
@@ -97,7 +98,11 @@ export function PortalShell({ children }) {
     enabled: Boolean(accessToken && user && !isAdminRole(user.role)),
   });
   const unreadCount = notifData?.unreadCount ?? 0;
-  const handleLogout = async () => {
+  const [showSignOutModal, setShowSignOutModal] = React.useState(false);
+  const [isSigningOut, setIsSigningOut] = React.useState(false);
+
+  const handleConfirmLogout = async () => {
+    setIsSigningOut(true);
     setMobileNavOpen(false);
     try {
       await apiRequest('/auth/logout', { method: 'POST' }, false);
@@ -105,6 +110,8 @@ export function PortalShell({ children }) {
       // ignore network error
     }
     clearSession();
+    setIsSigningOut(false);
+    setShowSignOutModal(false);
     router.replace('/login');
   };
   if (!hydrated || !accessToken || !user || isAdminRole(user.role)) {
@@ -261,7 +268,7 @@ export function PortalShell({ children }) {
             type="button"
             variant="ghost"
             size="sm"
-            onClick={handleLogout}
+            onClick={() => setShowSignOutModal(true)}
             className={styles.logoutBtn}
           >
             <LogOut className="h-3.5 w-3.5" />
@@ -291,6 +298,15 @@ export function PortalShell({ children }) {
 
       {/* Interactive Step-by-Step Onboarding & Review Tour */}
       <InteractiveTutorialTour />
+
+      {/* Sign Out Confirmation Modal (Exit & Deny) */}
+      <SignOutConfirmModal
+        isOpen={showSignOutModal}
+        onExit={handleConfirmLogout}
+        onDeny={() => setShowSignOutModal(false)}
+        user={user}
+        isExiting={isSigningOut}
+      />
     </div>
   );
 }

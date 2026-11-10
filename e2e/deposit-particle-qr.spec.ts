@@ -14,25 +14,20 @@ test('Verify Deposit Dropdown and Modern Particle QR Code with Center Logo', asy
   await page.goto('/deposit');
   await page.waitForTimeout(2000);
 
-  // 1. Verify Dropdown trigger is visible and cards grid is replaced
   const dropdownTrigger = page.locator('[class*="dropdownTrigger"]');
   await expect(dropdownTrigger).toBeVisible();
 
-  // Ensure old bulky methodsGrid is not visible or replaced
   const methodsGrid = page.locator('[class*="methodsGrid"]');
   expect(await methodsGrid.count()).toBe(0);
 
-  // Verify default selected wallet in trigger
   const triggerText = await dropdownTrigger.textContent();
   console.log('Dropdown Trigger Text:', triggerText);
   expect(triggerText).toContain('USDT');
   expect(triggerText).toContain('BEP20');
 
-  // Verify Particle QR Canvas exists
   const qrCanvas = page.locator('[class*="canvas"]');
   await expect(qrCanvas).toBeVisible();
 
-  // Wait 1.8s for particle assembly to settle and center logo to pop in
   await page.waitForTimeout(1800);
 
   const centerLogo = page.locator('[class*="centerLogoBadge"]');

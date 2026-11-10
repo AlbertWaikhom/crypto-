@@ -30,6 +30,7 @@ import { useAdminStore } from '../store/admin-store';
 import { adminApi } from '../lib/api';
 import { AdminHeader } from './AdminHeader';
 import { InteractiveTutorialTour } from './InteractiveTutorialTour';
+import { SignOutConfirmModal } from './SignOutConfirmModal';
 import styles from './admin-shell.module.css';
 
 const UNIFIED_LOGIN_URL = '/login';
@@ -170,7 +171,11 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [mobileOpen, setMobileOpen]);
 
-  const handleLogout = async () => {
+  const [showSignOutModal, setShowSignOutModal] = React.useState(false);
+  const [isSigningOut, setIsSigningOut] = React.useState(false);
+
+  const handleConfirmLogout = async () => {
+    setIsSigningOut(true);
     setMobileOpen(false);
     try {
       await adminApi('/auth/logout', { method: 'POST' }, false);
@@ -178,6 +183,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       // ignore
     }
     clearAdminSession();
+    setIsSigningOut(false);
+    setShowSignOutModal(false);
     router.replace(UNIFIED_LOGIN_URL);
   };
 
@@ -351,7 +358,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             type="button"
             variant="ghost"
             size="sm"
-            onClick={handleLogout}
+            onClick={() => setShowSignOutModal(true)}
             className={styles.logoutBtn}
           >
             <LogOut className="h-3.5 w-3.5" />
@@ -381,6 +388,15 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
       {/* Interactive Step-by-Step Operator & Review Tour */}
       <InteractiveTutorialTour />
+
+      {/* Sign Out Confirmation Modal (Exit & Deny) */}
+      <SignOutConfirmModal
+        isOpen={showSignOutModal}
+        onExit={handleConfirmLogout}
+        onDeny={() => setShowSignOutModal(false)}
+        user={user}
+        isExiting={isSigningOut}
+      />
     </div>
   );
 }
