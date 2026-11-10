@@ -4,7 +4,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { QRCodeSVG } from 'qrcode.react';
-import { AlertTriangle, ArrowRight, CheckCircle2, Coins, Share2, Wallet } from 'lucide-react';
+import {
+  AlertTriangle,
+  ArrowRight,
+  Check,
+  CheckCircle2,
+  ChevronDown,
+  Coins,
+  Share2,
+  Wallet,
+} from 'lucide-react';
 import { BLOCKCHAIN_DEFAULTS } from '@navrix/config';
 import {
   Button,
@@ -16,6 +25,7 @@ import {
   StatusBadge,
 } from '@navrix/ui';
 import { apiRequest, ClientApiError } from '../../../lib/api';
+import { ModernParticleQRCode } from '../../../components/ModernParticleQRCode';
 import styles from './deposit.module.css';
 export default function DepositPage() {
   const router = useRouter();
@@ -23,8 +33,21 @@ export default function DepositPage() {
   const [amount, setAmount] = React.useState('100');
   const [planCode, setPlanCode] = React.useState('');
   const [selectedMethodId, setSelectedMethodId] = React.useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+  const dropdownRef = React.useRef(null);
   const [creating, setCreating] = React.useState(false);
   const [error, setError] = React.useState(null);
+
+  // Close dropdown on click outside
+  React.useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const { data: config } = useQuery({
     queryKey: ['deposit-config'],
@@ -170,30 +193,79 @@ export default function DepositPage() {
               />
             </div>
 
-            <div>
+            <div className="relative" ref={dropdownRef}>
               <label className="mb-1.5 block text-xs font-semibold opacity-80">
                 Choose Payment Method &amp; Network
               </label>
-              <div className={styles.methodsGrid}>
-                {paymentMethods.map((m) => {
-                  const isSelected = m.id === selectedMethod?.id;
-                  return (
-                    <div
-                      key={m.id}
-                      onClick={() => setSelectedMethodId(m.id)}
-                      className={cn(styles.methodCard, isSelected && styles.methodCardActive)}
-                    >
-                      <div className={styles.methodCardHead}>
-                        <span className={styles.tokenBadge}>{m.symbol}</span>
-                        <span className={styles.networkBadge}>{m.network}</span>
+              <div className={styles.dropdownContainer}>
+                <button
+                  type="button"
+                  onClick={() => setIsDropdownOpen((prev) => !prev)}
+                  className={cn(
+                    styles.dropdownTrigger,
+                    isDropdownOpen && styles.dropdownTriggerOpen,
+                  )}
+                  aria-haspopup="listbox"
+                  aria-expanded={isDropdownOpen}
+                >
+                  <div className={styles.dropdownSelectedLeft}>
+                    <div className={styles.dropdownBadgeGroup}>
+                      <span className={styles.tokenBadge}>{selectedMethod?.symbol || 'USDT'}</span>
+                      <span className={styles.networkBadge}>
+                        {selectedMethod?.network || 'BEP-20'}
+                      </span>
+                    </div>
+                    <div className={styles.dropdownSelectedInfo}>
+                      <div className={styles.dropdownSelectedTitle}>
+                        {selectedMethod?.name || 'USDT (BNB Smart Chain)'}
                       </div>
-                      <div className={styles.methodCardTitle}>{m.name}</div>
-                      <div className={styles.methodCardSub}>
-                        Min: {m.minDeposit} {m.symbol}
+                      <div className={styles.dropdownSelectedSub}>
+                        Min: {selectedMethod?.minDeposit ?? 10} {selectedMethod?.symbol || 'USDT'} ·
+                        Verified automatically
                       </div>
                     </div>
-                  );
-                })}
+                  </div>
+                  <ChevronDown
+                    className={cn(styles.chevronIcon, isDropdownOpen && styles.chevronOpen)}
+                  />
+                </button>
+
+                {isDropdownOpen && (
+                  <div className={styles.dropdownMenu} role="listbox">
+                    {paymentMethods.map((m) => {
+                      const isSelected = m.id === selectedMethod?.id;
+                      return (
+                        <div
+                          key={m.id}
+                          role="option"
+                          aria-selected={isSelected}
+                          onClick={() => {
+                            setSelectedMethodId(m.id);
+                            setIsDropdownOpen(false);
+                          }}
+                          className={cn(
+                            styles.dropdownItem,
+                            isSelected && styles.dropdownItemActive,
+                          )}
+                        >
+                          <div className={styles.dropdownSelectedLeft}>
+                            <div className={styles.dropdownBadgeGroup}>
+                              <span className={styles.tokenBadge}>{m.symbol}</span>
+                              <span className={styles.networkBadge}>{m.network}</span>
+                            </div>
+                            <div className={styles.dropdownSelectedInfo}>
+                              <div className={styles.dropdownSelectedTitle}>{m.name}</div>
+                              <div className={styles.dropdownSelectedSub}>
+                                Min: {m.minDeposit} {m.symbol} · {shortenHex(m.walletAddress, 6, 4)}
+                              </div>
+                            </div>
+                          </div>
+                          {isSelected && <Check className="w-4 h-4 text-amber-400 shrink-0" />}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -270,13 +342,12 @@ export default function DepositPage() {
             </span>
           </div>
 
-          <div className={styles.qrBox}>
-            <QRCodeSVG value={receivingAddress} size={196} level="M" includeMargin={false} />
-            <span className="mt-2 text-[11px] font-bold tracking-wide text-slate-700">
-              {selectedMethod?.symbol || 'USDT'} ({selectedMethod?.network || 'BEP-20'}) PUBLIC
-              ADDRESS
-            </span>
-          </div>
+          <ModernParticleQRCode
+            value={receivingAddress}
+            token={selectedMethod?.symbol || 'USDT'}
+            network={selectedMethod?.network || 'BEP-20'}
+            size={220}
+          />
 
           <div className={styles.addressBox}>{receivingAddress}</div>
 
