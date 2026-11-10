@@ -13,77 +13,68 @@
 
 @media (min-width: 961px) {
   .lp-hero-section {
-    min-height: calc(100dvh - 114px);
-    max-height: calc(100dvh - 114px);
+    min-height: calc(100dvh - 72px);
     display: flex;
     align-items: center;
-    padding: clamp(8px, 1.6vh, 20px) 0;
+    padding: clamp(10px, 2.2vh, 28px) 0;
   }
 
   .lp-hero-inner {
     align-items: center;
-    gap: clamp(20px, 3vw, 44px);
+    gap: clamp(24px, 3.5vw, 48px);
     width: 100%;
   }
 
   .lp-hero-badge {
-    margin-bottom: clamp(8px, 1.4vh, 16px);
-    padding: 5px 12px;
-    font-size: 11.5px;
+    margin-bottom: clamp(10px, 1.8vh, 18px);
+    padding: 6px 13px;
+    font-size: 12px;
   }
 
   .lp-hero-title {
-    font-size: clamp(1.85rem, 3.2vw, 2.95rem);
+    font-size: clamp(2rem, 3.6vw, 3.25rem);
     line-height: 1.08;
-    margin: 0 0 clamp(8px, 1.4vh, 14px);
+    margin: 0 0 clamp(10px, 1.8vh, 16px);
   }
 
   .lp-hero-subtitle {
-    font-size: clamp(0.88rem, 1.05vw, 1rem);
-    line-height: 1.48;
-    margin: 0 0 clamp(10px, 1.8vh, 18px);
+    font-size: clamp(0.92rem, 1.15vw, 1.05rem);
+    line-height: 1.52;
+    margin: 0 0 clamp(12px, 2.2vh, 22px);
   }
 
   .lp-hero-cta-row {
-    margin-bottom: clamp(10px, 1.6vh, 16px);
-    gap: 10px;
+    margin-bottom: clamp(12px, 2vh, 20px);
+    gap: 12px;
   }
 
   .lp-btn-gold,
   .lp-btn-secondary {
-    padding: clamp(9px, 1.2vh, 12px) clamp(16px, 1.6vw, 22px);
-    font-size: clamp(13px, 0.9vw, 14px);
-  }
-
-  .lp-hero-trust-row {
-    gap: clamp(12px, 1.5vw, 18px);
-  }
-
-  .lp-hero-trust-item {
-    font-size: clamp(11px, 0.85vw, 12px);
+    padding: clamp(10px, 1.4vh, 13px) clamp(18px, 1.8vw, 24px);
+    font-size: clamp(13.5px, 0.95vw, 14.5px);
   }
 
   .lp-hero-stage {
     min-height: 0;
-    max-height: calc(100dvh - 140px);
+    max-height: calc(100dvh - 120px);
   }
 
   .lp-portfolio-phone {
-    max-width: clamp(290px, 23vw, 345px);
-    padding: clamp(12px, 1.6vh, 18px) clamp(12px, 1.4vw, 16px);
-    border-radius: 24px;
+    max-width: clamp(310px, 25vw, 360px);
+    padding: clamp(14px, 2vh, 20px) clamp(14px, 1.8vw, 18px);
+    border-radius: 26px;
   }
 
   .lp-phone-spark-wrap {
-    height: clamp(48px, 6vh, 64px);
+    height: clamp(52px, 6.8vh, 72px);
   }
 
   .lp-phone-assets-list {
-    gap: clamp(3px, 0.6vh, 6px);
+    gap: clamp(4px, 0.8vh, 8px);
   }
 
   .lp-phone-asset-row {
-    padding: clamp(4px, 0.6vh, 7px) clamp(6px, 0.8vw, 9px);
+    padding: clamp(5px, 0.8vh, 8px) clamp(6px, 1vw, 10px);
   }
 }
 

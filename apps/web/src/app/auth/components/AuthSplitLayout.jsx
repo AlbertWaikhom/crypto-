@@ -77,13 +77,16 @@ export function AuthSplitLayout({
       {/* Top minimal utility navigation */}
       <div className={styles.topUtilityBar}>
         <Link href="/" className={styles.homeBackLink}>
-          <ArrowLeft className="h-3.5 w-3.5" />
+          <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
           <span>Back to {BRAND_CONFIG.name}</span>
         </Link>
 
         <div className={styles.securityBadgePill}>
-          <Lock className="h-3 w-3 text-amber-400" />
-          <span>Port 3000 Unified Gateway · TLS &amp; Double-Entry Protected</span>
+          <Lock className="h-3 w-3 shrink-0 text-amber-400" />
+          <span className={styles.securityBadgeFull}>
+            Unified Gateway · TLS &amp; Double-Entry Protected
+          </span>
+          <span className={styles.securityBadgeMobile}>TLS &amp; Double-Entry Secured</span>
         </div>
       </div>
 

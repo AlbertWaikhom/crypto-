@@ -599,23 +599,23 @@ export default function LoginPage() {
                 type="button"
                 disabled={isGoogleBusy}
                 onClick={triggerGoogleLogin}
-                className={styles.socialBtn}
+                className={`${styles.socialBtn} ${styles.socialBtnGoogle}`}
               >
                 {isGoogleBusy ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  <GoogleLogoSvg className="h-4 w-4" />
+                  <GoogleLogoSvg className="h-4 w-4 shrink-0" />
                 )}
-                <span>Google</span>
+                <span>Continue with Google</span>
               </button>
 
               <button type="button" onClick={() => setView('PASSKEY')} className={styles.socialBtn}>
-                <Fingerprint className="h-4 w-4 text-slate-300" />
+                <Fingerprint className="h-4 w-4 shrink-0 text-slate-300" />
                 <span>Passkey</span>
               </button>
 
               <button type="button" onClick={handleRequestEmailOtp} className={styles.socialBtn}>
-                <Mail className="h-4 w-4 text-slate-300" />
+                <Mail className="h-4 w-4 shrink-0 text-slate-300" />
                 <span>Email OTP</span>
               </button>
             </div>
