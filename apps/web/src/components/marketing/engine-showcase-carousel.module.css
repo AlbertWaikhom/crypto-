@@ -23,6 +23,12 @@
   overflow-x: auto;
   max-width: 100%;
   padding-bottom: 0.2rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.selectorStrip::-webkit-scrollbar {
+  display: none;
 }
 
 .selectorPill {
@@ -355,16 +361,66 @@
 }
 
 @media (max-width: 640px) {
-  .specTilesGrid,
+  .carouselRoot {
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .stageCard {
+    border-radius: 18px;
+  }
+
+  .specTilesGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .specTile {
+    padding: 0.52rem 0.55rem;
+    border-radius: 9px;
+  }
+
+  .specTileLabel {
+    font-size: 0.58rem;
+  }
+
+  .specTileVal {
+    font-size: 0.74rem;
+  }
+
   .telemetryMetaGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
   }
 
   .slideGrid {
-    padding: 1.05rem;
+    padding: 1.15rem 0.95rem;
+    gap: 1.15rem;
+  }
+
+  .engineTitle {
+    font-size: clamp(1.45rem, 5.8vw, 1.95rem);
+    line-height: 1.15;
+  }
+
+  .engineDesc {
+    font-size: 0.82rem;
+    line-height: 1.55;
   }
 
   .ctaRow a {
     flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .specTilesGrid {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .slideGrid {
+    padding: 0.95rem 0.8rem;
   }
 }

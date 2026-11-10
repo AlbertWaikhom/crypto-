@@ -75,13 +75,29 @@
 }
 
 @media (max-width: 768px) {
+  .graphicCard {
+    padding: 0.95rem 0.85rem;
+    border-radius: 14px;
+    box-sizing: border-box;
+  }
+
   .pipelineGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 460px) {
+  .graphicCard {
+    padding: 0.85rem 0.65rem;
+  }
+
   .pipelineGrid {
     grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+
+  .ledgerEntry {
+    padding: 0.38rem 0.5rem;
+    font-size: 0.68rem;
   }
 }

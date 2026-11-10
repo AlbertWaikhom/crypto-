@@ -5,10 +5,13 @@
 
 .lp-security-section {
   position: relative;
+  width: 100%;
   max-width: 1240px;
   margin: 0 auto;
   padding: 0 24px 36px;
   scroll-margin-top: 88px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .lp-security-card {
@@ -150,11 +153,38 @@
 
 @media (max-width: 640px) {
   .lp-security-section {
-    padding: 0 16px 28px;
+    padding: 0 14px 28px;
   }
 
   .lp-security-card {
-    padding: 24px 18px;
-    border-radius: 20px;
+    padding: 22px 16px;
+    border-radius: 18px;
+    gap: 18px;
+    contain: paint;
+  }
+
+  .lp-security-shield-svg {
+    width: 120px;
+    height: 130px;
+  }
+
+  .lp-security-title {
+    font-size: clamp(1.4rem, 5.8vw, 1.85rem);
+    line-height: 1.2;
+  }
+
+  .lp-security-desc {
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .lp-security-check-item {
+    font-size: 13px;
+    gap: 9px;
+  }
+
+  .lp-security-check-icon {
+    width: 20px;
+    height: 20px;
   }
 }

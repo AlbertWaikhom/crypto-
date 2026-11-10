@@ -5,10 +5,13 @@
 
 .lp-features-section {
   position: relative;
+  width: 100%;
   max-width: 1240px;
   margin: 0 auto;
   padding: 46px 24px 28px;
   scroll-margin-top: 88px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .lp-features-grid {
@@ -69,10 +72,31 @@
 
 @media (max-width: 640px) {
   .lp-features-section {
-    padding: 34px 16px 20px;
+    padding: 28px 14px 18px;
+  }
+
+  .lp-features-grid {
+    gap: 14px;
   }
 
   .lp-feature-card-inner {
-    padding: 22px 20px;
+    padding: 20px 18px;
+  }
+
+  .lp-feature-icon-tile {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+  }
+
+  .lp-feature-title {
+    font-size: 17px;
+    margin-bottom: 8px;
+  }
+
+  .lp-feature-desc {
+    font-size: 13.5px;
+    line-height: 1.58;
   }
 }

@@ -5,10 +5,13 @@
 
 .lp-steps-section {
   position: relative;
+  width: 100%;
   max-width: 1240px;
   margin: 0 auto;
   padding: 20px 24px 56px;
   scroll-margin-top: 88px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .lp-steps-header {
@@ -112,10 +115,29 @@
 
 @media (max-width: 640px) {
   .lp-steps-section {
-    padding: 16px 16px 40px;
+    padding: 12px 14px 36px;
+  }
+
+  .lp-steps-header {
+    margin-bottom: 22px;
+  }
+
+  .lp-steps-title {
+    font-size: clamp(1.4rem, 5.8vw, 1.85rem);
+    line-height: 1.2;
   }
 
   .lp-step-card {
-    padding: 20px 18px;
+    padding: 18px 16px;
+    border-radius: 16px;
+  }
+
+  .lp-step-heading {
+    font-size: 16px;
+  }
+
+  .lp-step-desc {
+    font-size: 13px;
+    line-height: 1.55;
   }
 }

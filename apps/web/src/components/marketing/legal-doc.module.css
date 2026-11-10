@@ -43,6 +43,14 @@
   display: inline-flex;
   flex-wrap: wrap;
   gap: 0.38rem;
+  overflow-x: auto;
+  max-width: 100%;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.docTabs::-webkit-scrollbar {
+  display: none;
 }
 
 .docTab {
@@ -185,19 +193,91 @@
 @media (max-width: 900px) {
   .docGrid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .tocCard {
     position: static;
+    padding: 1rem;
+    border-radius: 14px;
+  }
+
+  .tocLinks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.35rem;
   }
 }
 
 @media (max-width: 600px) {
+  .pageRoot {
+    overflow-x: hidden;
+  }
+
   .container {
-    padding: 0 1rem;
+    padding: 0 0.95rem;
+    box-sizing: border-box;
+  }
+
+  .heroStrip {
+    padding: 1.65rem 0 1.85rem;
+  }
+
+  .switcherRow {
+    gap: 0.65rem;
+    margin-bottom: 1.15rem;
+  }
+
+  .docTitle {
+    font-size: clamp(1.5rem, 6.2vw, 2.15rem);
+    line-height: 1.18;
+    overflow-wrap: break-word;
+  }
+
+  .docSub {
+    font-size: 0.86rem;
+    line-height: 1.58;
+  }
+
+  .bodySection {
+    padding: 1.75rem 0 3rem;
+  }
+
+  .tocLinks {
+    grid-template-columns: 1fr;
+    max-height: 240px;
+    overflow-y: auto;
+    padding-right: 0.25rem;
   }
 
   .clauseCard {
-    padding: 1.15rem;
+    padding: 1.15rem 1rem;
+    border-radius: 14px;
+    scroll-margin-top: 76px;
+  }
+
+  .clauseTitle {
+    font-size: 1.02rem;
+  }
+
+  .clauseBody {
+    font-size: 0.82rem;
+    line-height: 1.62;
+  }
+
+  .summaryAlert {
+    padding: 1rem 1.15rem;
+    font-size: 0.8rem;
+    line-height: 1.58;
+  }
+}
+
+@media (max-width: 360px) {
+  .container {
+    padding: 0 0.75rem;
+  }
+
+  .clauseCard {
+    padding: 1rem 0.85rem;
   }
 }

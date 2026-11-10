@@ -5,10 +5,13 @@
 
 .lp-faq-section {
   position: relative;
+  width: 100%;
   max-width: 1240px;
   margin: 0 auto;
   padding: 6px 24px 56px;
   scroll-margin-top: 88px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .lp-faq-header {
@@ -132,16 +135,28 @@
 
 @media (max-width: 640px) {
   .lp-faq-section {
-    padding: 4px 16px 40px;
+    padding: 4px 14px 36px;
+  }
+
+  .lp-faq-header {
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .lp-faq-title {
+    font-size: clamp(1.4rem, 5.8vw, 1.85rem);
+    line-height: 1.2;
   }
 
   .lp-faq-trigger {
-    padding: 15px 16px;
-    font-size: 14px;
+    padding: 14px 14px;
+    font-size: 13.5px;
+    gap: 12px;
   }
 
   .lp-faq-panel {
-    padding: 15px 16px 18px;
-    font-size: 13.5px;
+    padding: 13px 14px 16px;
+    font-size: 13px;
+    line-height: 1.6;
   }
 }
