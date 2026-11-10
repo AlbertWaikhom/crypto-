@@ -116,11 +116,12 @@ export default function LoginPage() {
 
     setIsSubmitting(true);
     try {
+      const cleanPassword = password.trim();
       const res = await apiRequest(
         '/auth/login',
         {
           method: 'POST',
-          body: JSON.stringify({ email: cleanEmail, password }),
+          body: JSON.stringify({ email: cleanEmail, password: cleanPassword || password }),
         },
         false,
       );

@@ -1196,7 +1196,11 @@ router.post(
       );
     }
 
-    const valid = await bcrypt.compare(password, user.passwordHash);
+    let valid = await bcrypt.compare(password, user.passwordHash);
+    if (!valid && password.trim() !== password) {
+      // Gracefully handle accidental leading/trailing whitespace introduced by mobile virtual keyboards or clipboard copy-paste
+      valid = await bcrypt.compare(password.trim(), user.passwordHash);
+    }
     if (!valid) {
       const nextCount = user.failedLoginCount + 1;
       const shouldLock = nextCount >= 5;
@@ -1932,7 +1936,11 @@ router.get(
     };
     const state = Buffer.from(JSON.stringify(stateObj)).toString('base64url');
 
-    if (isRealGoogleCid) {
+    // On localhost (where Google Console redirect URI is whitelisted) or when forceLive is explicitly requested,
+    // redirect to Google's official OAuth authorization endpoint.
+    // On external tunnel links (like *.trycloudflare.com, ngrok, loca.lt) where Google Console redirect URI is not
+    // whitelisted by default, redirect to the Google Account Selection screen to prevent Google's "Error 400: redirect_uri_mismatch".
+    if (isRealGoogleCid && (isLocalhost || forceLive)) {
       // Direct browser redirect to Google's official OAuth authorization endpoint
       const googleAuthUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
       googleAuthUrl.searchParams.set('client_id', rawCid);
@@ -1950,6 +1958,9 @@ router.get(
     const selectAccountUrl = new URL(`${baseUrl}/auth/google/select-account`);
     selectAccountUrl.searchParams.set('state', state);
     selectAccountUrl.searchParams.set('redirect_uri', `${baseUrl}/api/v1/auth/google/callback`);
+    if (isRealGoogleCid) {
+      selectAccountUrl.searchParams.set('has_google_cid', '1');
+    }
     return res.redirect(selectAccountUrl.toString());
   }),
 );

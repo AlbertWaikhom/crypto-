@@ -6,9 +6,12 @@
 .rb-aurora-container {
   position: absolute;
   inset: 0;
+  width: 100%;
+  max-width: 100%;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
+  contain: paint;
 }
 
 .rb-aurora-grid {
@@ -232,7 +235,11 @@
 .rb-logoloop-viewport {
   position: relative;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1;
   overflow: hidden;
+  contain: paint;
   mask-image: linear-gradient(to right, transparent 0%, #000 5%, #000 95%, transparent 100%);
   -webkit-mask-image: linear-gradient(
     to right,
@@ -262,6 +269,40 @@
   }
   100% {
     transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Mobile Optimizations */
+@media (max-width: 640px) {
+  .rb-aurora-beam-gold {
+    width: 260px;
+    height: 260px;
+    right: -10%;
+    filter: blur(54px);
+  }
+
+  .rb-aurora-beam-emerald {
+    width: 220px;
+    height: 220px;
+    right: -5%;
+    filter: blur(48px);
+  }
+
+  .rb-aurora-beam-streak {
+    width: 140px;
+    height: 380px;
+    filter: blur(40px);
+  }
+
+  .rb-aurora-beam-ambient {
+    width: 260px;
+    height: 220px;
+    left: -15%;
+    filter: blur(48px);
+  }
+
+  .rb-logoloop-track {
+    gap: 8px;
   }
 }
 

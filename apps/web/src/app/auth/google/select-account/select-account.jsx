@@ -270,7 +270,19 @@ export default function GoogleSelectAccountPage() {
         )}
 
         {/* Footer Disclaimer */}
-        <div className="mt-8 pt-6 border-t border-[#5f6368]/30 text-xs text-[#9aa0a6] leading-relaxed">
+        {searchParams.get('has_google_cid') === '1' && (
+          <div className="mt-4 pt-4 border-t border-[#5f6368]/20 text-center">
+            <a
+              href={`/api/v1/auth/google?force_live=1${state ? `&state=${encodeURIComponent(state)}` : ''}`}
+              className="inline-flex items-center gap-1.5 text-xs text-[#8ab4f8] hover:text-[#aecbfa] transition-colors"
+            >
+              <span>Or continue with Official Google OAuth</span>
+              <ChevronRight className="h-3.5 w-3.5" />
+            </a>
+          </div>
+        )}
+
+        <div className="mt-6 pt-6 border-t border-[#5f6368]/30 text-xs text-[#9aa0a6] leading-relaxed">
           <p>
             To continue, Google will share your name, email address, and profile picture with{' '}
             <span className="text-white font-medium">NAVRIX</span>. Before using this app, review

@@ -239,12 +239,9 @@ export default function CustomerDashboardPage() {
         ))}
       </section>
 
-      {/* Row 3: Live Real-Time Market Station (Binance WebSocket Streams) */}
       <LiveMarketStation />
 
-      {/* Row 4: 3-Column Bento Workspace (Fits Cleanly in Single Screen!) */}
       <div className={styles.mainBento}>
-        {/* Col 1: Ledger Equity Progression */}
         <SpotlightCard tone="gold" className={styles.bentoCard}>
           <div className={styles.cardTop}>
             <div>
@@ -320,7 +317,6 @@ export default function CustomerDashboardPage() {
           )}
         </SpotlightCard>
 
-        {/* Col 2: Capital Allocation Ring */}
         <SpotlightCard tone="emerald" className={styles.bentoCard}>
           <div className={styles.cardTop}>
             <div>
@@ -374,7 +370,6 @@ export default function CustomerDashboardPage() {
           </div>
         </SpotlightCard>
 
-        {/* Col 3: Compact Tabbed Live Activity Feed */}
         <SpotlightCard tone="cyan" className={styles.bentoCard}>
           <div className={styles.activityTop}>
             <AnimatedTabs

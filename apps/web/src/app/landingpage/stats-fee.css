@@ -5,14 +5,19 @@
 
 .lp-fees-section {
   position: relative;
+  width: 100%;
   max-width: 1240px;
   margin: 0 auto;
   padding: 0 24px 48px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .lp-fees-card {
+  width: 100%;
   border-radius: 22px;
   padding: 30px 36px;
+  box-sizing: border-box;
   background: linear-gradient(135deg, rgba(20, 30, 52, 0.96) 0%, rgba(10, 16, 30, 0.98) 100%);
   border: 1.5px solid rgba(245, 184, 46, 0.34);
   box-shadow:
@@ -114,11 +119,31 @@
 
 @media (max-width: 520px) {
   .lp-fees-section {
-    padding: 0 16px 36px;
+    padding: 0 12px 30px;
+  }
+
+  .lp-fees-card {
+    padding: 18px 12px;
+    border-radius: 18px;
   }
 
   .lp-fees-metrics-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 8px;
+  }
+
+  .lp-fee-metric-box {
+    padding: 10px 6px;
+    border-radius: 10px;
+  }
+
+  .lp-fee-metric-value {
+    font-size: 1.45rem;
+    margin-bottom: 3px;
+  }
+
+  .lp-fee-metric-label {
+    font-size: 10.5px;
+    gap: 3px;
   }
 }
