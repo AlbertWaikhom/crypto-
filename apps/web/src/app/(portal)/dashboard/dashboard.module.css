@@ -1,23 +1,29 @@
 .dashboardGrid {
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.65rem;
 }
 
 /* Row 1: Compact Single-Line Hero Vault Bar */
 .heroStrip {
-  padding: 0.55rem 0.85rem;
+  padding: 0.7rem 1.15rem;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.65rem;
+  border-radius: 0.95rem;
+  flex-shrink: 0;
 }
 
 .heroLeft {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.18rem;
   min-width: 0;
 }
 
@@ -34,8 +40,8 @@
   border-radius: 9999px;
   border: 1px solid rgba(245, 184, 46, 0.34);
   background-color: rgba(245, 184, 46, 0.08);
-  padding: 0.1rem 0.45rem;
-  font-size: 0.58rem;
+  padding: 0.12rem 0.5rem;
+  font-size: 0.62rem;
   font-weight: 800;
   letter-spacing: 0.07em;
 }
@@ -44,8 +50,8 @@
   border-radius: 9999px;
   border: 1px solid var(--nv-border);
   background-color: rgba(15, 23, 42, 0.5);
-  padding: 0.08rem 0.45rem;
-  font-size: 0.62rem;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.65rem;
   font-weight: 700;
   color: var(--nv-text-muted);
   font-variant-numeric: tabular-nums;
@@ -58,8 +64,8 @@
 .verifiedTag {
   display: inline-flex;
   align-items: center;
-  gap: 0.22rem;
-  font-size: 0.64rem;
+  gap: 0.25rem;
+  font-size: 0.68rem;
   font-weight: 600;
   color: var(--nv-text-muted);
 }
@@ -74,8 +80,8 @@
 .totalAmount {
   display: inline-flex;
   align-items: baseline;
-  gap: 0.25rem;
-  font-size: clamp(1.25rem, 2vw, 1.55rem);
+  gap: 0.28rem;
+  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.025em;
@@ -83,7 +89,7 @@
 }
 
 .totalUnit {
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   font-weight: 700;
   color: var(--nv-text-muted);
 }
@@ -91,12 +97,12 @@
 .yieldPill {
   display: inline-flex;
   align-items: center;
-  gap: 0.22rem;
+  gap: 0.25rem;
   border-radius: 9999px;
   background-color: rgba(16, 185, 129, 0.13);
   border: 1px solid rgba(16, 185, 129, 0.28);
-  padding: 0.12rem 0.45rem;
-  font-size: 0.65rem;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: #34d399;
   font-variant-numeric: tabular-nums;
@@ -110,7 +116,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.38rem;
+  gap: 0.45rem;
 }
 
 .pillPrimary,
@@ -118,16 +124,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.32rem;
-  min-height: 32px;
-  padding: 0.32rem 0.68rem;
-  border-radius: 0.65rem;
-  font-size: 0.72rem;
+  gap: 0.35rem;
+  min-height: 34px;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.7rem;
+  font-size: 0.74rem;
   font-weight: 700;
   white-space: nowrap;
   transition:
     transform 0.14s ease,
-    border-color 0.14s ease;
+    border-color 0.14s ease,
+    box-shadow 0.14s ease;
 }
 
 .pillPrimary {
@@ -155,23 +162,36 @@
 .kpiRibbon {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 0.45rem;
+  gap: 0.55rem;
+  flex-shrink: 0;
 }
 
 .kpiTile {
-  padding: 0.45rem 0.58rem !important;
-  border-radius: 0.75rem !important;
+  padding: 0.6rem 0.75rem !important;
+  border-radius: 0.85rem !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 68px;
+  transition:
+    transform 0.14s ease,
+    border-color 0.14s ease;
+}
+
+.kpiTile:hover {
+  transform: translateY(-1px);
+  border-color: rgba(245, 184, 46, 0.35);
 }
 
 .kpiHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.25rem;
+  gap: 0.35rem;
 }
 
 .kpiName {
-  font-size: 0.64rem;
+  font-size: 0.68rem;
   font-weight: 600;
   color: var(--nv-text-muted);
   white-space: nowrap;
@@ -180,27 +200,27 @@
 }
 
 .kpiNum {
-  margin-top: 0.18rem;
+  margin-top: 0.2rem;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.18rem;
+  gap: 0.2rem;
   min-width: 0;
-  font-size: clamp(0.84rem, 3.5vw, 0.98rem);
+  font-size: clamp(0.92rem, 1.25vw, 1.12rem);
   font-weight: 800;
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
 
 .kpiAsset {
-  font-size: 0.58rem;
+  font-size: 0.62rem;
   font-weight: 700;
   color: var(--nv-text-muted);
 }
 
 .microTrack {
-  margin-top: 0.25rem;
-  height: 2px;
+  margin-top: 0.35rem;
+  height: 3px;
   width: 100%;
   border-radius: 9999px;
   background-color: rgba(148, 163, 184, 0.14);
@@ -215,17 +235,22 @@
 
 /* Row 3: 3-Column Bento Command Grid */
 .mainBento {
+  flex: 1;
+  min-height: 340px;
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.72fr) minmax(0, 1.15fr);
-  gap: 0.5rem;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.82fr) minmax(0, 1.25fr);
+  gap: 0.65rem;
   align-items: stretch;
 }
 
 .bentoCard {
-  padding: 0.65rem 0.8rem !important;
-  border-radius: 0.85rem !important;
+  padding: 0.85rem 1.05rem !important;
+  border-radius: 0.95rem !important;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 .cardTop {
@@ -233,27 +258,28 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.45rem;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
+  flex-shrink: 0;
 }
 
 .cardTitle {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: 0.86rem;
   font-weight: 800;
   letter-spacing: -0.015em;
 }
 
 .cardSub {
-  margin: 0.05rem 0 0;
-  font-size: 0.64rem;
+  margin: 0.08rem 0 0;
+  font-size: 0.66rem;
   color: var(--nv-text-muted);
 }
 
 .textLink {
   display: inline-flex;
   align-items: center;
-  gap: 0.15rem;
-  font-size: 0.68rem;
+  gap: 0.18rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: var(--nv-gold);
   white-space: nowrap;
@@ -265,14 +291,27 @@
 
 .compactEmptyWrap {
   flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 145px;
+}
+
+.compactEmptyWrap > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .chartBox {
-  height: 155px;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
   width: 100%;
 }
 
@@ -281,14 +320,19 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 0.42rem;
+  gap: 0.5rem;
+  flex: 1;
   height: 100%;
+  min-height: 0;
 }
 
 .donutCanvas {
   position: relative;
-  height: 95px;
   width: 100%;
+  height: 190px;
+  min-height: 160px;
+  max-height: 210px;
+  flex-shrink: 0;
 }
 
 .donutOverlay {
@@ -302,14 +346,14 @@
 }
 
 .donutTiny {
-  font-size: 0.52rem;
+  font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--nv-text-muted);
 }
 
 .donutTotal {
-  font-size: 0.78rem;
+  font-size: 0.92rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
@@ -317,22 +361,24 @@
 .tierRows {
   display: flex;
   flex-direction: column;
-  gap: 0.22rem;
+  gap: 0.35rem;
+  margin-top: auto;
+  flex-shrink: 0;
 }
 
 .tierRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.22rem 0.42rem;
-  border-radius: 0.45rem;
+  padding: 0.32rem 0.55rem;
+  border-radius: 0.5rem;
   background-color: rgba(148, 163, 184, 0.06);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
 }
 
 .dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 9999px;
 }
 
@@ -343,23 +389,31 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.45rem;
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.5rem;
   min-width: 0;
+  flex-shrink: 0;
 }
 
 .feedScroll {
   display: flex;
   flex-direction: column;
-  gap: 0.28rem;
-  max-height: 155px;
+  gap: 0.32rem;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
   overflow-y: auto;
-  padding-right: 0.1rem;
+  padding-right: 0.15rem;
 }
 
 .feedEmpty {
-  padding: 2rem 0.5rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  padding: 1rem 0.5rem;
   text-align: center;
-  font-size: 0.7rem;
+  font-size: 0.74rem;
   color: var(--nv-text-muted);
 }
 
@@ -369,9 +423,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.45rem;
-  padding: 0.38rem 0.55rem;
-  min-height: 38px;
-  border-radius: 0.62rem;
+  padding: 0.45rem 0.65rem;
+  min-height: 42px;
+  border-radius: 0.65rem;
   border: 1px solid var(--nv-border);
   background-color: rgba(148, 163, 184, 0.04);
   transition:
@@ -385,7 +439,7 @@
 }
 
 .feedUid {
-  font-size: 0.69rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--nv-gold);
   font-variant-numeric: tabular-nums;
@@ -395,7 +449,7 @@
 }
 
 .feedDate {
-  font-size: 0.62rem;
+  font-size: 0.65rem;
   color: var(--nv-text-muted);
 }
 
@@ -408,26 +462,27 @@
 }
 
 .feedAmt {
-  font-size: 0.74rem;
+  font-size: 0.78rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
 .feedYieldAmt {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 800;
   color: #10b981;
   font-variant-numeric: tabular-nums;
 }
 
 /* Responsive Breakpoints (Laptop, Tablet, iOS & Android) */
-@media (max-width: 1180px) {
+@media (max-width: 1280px) {
   .kpiRibbon {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .mainBento {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
+    min-height: auto;
   }
 
   .mainBento > :last-child {
@@ -438,16 +493,19 @@
 @media (max-width: 768px) {
   .dashboardGrid {
     gap: 0.65rem;
+    height: auto;
+    min-height: 100%;
   }
 
   .heroStrip {
-    padding: 0.75rem;
+    padding: 0.85rem;
     gap: 0.75rem;
   }
 
   .mainBento {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.65rem;
+    min-height: auto;
   }
 
   .mainBento > :last-child {
@@ -459,15 +517,18 @@
   }
 
   .chartBox {
-    height: 175px;
+    min-height: 200px;
+    height: 200px;
   }
 
   .donutCanvas {
-    height: 115px;
+    min-height: 150px;
+    height: 150px;
   }
 
   .feedScroll {
-    max-height: 240px;
+    min-height: 180px;
+    max-height: 280px;
   }
 }
 
