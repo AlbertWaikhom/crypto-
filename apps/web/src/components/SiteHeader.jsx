@@ -5,16 +5,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
+  Activity,
   ArrowRight,
   ChevronDown,
+  Cpu,
   FileCheck2,
   LayoutDashboard,
   Lock,
+  Mail,
   Menu,
   Scale,
+  Shield,
   ShieldAlert,
   ShieldCheck,
   Sparkles,
+  Workflow,
   X,
 } from 'lucide-react';
 import { BRAND_CONFIG } from '@navrix/config';
@@ -28,6 +33,8 @@ export function SiteHeader({ mode = 'sticky', compactAuth = false }) {
   const pathname = usePathname();
   const { accessToken, user } = useUiStore();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [mobileEcosystemOpen, setMobileEcosystemOpen] = React.useState(false);
+  const [mobileGovernanceOpen, setMobileGovernanceOpen] = React.useState(false);
   const [openMenu, setOpenMenu] = React.useState(null); // 'ecosystem' | 'governance' | null
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [mounted, setMounted] = React.useState(false);
@@ -45,6 +52,8 @@ export function SiteHeader({ mode = 'sticky', compactAuth = false }) {
 
   React.useEffect(() => {
     setMobileMenuOpen(false);
+    setMobileEcosystemOpen(false);
+    setMobileGovernanceOpen(false);
     setOpenMenu(null);
   }, [pathname]);
 
@@ -349,9 +358,10 @@ export function SiteHeader({ mode = 'sticky', compactAuth = false }) {
               {mounted && accessToken ? (
                 <Link href={workspaceHref}>
                   <Button size="sm" className={styles.ctaPrimaryBtn}>
-                    <LayoutDashboard size={14} className="mr-1.5" />
-                    <span>Command Portal</span>
-                    <ArrowRight size={13} className="ml-1" />
+                    <LayoutDashboard size={13} className="mr-1" />
+                    <span className={styles.ctaFullText}>Command Portal</span>
+                    <span className={styles.ctaShortText}>Portal</span>
+                    <ArrowRight size={12} className="ml-1" />
                   </Button>
                 </Link>
               ) : (
@@ -363,8 +373,9 @@ export function SiteHeader({ mode = 'sticky', compactAuth = false }) {
 
                   <Link href="/register">
                     <Button size="sm" className={styles.ctaPrimaryBtn}>
-                      <span>Open Account</span>
-                      <ArrowRight size={13} className="ml-1" />
+                      <span className={styles.ctaFullText}>Open Account</span>
+                      <span className={styles.ctaShortText}>Open</span>
+                      <ArrowRight size={12} className="ml-1" />
                     </Button>
                   </Link>
                 </div>
@@ -386,69 +397,294 @@ export function SiteHeader({ mode = 'sticky', compactAuth = false }) {
           {/* Mobile Institutional Navigation Sheet */}
           {mobileMenuOpen && !compactAuth && (
             <div className={styles.mobileSheet}>
+              {/* Institutional Telemetry Banner */}
               <div className={styles.mobileStatusBanner}>
-                <span className="inline-flex items-center gap-1.5">
-                  <ShieldCheck size={14} />
-                  Double-Entry Solvency Verified
-                </span>
-                <span>BEP-20 USDT</span>
-              </div>
-
-              <nav className={styles.mobileNavLinks}>
-                {[
-                  { href: '/', label: 'Overview' },
-                  { href: '/about', label: 'About & S.E.R.P.O. Architecture' },
-                  { href: '/ecosystem', label: 'Ecosystem Marketplace (8 Engines)' },
-                  { href: '/contact', label: 'Institutional & Partner Desk' },
-                  { href: '/risk-disclosure', label: 'Risk Disclosure Statement' },
-                  { href: '/terms-conditions', label: 'Terms & Conditions' },
-                ].map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={cn(
-                      styles.mobileNavLinkItem,
-                      pathname === item.href && styles.mobileNavActive,
-                    )}
-                  >
-                    <span>{item.label}</span>
-                    <ArrowRight size={14} className="opacity-50" />
-                  </Link>
-                ))}
-              </nav>
-
-              <div className={styles.mobileEnginesBox}>
-                <div className={styles.mobileSectionLabel}>Featured Engines</div>
-                <div className={styles.mobileEngineChips}>
-                  {ECOSYSTEM_ENTITIES.slice(0, 4).map((ent) => (
-                    <Link
-                      key={ent.id}
-                      href={`/ecosystem?engine=${ent.id}`}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={styles.mobileEngineChip}
-                    >
-                      <span>{ent.name}</span>
-                      <span>{ent.badge}</span>
-                    </Link>
-                  ))}
+                <div className={styles.mobileStatusRow}>
+                  <div className={styles.mobileStatusLeft}>
+                    <span className={styles.liveDot} />
+                    <span className={styles.mobileStatusTitle}>Settlement Finality Live</span>
+                  </div>
+                  <span className={styles.mobileStatusNet}>BEP-20 USDT</span>
+                </div>
+                <div className={styles.mobileStatusRow}>
+                  <span className={styles.mobileSolvencyLabel}>Double-Entry Solvency Verified</span>
+                  <div className={styles.mobileSolvencyPill}>
+                    <ShieldCheck size={11} />
+                    <span>0.00000000 Variance</span>
+                  </div>
                 </div>
               </div>
 
+              {/* Sub-brand Descriptor */}
+              <div className={styles.mobileBrandHeader}>
+                <div className={styles.mobileBrandRow}>
+                  <span className={styles.mobileBrandName}>{BRAND_CONFIG.name}</span>
+                  <span className={styles.mobileBrandBadge}>INSTITUTIONAL GATEWAY</span>
+                </div>
+                <span className={styles.mobileBrandDesc}>
+                  Multi-Engine Financial Ecosystem · Ring-Fenced Autonomous Infrastructure
+                </span>
+              </div>
+
+              {/* Main Navigation Stack */}
+              <nav className={styles.mobileNavLinks} aria-label="Mobile Navigation">
+                {/* 1. Overview */}
+                <Link
+                  href="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    styles.mobileNavLinkItem,
+                    pathname === '/' && styles.mobileNavActive,
+                  )}
+                >
+                  <div className={styles.mobileNavLeft}>
+                    <Sparkles size={16} className="text-amber-400 opacity-90" />
+                    <span>Overview & Ecosystem</span>
+                  </div>
+                  <ArrowRight size={14} className="opacity-40" />
+                </Link>
+
+                {/* 2. Live Markets */}
+                <Link
+                  href="/#markets"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={styles.mobileNavLinkItem}
+                >
+                  <div className={styles.mobileNavLeft}>
+                    <Activity size={16} className="text-emerald-400" />
+                    <span>Live Markets & Telemetry</span>
+                  </div>
+                  <span className={styles.mobileLiveTag}>
+                    <span className={styles.liveDotSmall} />
+                    LIVE
+                  </span>
+                </Link>
+
+                {/* 3. Platform (8 Financial Engines) DROPDOWN */}
+                <div className={styles.mobileDropdownSection}>
+                  <button
+                    type="button"
+                    onClick={() => setMobileEcosystemOpen((prev) => !prev)}
+                    className={cn(
+                      styles.mobileDropdownTrigger,
+                      mobileEcosystemOpen && styles.mobileDropdownTriggerOpen,
+                    )}
+                    aria-expanded={mobileEcosystemOpen}
+                  >
+                    <div className={styles.mobileDropdownLabel}>
+                      <Cpu size={16} className="text-amber-400" />
+                      <span>Platform Engines</span>
+                      <span className={styles.countBadge}>8 Models</span>
+                    </div>
+                    <ChevronDown
+                      size={16}
+                      className={cn(styles.chevronIcon, mobileEcosystemOpen && styles.chevronOpen)}
+                    />
+                  </button>
+
+                  {mobileEcosystemOpen && (
+                    <div className={styles.mobileDropdownPanel}>
+                      <div className={styles.mobilePanelHeader}>
+                        <span>Decoupled Execution Architecture</span>
+                        <span>Multi-Strategy</span>
+                      </div>
+                      <div className={styles.mobileEnginesList}>
+                        {ECOSYSTEM_ENTITIES.map((entity, index) => (
+                          <Link
+                            key={entity.id}
+                            href={`/ecosystem?engine=${entity.id}`}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className={styles.mobileEngineCard}
+                          >
+                            <div className={styles.mobileEngineCardTop}>
+                              <span className={styles.mobileEngineIndex}>
+                                {String(index + 1).padStart(2, '0')}
+                              </span>
+                              <span className={styles.mobileEngineName}>{entity.name}</span>
+                              <span className={styles.mobileEngineBadge}>{entity.badge}</span>
+                            </div>
+                            <span className={styles.mobileEngineDesc}>{entity.tagline}</span>
+                          </Link>
+                        ))}
+                      </div>
+
+                      <Link
+                        href="/ecosystem"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={styles.mobileExploreMarketBtn}
+                      >
+                        <span>Explore Full Marketplace (All 8 Engines)</span>
+                        <ArrowRight size={14} />
+                      </Link>
+                    </div>
+                  )}
+                </div>
+
+                {/* 4. How It Works */}
+                <Link
+                  href="/#how-it-works"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={styles.mobileNavLinkItem}
+                >
+                  <div className={styles.mobileNavLeft}>
+                    <Workflow size={16} className="text-amber-400 opacity-90" />
+                    <span>How It Works · 4-Step Settlement</span>
+                  </div>
+                  <ArrowRight size={14} className="opacity-40" />
+                </Link>
+
+                {/* 5. Security */}
+                <Link
+                  href="/#security"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={styles.mobileNavLinkItem}
+                >
+                  <div className={styles.mobileNavLeft}>
+                    <Shield size={16} className="text-emerald-400 opacity-90" />
+                    <span>Security & Multi-Sig Vaults</span>
+                  </div>
+                  <ArrowRight size={14} className="opacity-40" />
+                </Link>
+
+                {/* 6. About */}
+                <Link
+                  href="/about"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    styles.mobileNavLinkItem,
+                    pathname === '/about' && styles.mobileNavActive,
+                  )}
+                >
+                  <div className={styles.mobileNavLeft}>
+                    <Scale size={16} className="text-amber-400 opacity-90" />
+                    <span>About NAVRIX & Architecture</span>
+                  </div>
+                  <ArrowRight size={14} className="opacity-40" />
+                </Link>
+
+                {/* 7. Resources & Governance DROPDOWN */}
+                <div className={styles.mobileDropdownSection}>
+                  <button
+                    type="button"
+                    onClick={() => setMobileGovernanceOpen((prev) => !prev)}
+                    className={cn(
+                      styles.mobileDropdownTrigger,
+                      mobileGovernanceOpen && styles.mobileDropdownTriggerOpen,
+                    )}
+                    aria-expanded={mobileGovernanceOpen}
+                  >
+                    <div className={styles.mobileDropdownLabel}>
+                      <ShieldCheck size={16} className="text-amber-400" />
+                      <span>Resources & Legal Governance</span>
+                      <span className={styles.countBadge}>Institutional</span>
+                    </div>
+                    <ChevronDown
+                      size={16}
+                      className={cn(styles.chevronIcon, mobileGovernanceOpen && styles.chevronOpen)}
+                    />
+                  </button>
+
+                  {mobileGovernanceOpen && (
+                    <div className={styles.mobileDropdownPanel}>
+                      <Link
+                        href="/about#serpo"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={styles.mobileSubLinkItem}
+                      >
+                        <div className={styles.mobileSubIconBox}>
+                          <Scale size={14} />
+                        </div>
+                        <div className={styles.mobileSubMeta}>
+                          <div className={styles.mobileSubTitle}>S.E.R.P.O. Governance</div>
+                          <div className={styles.mobileSubDesc}>
+                            5-pillar entity isolation & operational standards
+                          </div>
+                        </div>
+                      </Link>
+
+                      <Link
+                        href="/risk-disclosure"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={styles.mobileSubLinkItem}
+                      >
+                        <div className={styles.mobileSubIconBox}>
+                          <ShieldAlert size={14} />
+                        </div>
+                        <div className={styles.mobileSubMeta}>
+                          <div className={styles.mobileSubTitle}>Risk Disclosure</div>
+                          <div className={styles.mobileSubDesc}>
+                            Market volatility, contract & algorithmic disclosures
+                          </div>
+                        </div>
+                      </Link>
+
+                      <Link
+                        href="/terms-conditions"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={styles.mobileSubLinkItem}
+                      >
+                        <div className={styles.mobileSubIconBox}>
+                          <FileCheck2 size={14} />
+                        </div>
+                        <div className={styles.mobileSubMeta}>
+                          <div className={styles.mobileSubTitle}>Terms & Conditions</div>
+                          <div className={styles.mobileSubDesc}>
+                            Platform gateway terms & eligibility criteria
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+
+                {/* 8. Contact Desk */}
+                <Link
+                  href="/contact"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    styles.mobileNavLinkItem,
+                    pathname === '/contact' && styles.mobileNavActive,
+                  )}
+                >
+                  <div className={styles.mobileNavLeft}>
+                    <Mail size={16} className="text-amber-400 opacity-90" />
+                    <span>Institutional & Partner Desk</span>
+                  </div>
+                  <ArrowRight size={14} className="opacity-40" />
+                </Link>
+              </nav>
+
+              {/* Mobile Auth & Command Actions */}
               <div className={styles.mobileAuthActions}>
                 {accessToken ? (
-                  <Link
-                    href={workspaceHref}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="col-span-full"
-                  >
-                    <Button className="w-full" variant="gold">
-                      <LayoutDashboard size={15} className="mr-1.5" />
-                      Open Command Portal
-                    </Button>
-                  </Link>
+                  <div className={styles.mobileUserWrap}>
+                    {user?.email && (
+                      <div className={styles.mobileUserPill}>
+                        <span className={styles.userDot} />
+                        <span className={styles.userEmail}>{user.email}</span>
+                        <span className={styles.userRoleTag}>
+                          {user.role === 'MASTER_ADMIN'
+                            ? 'MASTER'
+                            : user.role === 'ADMIN'
+                              ? 'ADMIN'
+                              : 'INVESTOR'}
+                        </span>
+                      </div>
+                    )}
+                    <Link
+                      href={workspaceHref}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full"
+                    >
+                      <Button className="w-full" variant="gold">
+                        <LayoutDashboard size={15} className="mr-1.5" />
+                        Open Command Portal
+                        <ArrowRight size={14} className="ml-1" />
+                      </Button>
+                    </Link>
+                  </div>
                 ) : (
-                  <>
+                  <div className={styles.mobileGuestActions}>
                     <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
                       <Button variant="outline" className="w-full text-xs font-bold">
                         <Lock size={13} className="mr-1.5" />
@@ -461,7 +697,7 @@ export function SiteHeader({ mode = 'sticky', compactAuth = false }) {
                         <ArrowRight size={13} className="ml-1" />
                       </Button>
                     </Link>
-                  </>
+                  </div>
                 )}
               </div>
             </div>
